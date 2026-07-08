@@ -347,30 +347,31 @@
             activeSeason: '', 
 
             // 2. INICIALIZACIÓN Y CONSUMO DE API (FETCH)
-            init: async function() {
-                try {
-                    const [resConfig, resEquipos, resPartidos, resClasificacion] = await Promise.all([
-                        fetch(`${API_URL}?endpoint=config`).then(r => r.json()),
-                        fetch(`${API_URL}?endpoint=equipos`).then(r => r.json()),
-                        fetch(`${API_URL}?endpoint=partidos`).then(r => r.json()),
-                        fetch(`${API_URL}?endpoint=clasificacion`).then(r => r.json())
-                    ]);
+init: async function() {
+        try {
+            const [resConfig, resEquipos, resPartidos, resClasificacion] = await Promise.all([
+                fetch(`${API_URL}?endpoint=config`).then(r => r.json()).catch(() => ({ status: 'error', data: {} })),
+                fetch(`${API_URL}?endpoint=equipos`).then(r => r.json()).catch(() => ({ status: 'error', data: [] })),
+                fetch(`${API_URL}?endpoint=partidos`).then(r => r.json()).catch(() => ({ status: 'error', data: [] })),
+                fetch(`${API_URL}?endpoint=clasificacion`).then(r => r.json()).catch(() => ({ status: 'error', data: [] }))
+            ]);
 
-                    if(resConfig.status === "success") {
-                        this.data.config = resConfig.data;
-                        this.activeSeason = resConfig.data.activa;
-                        this.populateSeasonFilter();
-                    }
-                    if(resEquipos.status === "success") this.data.teams = resEquipos.data;
-                    if(resPartidos.status === "success") this.data.matches = resPartidos.data;
-                    if(resClasificacion.status === "success") this.data.standings = resClasificacion.data;
+            if(resConfig?.status === "success" && resConfig?.data) {
+                this.data.config = resConfig.data;
+                this.activeSeason = resConfig.data.activa || '';
+                this.populateSeasonFilter();
+            }
+            // Aseguramos que siempre sea un array, aunque la API devuelva null
+            this.data.teams = Array.isArray(resEquipos?.data) ? resEquipos.data : [];
+            this.data.matches = Array.isArray(resPartidos?.data) ? resPartidos.data : [];
+            this.data.standings = Array.isArray(resClasificacion?.data) ? resClasificacion.data : [];
 
-                    this.switchView('home');
-                } catch (error) {
-                    console.error("Fallo crítico de conexión con la API:", error);
-                    document.getElementById('live-matches-container').innerHTML = `<div class="col-span-1 md:col-span-2 text-center text-red-500 bg-surface border border-red-500/50 p-4 rounded-xl">Error de conexión con los servidores de la liga.</div>`;
-                }
-            },
+            this.switchView('home');
+        } catch (error) {
+            console.error("Fallo crítico general:", error);
+            document.getElementById('live-matches-container').innerHTML = `<div class="col-span-1 md:col-span-2 text-center text-red-500 bg-surface border border-red-500/50 p-4 rounded-xl font-bold">Error de sincronización. Servidor inaccesible.</div>`;
+        }
+    },
 
             populateSeasonFilter: function() {
                 const select = document.getElementById('season-filter');
@@ -412,35 +413,45 @@
                         </div>`;
             },
 
-            getMatchCardHTML: function(m, isLive = false) {
-                const statusColor = isLive ? 'text-accent animate-pulse' : (m.status === 'Finalizado' ? 'text-gray-400' : 'text-raptor-light');
-                const liveBg = isLive ? 'bg-raptor border-raptor-light shadow-[0_0_15px_rgba(157,80,224,0.4)]' : 'bg-raptor-dark border-raptor hover:border-raptor-light hover:bg-raptor/80 shadow-lg transition-all';
-                
-                return `
-                    <div class="${liveBg} border rounded-xl flex flex-col relative h-full overflow-hidden">
-                        <div class="bg-black/40 border-b border-raptor-light/20 px-4 py-2 flex justify-between items-center w-full">
-                            <span class="text-[9px] text-white uppercase tracking-widest font-bold bg-dark px-2 py-0.5 rounded border border-raptor/50">${m.category}</span>
-                            <span class="text-[10px] font-bold text-gray-200 tracking-wider">${m.court} • ${m.time}</span>
-                            <span class="text-[9px] font-bold uppercase ${statusColor} tracking-widest">${m.status}</span>
-                        </div>
-                        <div class="flex justify-between items-center p-4 flex-1">
-                            <div class="flex flex-col items-center gap-2 w-1/3">
-                                ${this.getLogoBadge(m.teamA)}
-                                <span class="text-xs font-bold text-center leading-tight truncate w-full text-white">${m.teamA}</span>
-                            </div>
-                            <div class="flex justify-center items-center gap-3 w-1/3">
-                                <span class="font-sport font-black text-3xl md:text-4xl text-white">${m.scoreA}</span>
-                                <span class="text-raptor-light font-bold">-</span>
-                                <span class="font-sport font-black text-3xl md:text-4xl text-white">${m.scoreB}</span>
-                            </div>
-                            <div class="flex flex-col items-center gap-2 w-1/3">
-                                ${this.getLogoBadge(m.teamB)}
-                                <span class="text-xs font-bold text-center leading-tight truncate w-full text-white">${m.teamB}</span>
-                            </div>
-                        </div>
+getMatchCardHTML: function(m, isLive = false) {
+        // Fallbacks (valores por defecto) si el dato viene vacío desde la base de datos
+        const teamA = m?.teamA || 'Por Definir';
+        const teamB = m?.teamB || 'Por Definir';
+        const scoreA = m?.scoreA !== undefined && m?.scoreA !== "" ? m.scoreA : '-';
+        const scoreB = m?.scoreB !== undefined && m?.scoreB !== "" ? m.scoreB : '-';
+        const matchStatus = m?.status || 'Programado';
+        const matchCategory = m?.category || 'Sin Cat';
+        const matchTime = m?.time || '00:00';
+        const matchCourt = m?.court || 'Cancha 1';
+
+        const statusColor = isLive ? 'text-accent animate-pulse' : (matchStatus === 'Finalizado' ? 'text-gray-400' : 'text-raptor-light');
+        const liveBg = isLive ? 'bg-raptor border-raptor-light shadow-[0_0_15px_rgba(157,80,224,0.4)]' : 'bg-raptor-dark border-raptor hover:border-raptor-light hover:bg-raptor/80 shadow-lg transition-all';
+        
+        return `
+            <div class="${liveBg} border rounded-xl flex flex-col relative h-full overflow-hidden">
+                <div class="bg-black/40 border-b border-raptor-light/20 px-4 py-2 flex justify-between items-center w-full">
+                    <span class="text-[9px] text-white uppercase tracking-widest font-bold bg-dark px-2 py-0.5 rounded border border-raptor/50">${matchCategory}</span>
+                    <span class="text-[10px] font-bold text-gray-200 tracking-wider">${matchCourt} • ${matchTime}</span>
+                    <span class="text-[9px] font-bold uppercase ${statusColor} tracking-widest">${matchStatus}</span>
+                </div>
+                <div class="flex justify-between items-center p-4 flex-1">
+                    <div class="flex flex-col items-center gap-2 w-1/3">
+                        ${this.getLogoBadge(teamA)}
+                        <span class="text-xs font-bold text-center leading-tight truncate w-full text-white">${teamA}</span>
                     </div>
-                `;
-            },
+                    <div class="flex justify-center items-center gap-3 w-1/3">
+                        <span class="font-sport font-black text-3xl md:text-4xl text-white">${scoreA}</span>
+                        <span class="text-raptor-light font-bold">-</span>
+                        <span class="font-sport font-black text-3xl md:text-4xl text-white">${scoreB}</span>
+                    </div>
+                    <div class="flex flex-col items-center gap-2 w-1/3">
+                        ${this.getLogoBadge(teamB)}
+                        <span class="text-xs font-bold text-center leading-tight truncate w-full text-white">${teamB}</span>
+                    </div>
+                </div>
+            </div>
+        `;
+    },
 
             renderHome: function() {
                 const seasonMatches = this.data.matches.filter(m => m.temporada === this.activeSeason);
