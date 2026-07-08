@@ -100,19 +100,20 @@
         <section id="view-home" class="spa-view active space-y-8">
 
             <!-- Cabecera de Inicio: Temporada y Redes Sociales -->
-            <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 border-b border-zinc-800 pb-4">
-                <div class="flex flex-col sm:flex-row sm:items-center gap-4 w-full md:w-auto">
+<div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 border-b border-zinc-800 pb-4">
+                <div class="flex flex-col sm:flex-row sm:items-center gap-4 w-full sm:w-auto">
                     <h1 class="font-sport font-black text-3xl md:text-4xl uppercase tracking-wider text-white">Match Center</h1>
                     <select id="season-filter" class="bg-surface border border-zinc-700 text-white text-sm font-bold rounded-lg px-3 py-2 outline-none focus:border-raptor">
-                        <!-- Llenado dinámicamente -->
-                    </select>
+                        </select>
                 </div>
-                <div class="flex gap-2 w-full md:w-auto">
-                    <a href="#" class="flex-1 md:flex-none justify-center bg-[#1877F2]/10 text-[#1877F2] hover:bg-[#1877F2] hover:text-white px-3 py-2 rounded-lg transition-colors border border-[#1877F2]/20 flex items-center gap-2 text-sm font-bold">
-                        <i data-lucide="facebook" class="w-4 h-4"></i> Facebook
+                
+                <div class="flex gap-3 items-center w-full sm:w-auto justify-start sm:justify-end">
+                    <span class="text-[10px] font-bold uppercase tracking-widest text-zinc-500 hidden md:inline">Transmisiones oficiales:</span>
+                    <a href="https://www.facebook.com/raptors.voleibol.50" target="_blank" rel="noopener noreferrer" class="w-10 h-10 rounded-xl bg-zinc-950 border border-zinc-800 hover:border-raptor-light hover:bg-raptor-dark flex items-center justify-center transition-all shadow-md group">
+                        <img src="assets/fb-icon.png" alt="Facebook Raptors" class="w-5 h-5 object-contain group-hover:scale-110 transition-transform">
                     </a>
-                    <a href="#" class="flex-1 md:flex-none justify-center bg-[#E1306C]/10 text-[#E1306C] hover:bg-gradient-to-r hover:from-[#F56040] hover:to-[#E1306C] hover:text-white px-3 py-2 rounded-lg transition-colors border border-[#E1306C]/20 flex items-center gap-2 text-sm font-bold">
-                        <i data-lucide="instagram" class="w-4 h-4"></i> Instagram
+                    <a href="https://www.instagram.com/raptorsvoleybol/" target="_blank" rel="noopener noreferrer" class="w-10 h-10 rounded-xl bg-zinc-950 border border-zinc-800 hover:border-raptor-light hover:bg-raptor-dark flex items-center justify-center transition-all shadow-md group">
+                        <img src="assets/ig-icon.png" alt="Instagram Raptors" class="w-5 h-5 object-contain group-hover:scale-110 transition-transform">
                     </a>
                 </div>
             </div>
