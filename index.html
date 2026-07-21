@@ -445,6 +445,7 @@
             },
 
             // [NEXO SPORTS MAPA] TARJETA DE PARTIDO (NUEVA ESTRUCTURA HEADER/BODY/FOOTER)
+           // [NEXO SPORTS MAPA] TARJETA DE PARTIDO (NUEVA ESTRUCTURA HEADER/BODY/FOOTER)
             getMatchCardHTML: function(m, isLive = false) {
                 const teamA = m?.teamA || 'Por Definir';
                 const teamB = m?.teamB || 'Por Definir';
@@ -454,10 +455,17 @@
                 const matchCategory = m?.category || 'Sin Cat';
                 const matchCourt = m?.court || 'Cancha por asignar';
                 
-                // Formateo estricto de hora (Elimina los segundos. Ej: 18:00:00 -> 18:00)
+                // Formateo estricto de hora (Conversión a 12 horas + a.m./p.m.)
                 let matchTime = m?.time || '00:00';
                 if (matchTime.includes(':')) {
-                    matchTime = matchTime.split(':').slice(0, 2).join(':');
+                    let [hours, minutes] = matchTime.split(':');
+                    let h = parseInt(hours, 10);
+                    let suffix = h >= 12 ? 'p.m.' : 'a.m.';
+                    
+                    if (h === 0) h = 12; // Caso Medianoche
+                    else if (h > 12) h -= 12; // Horas de la tarde
+                    
+                    matchTime = `${h}:${minutes} ${suffix}`;
                 }
 
                 const statusColor = isLive ? 'text-accent animate-pulse' : (matchStatus === 'Finalizado' ? 'text-gray-400' : 'text-raptor-light');
@@ -469,9 +477,12 @@
                         <!-- Header: Categoría, Hora y Estatus -->
                         <div class="bg-black/40 border-b border-raptor-light/20 px-4 py-2 flex justify-between items-center w-full">
                             <span class="text-[9px] text-white uppercase tracking-widest font-bold bg-dark px-2 py-0.5 rounded border border-raptor/50">${matchCategory}</span>
-                            <span class="text-[10px] font-bold text-gray-200 tracking-wider flex items-center gap-1">
-                                <i data-lucide="clock" class="w-3 h-3 text-raptor-light"></i> ${matchTime}
+                            
+                            <!-- [CORRECCIÓN] Tamaño aumentado (text-xs) y ajuste del icono -->
+                            <span class="text-xs font-bold text-gray-200 tracking-wider flex items-center gap-1.5">
+                                <i data-lucide="clock" class="w-3.5 h-3.5 text-raptor-light"></i> ${matchTime}
                             </span>
+                            
                             <span class="text-[9px] font-bold uppercase ${statusColor} tracking-widest">${matchStatus}</span>
                         </div>
                         
