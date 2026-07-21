@@ -344,6 +344,26 @@
             currentCoachPhone: '',
             activeSeason: '', 
 
+            // 1. SANITIZADOR DE FECHAS (PARCHE)
+            normalizeDateStr: function(dateStr) {
+                if (!dateStr) return "";
+                
+                // Si la fecha ya viene correcta desde Sheets (YYYY-MM-DD), la dejamos pasar
+                if (dateStr.includes("-") && dateStr.split("-")[0].length === 4) {
+                    return dateStr;
+                }
+
+                // Si la fecha viene en formato latino (DD/MM/YYYY o D/M/YYYY)
+                if (dateStr.includes("/")) {
+                    const parts = dateStr.split("/");
+                    if (parts.length === 3 && parts[2].length === 4) {
+                        // Forzar formato YYYY-MM-DD
+                        return `${parts[2]}-${parts[1].padStart(2, '0')}-${parts[0].padStart(2, '0')}`;
+                    }
+                }
+                return dateStr; // Fallback
+            },
+
             // [NEXO SPORTS MAPA] 2. INICIALIZACIÓN (AQUÍ SE DESCARGAN LOS DATOS AL ABRIR LA PÁGINA)
             init: async function() {
                 try {
@@ -360,7 +380,10 @@
                         this.populateSeasonFilter();
                     }
                     this.data.teams = Array.isArray(resEquipos?.data) ? resEquipos.data : [];
-                    this.data.matches = Array.isArray(resPartidos?.data) ? resPartidos.data : [];
+                    this.data.matches = Array.isArray(resPartidos?.data) ? resPartidos.data.map(m => ({
+                        ...m,
+                        date: this.normalizeDateStr(m.date) // <-- Estandarización obligatoria
+                    })) : [];
                     this.data.standings = Array.isArray(resClasificacion?.data) ? resClasificacion.data : [];
 
                     this.switchView('home');
