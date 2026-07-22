@@ -261,49 +261,30 @@
     </main>
 
     <!-- ================= MODAL CÉDULA EQUIPO ================= -->
-    <div id="team-modal" class="fixed inset-0 bg-black/90 backdrop-blur-sm z-[60] hidden flex items-end md:items-center justify-center">
-        <div class="bg-surface w-full max-w-md h-[85vh] md:h-auto md:max-h-[80vh] md:rounded-2xl rounded-t-2xl flex flex-col border border-zinc-800 transform transition-transform translate-y-full" id="team-modal-content">
-            
-            <div class="p-4 border-b border-zinc-800 flex justify-between items-center bg-dark rounded-t-2xl">
-                <div class="flex items-center gap-3">
-                    <div id="modal-team-logo" class="w-10 h-10 bg-zinc-800 rounded-full flex items-center justify-center border border-zinc-700"></div>
-                    <div>
-                        <h3 id="modal-team-name" class="font-sport font-black text-2xl uppercase tracking-wide leading-none">Nombre</h3>
-                        <span id="modal-team-category" class="text-[10px] text-accent font-bold uppercase tracking-widest">Categoría</span>
-                    </div>
-                </div>
-                <button onclick="app.closeModal()" class="text-gray-400 hover:text-white bg-surface p-2 rounded-full"><i data-lucide="x" class="w-5 h-5"></i></button>
-            </div>
-
-            <div class="p-4 overflow-y-auto flex-1 space-y-4">
-                <div class="bg-zinc-900/50 p-3 rounded-xl border border-zinc-800/50 flex justify-between items-center">
-                    <div class="flex items-center gap-3">
-                        <div class="bg-dark p-2 rounded-full"><i data-lucide="user" class="w-4 h-4 text-gray-400"></i></div>
-                        <div>
-                            <p class="text-[10px] text-gray-500 uppercase font-bold tracking-wider">Entrenador</p>
-                            <p id="modal-coach-name" class="text-sm font-semibold text-gray-200">Cargando...</p>
+<!-- Contenedor del Entrenador (Rediseñado para fotos grandes) -->
+                <div class="bg-zinc-900/50 p-4 md:p-5 rounded-xl border border-zinc-800/50 flex justify-between items-center gap-3 relative overflow-hidden shadow-lg">
+                    <div class="flex items-center gap-4 z-10">
+                        <div id="modal-coach-photo-container" class="w-16 h-16 md:w-20 md:h-20 rounded-full bg-dark border-2 border-zinc-700 flex-shrink-0 flex justify-center items-center overflow-hidden shadow-inner">
+                            <!-- Inyectado vía JS -->
+                        </div>
+                        <div class="flex flex-col justify-center">
+                            <p class="text-[10px] text-accent uppercase font-bold tracking-widest mb-0.5">Entrenador Oficial</p>
+                            <p id="modal-coach-name" class="text-base md:text-lg font-black text-white leading-tight">Cargando...</p>
                         </div>
                     </div>
-                    <button onclick="app.requestPin()" id="btn-coach-contact" class="bg-surface hover:bg-zinc-800 border border-zinc-700 text-white rounded-full p-3 transition shadow-md">
-                        <i data-lucide="phone" class="w-4 h-4 text-accent"></i>
-                    </button>
-                    <a id="link-coach-contact" href="#" class="hidden bg-green-600 hover:bg-green-500 text-white rounded-full p-3 transition shadow-md">
-                        <i data-lucide="phone-call" class="w-4 h-4"></i>
-                    </a>
-                </div>
-
-                <div>
-                    <div class="flex justify-between items-center mb-3">
-                        <h4 class="text-xs font-bold text-gray-400 uppercase tracking-wider">Plantilla Oficial</h4>
-                        <span id="modal-roster-count" class="text-[10px] bg-dark border border-zinc-800 px-2 py-1 rounded font-medium text-gray-400">0 Registrados</span>
+                    <div class="flex-shrink-0 z-10">
+                        <button onclick="app.requestPin()" id="btn-coach-contact" class="bg-surface hover:bg-zinc-800 border border-zinc-700 text-white rounded-full p-4 transition shadow-md">
+                            <i data-lucide="phone" class="w-5 h-5 text-accent"></i>
+                        </button>
+                        <a id="link-coach-contact" href="#" class="hidden bg-green-600 hover:bg-green-500 text-white rounded-full p-4 transition shadow-md">
+                            <i data-lucide="phone-call" class="w-5 h-5"></i>
+                        </a>
                     </div>
-                    <ul id="modal-roster-list" class="space-y-2">
-                        <!-- Inyectado vía JS -->
-                    </ul>
+                    <!-- Elemento decorativo de fondo -->
+                    <div class="absolute right-0 top-0 bottom-0 flex items-center pr-2 pointer-events-none">
+                        <i data-lucide="shield" class="w-24 h-24 text-white/[0.02] transform rotate-12"></i>
+                    </div>
                 </div>
-            </div>
-        </div>
-    </div>
 
     <!-- ================= MODAL PIN ÁRBITRO ================= -->
     <div id="pin-modal" class="fixed inset-0 bg-black/80 z-[70] hidden flex items-center justify-center p-4">
@@ -444,8 +425,7 @@
                         </div>`;
             },
 
-            // [NEXO SPORTS MAPA] TARJETA DE PARTIDO (NUEVA ESTRUCTURA HEADER/BODY/FOOTER)
-           // [NEXO SPORTS MAPA] TARJETA DE PARTIDO (NUEVA ESTRUCTURA HEADER/BODY/FOOTER)
+          // [NEXO SPORTS MAPA] TARJETA DE PARTIDO (NUEVA ESTRUCTURA HEADER/BODY/FOOTER)
             getMatchCardHTML: function(m, isLive = false) {
                 const teamA = m?.teamA || 'Por Definir';
                 const teamB = m?.teamB || 'Por Definir';
@@ -455,17 +435,36 @@
                 const matchCategory = m?.category || 'Sin Cat';
                 const matchCourt = m?.court || 'Cancha por asignar';
                 
-                // Formateo estricto de hora (Conversión a 12 horas + a.m./p.m.)
+                // Motor de formateo estricto de hora (Soporta 12h y 24h dinámicamente)
                 let matchTime = m?.time || '00:00';
-                if (matchTime.includes(':')) {
-                    let [hours, minutes] = matchTime.split(':');
-                    let h = parseInt(hours, 10);
-                    let suffix = h >= 12 ? 'p.m.' : 'a.m.';
+                if (matchTime) {
+                    let timeStr = matchTime.toString().toLowerCase().trim();
                     
-                    if (h === 0) h = 12; // Caso Medianoche
-                    else if (h > 12) h -= 12; // Horas de la tarde
+                    // 1. Detectar si Google Sheets ya envió PM o AM
+                    let isPM = /(p\.?m\.?|p\s*m)/i.test(timeStr);
+                    let isAM = /(a\.?m\.?|a\s*m)/i.test(timeStr);
                     
-                    matchTime = `${h}:${minutes} ${suffix}`;
+                    // 2. Extraer solo los números
+                    let timeParts = timeStr.match(/\d+/g);
+                    if (timeParts && timeParts.length >= 2) {
+                        let h = parseInt(timeParts[0], 10);
+                        let min = timeParts[1].padStart(2, '0');
+
+                        // 3. Si venía en 24h sin letras, el sistema lo deduce
+                        if (!isPM && !isAM) {
+                            if (h >= 12) isPM = true;
+                            else isAM = true;
+                        }
+
+                        // 4. Conversión estricta a 12 horas
+                        if (h > 12) h -= 12;
+                        else if (h === 0) h = 12; // Caso Medianoche
+
+                        let suffix = isPM ? 'p.m.' : 'a.m.';
+                        matchTime = `${h}:${min} ${suffix}`;
+                    } else {
+                        matchTime = '00:00'; // Fallback de seguridad
+                    }
                 }
 
                 const statusColor = isLive ? 'text-accent animate-pulse' : (matchStatus === 'Finalizado' ? 'text-gray-400' : 'text-raptor-light');
@@ -478,7 +477,6 @@
                         <div class="bg-black/40 border-b border-raptor-light/20 px-4 py-2 flex justify-between items-center w-full">
                             <span class="text-[9px] text-white uppercase tracking-widest font-bold bg-dark px-2 py-0.5 rounded border border-raptor/50">${matchCategory}</span>
                             
-                            <!-- [CORRECCIÓN] Tamaño aumentado (text-xs) y ajuste del icono -->
                             <span class="text-xs font-bold text-gray-200 tracking-wider flex items-center gap-1.5">
                                 <i data-lucide="clock" class="w-3.5 h-3.5 text-raptor-light"></i> ${matchTime}
                             </span>
@@ -733,6 +731,7 @@
             },
 
             // [NEXO SPORTS MAPA] 3. MODAL DE EQUIPOS (LA VENTANA EMERGENTE CON LA PLANTILLA)
+// [NEXO SPORTS MAPA] 3. MODAL DE EQUIPOS (LA VENTANA EMERGENTE CON LA PLANTILLA)
             openModal: function(teamId) {
                 const team = this.data.teams.find(t => t.id === teamId);
                 if(!team) return;
@@ -740,13 +739,18 @@
                 document.getElementById('modal-team-name').innerText = team.name;
                 document.getElementById('modal-team-category').innerText = team.category;
                 
-                // [CORRECCIÓN] Renderizado dinámico del LOGO DEL EQUIPO en la cabecera del Modal
                 document.getElementById('modal-team-logo').innerHTML = team.logo 
                     ? `<img src="${team.logo}" class="w-full h-full object-cover rounded-full border border-zinc-700">` 
                     : `<span class="font-sport font-bold text-lg text-gray-300">${team.name.substring(0,3).toUpperCase()}</span>`;
                 
                 document.getElementById('modal-coach-name').innerText = team.coach;
                 this.currentCoachPhone = team.phone;
+                
+                // [NUEVO] Inyectar foto del entrenador
+                const coachPhotoContainer = document.getElementById('modal-coach-photo-container');
+                coachPhotoContainer.innerHTML = team.coachPhoto 
+                    ? `<img src="${team.coachPhoto}" alt="${team.coach}" class="w-full h-full object-cover">`
+                    : `<i data-lucide="user" class="w-8 h-8 text-zinc-500"></i>`;
                 
                 document.getElementById('btn-coach-contact').classList.remove('hidden');
                 document.getElementById('link-coach-contact').classList.add('hidden');
@@ -757,20 +761,32 @@
                 rosterList.innerHTML = '';
                 
                 team.roster.forEach(player => {
+                    // [NUEVO] Diseño de Tarjeta XXL para el árbitro
                     rosterList.innerHTML += `
-                        <li class="bg-zinc-900/40 border border-zinc-800/60 rounded-lg p-2.5 flex items-center gap-3">
-                            <div class="w-9 h-9 bg-raptor text-white font-sport text-xl font-black flex justify-center items-center rounded-md transform -skew-x-6 shadow-sm border border-raptor-light/50">
-                                ${player.num}
-                            </div>
-                            <div class="flex items-center gap-3">
-                                
-                                <!-- [CORRECCIÓN] Renderizado dinámico de la FOTO DEL JUGADOR -->
+                        <li class="bg-zinc-900/40 border border-zinc-800/60 rounded-xl p-3 md:p-4 flex items-center gap-4 relative overflow-hidden shadow-sm">
+                            
+                            <!-- Foto Grande de Jugador -->
+                            <div class="w-16 h-16 md:w-20 md:h-20 rounded-lg bg-dark border border-zinc-700 flex-shrink-0 flex justify-center items-center overflow-hidden shadow-inner">
                                 ${player.photo 
-                                    ? `<img src="${player.photo}" alt="${player.name}" class="w-8 h-8 rounded-full object-cover border border-zinc-700">` 
-                                    : `<div class="w-8 h-8 rounded-full bg-zinc-800 border border-zinc-700 flex justify-center items-center"><i data-lucide="user" class="w-4 h-4 text-zinc-500"></i></div>`
+                                    ? `<img src="${player.photo}" alt="${player.name}" class="w-full h-full object-cover">` 
+                                    : `<i data-lucide="user" class="w-8 h-8 text-zinc-500"></i>`
                                 }
-                                
-                                <span class="text-sm font-semibold text-gray-200">${player.name}</span>
+                            </div>
+                            
+                            <!-- Datos del Jugador -->
+                            <div class="flex-1 flex flex-col justify-center py-1 z-10">
+                                <span class="text-base md:text-lg font-black text-white leading-tight uppercase">${player.name}</span>
+                                <span class="text-[9px] text-gray-400 font-bold tracking-widest mt-1">JUGADOR OFICIAL</span>
+                            </div>
+                            
+                            <!-- Número (Dorsal) Gigante como marca de agua y visible -->
+                            <div class="absolute right-0 top-0 bottom-0 flex items-center pr-3 pointer-events-none">
+                                <div class="font-sport font-black text-6xl text-white/[0.03] select-none -translate-x-2">
+                                    ${player.num}
+                                </div>
+                            </div>
+                            <div class="flex-shrink-0 w-12 h-12 md:w-14 md:h-14 bg-raptor text-white font-sport text-2xl md:text-3xl font-black flex justify-center items-center rounded-lg transform -skew-x-6 shadow-md border border-raptor-light/50 relative z-10">
+                                ${player.num}
                             </div>
                         </li>
                     `;
