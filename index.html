@@ -164,7 +164,7 @@
                 </div>
                 <select id="teams-category" onchange="app.renderTeams()" class="bg-surface border border-zinc-800 text-white text-sm rounded-lg p-2.5 outline-none min-w-[120px]">
                     <option value="Todas">Todas</option>
-                    <option value="Varonil A">Varonil A</option>
+                    <option value="Varonil">Varonil</option>
                     <option value="Femenil A">Femenil A</option>
                     <option value="Femenil B">Femenil B</option>
                     <option value="Mixto">Mixto</option>
@@ -205,7 +205,7 @@
                 <div class="flex flex-row gap-2 mb-4">
                     <select id="calendar-category" onchange="app.renderCalendarMatches()" class="bg-surface border border-zinc-700 text-white text-sm rounded-lg p-2.5 outline-none w-1/2 focus:border-raptor transition-colors">
                         <option value="Todas">Todas las Categorías</option>
-                        <option value="Varonil A">Varonil A</option>
+                        <option value="Varonil">Varonil</option>
                         <option value="Femenil A">Femenil A</option>
                         <option value="Femenil B">Femenil B</option>
                         <option value="Mixto">Mixto</option>
@@ -229,7 +229,7 @@
         <section id="view-standings" class="spa-view space-y-4">
             <div class="flex gap-2 mb-4">
                 <select id="standings-category" onchange="app.renderStandings()" class="bg-surface border border-zinc-800 text-white text-sm rounded-lg block w-full md:w-1/3 p-2.5 outline-none focus:border-raptor">
-                    <option value="Varonil A">Varonil A</option>
+                    <option value="Varonil">Varonil</option>
                     <option value="Femenil A">Femenil A</option>
                     <option value="Femenil B">Femenil B</option>
                     <option value="Mixto">Mixto</option>
@@ -578,7 +578,7 @@
 
                 const leadersContainer = document.getElementById('home-leaders-container');
                 leadersContainer.innerHTML = '';
-                const cats = ["Varonil A", "Femenil A", "Femenil B", "Mixto"];
+                const cats = ["Varonil", "Femenil A", "Femenil B", "Mixto"];
                 
                 cats.forEach(cat => {
                     const topTeams = this.data.standings.filter(s => s.category === cat && s.temporada === this.activeSeason).slice(0, 5);
