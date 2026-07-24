@@ -467,7 +467,7 @@ this.data.standings = Array.isArray(resClasificacion?.data) ? resClasificacion.d
                         </div>`;
             },
 
-          // [NEXO SPORTS MAPA] TARJETA DE PARTIDO (NUEVA ESTRUCTURA HEADER/BODY/FOOTER)
+// [NEXO SPORTS MAPA] TARJETA DE PARTIDO (NUEVA ESTRUCTURA HEADER/BODY/FOOTER)
             getMatchCardHTML: function(m, isLive = false) {
                 const teamA = m?.teamA || 'Por Definir';
                 const teamB = m?.teamB || 'Por Definir';
@@ -476,6 +476,7 @@ this.data.standings = Array.isArray(resClasificacion?.data) ? resClasificacion.d
                 const matchStatus = m?.status || 'Programado';
                 const matchCategory = m?.category || 'Sin Cat';
                 const matchCourt = m?.court || 'Cancha por asignar';
+                const matchDate = m?.date || 'Sin fecha'; // [NUEVO] Inyección de variable de Fecha
                 
                 // Motor de formateo estricto de hora (Soporta 12h y 24h dinámicamente)
                 let matchTime = m?.time || '00:00';
@@ -515,12 +516,12 @@ this.data.standings = Array.isArray(resClasificacion?.data) ? resClasificacion.d
                 return `
                     <div class="${liveBg} border rounded-xl flex flex-col relative h-full overflow-hidden">
                         
-                        <!-- Header: Categoría, Hora y Estatus -->
+                        <!-- Header: Categoría, Cancha y Estatus -->
                         <div class="bg-black/40 border-b border-raptor-light/20 px-4 py-2 flex justify-between items-center w-full">
                             <span class="text-[9px] text-white uppercase tracking-widest font-bold bg-dark px-2 py-0.5 rounded border border-raptor/50">${matchCategory}</span>
                             
-                            <span class="text-xs font-bold text-gray-200 tracking-wider flex items-center gap-1.5">
-                                <i data-lucide="clock" class="w-3.5 h-3.5 text-raptor-light"></i> ${matchTime}
+                            <span class="text-[10px] font-bold text-gray-200 tracking-wider flex items-center gap-1.5 uppercase">
+                                <i data-lucide="map-pin" class="w-3 h-3 text-raptor-light"></i> ${matchCourt}
                             </span>
                             
                             <span class="text-[9px] font-bold uppercase ${statusColor} tracking-widest">${matchStatus}</span>
@@ -543,10 +544,13 @@ this.data.standings = Array.isArray(resClasificacion?.data) ? resClasificacion.d
                             </div>
                         </div>
 
-                        <!-- Footer: Cancha -->
-                        <div class="bg-black/60 border-t border-raptor/30 px-4 py-2 flex justify-center items-center w-full">
-                            <span class="text-[10px] font-bold text-gray-400 tracking-wider uppercase flex items-center gap-1">
-                                <i data-lucide="map-pin" class="w-3 h-3 text-gray-500"></i> ${matchCourt}
+                        <!-- Footer: Fecha y Hora -->
+                        <div class="bg-black/60 border-t border-raptor/30 px-4 py-2 flex justify-center items-center gap-5 w-full">
+                            <span class="text-[10px] font-bold text-gray-400 tracking-wider uppercase flex items-center gap-1.5">
+                                <i data-lucide="calendar" class="w-3 h-3 text-gray-500"></i> ${matchDate}
+                            </span>
+                            <span class="text-[10px] font-bold text-gray-400 tracking-wider uppercase flex items-center gap-1.5">
+                                <i data-lucide="clock" class="w-3 h-3 text-gray-500"></i> ${matchTime}
                             </span>
                         </div>
                     </div>
