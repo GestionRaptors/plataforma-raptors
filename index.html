@@ -240,15 +240,14 @@
             <div class="bg-raptor-dark rounded-xl overflow-hidden border border-raptor text-sm shadow-lg">
                 <table class="w-full text-left">
                     <thead class="bg-raptor text-white text-[10px] uppercase tracking-wider border-b border-raptor-light/50">
-                        <tr>
+<tr>
                             <th class="py-3 px-2 font-semibold text-center w-10">POS</th>
                             <th class="py-3 px-2 font-semibold">EQUIPO</th>
                             <th class="py-3 px-2 font-semibold text-center hidden md:table-cell" title="Jugados">PJ</th>
-                            <th class="py-3 px-2 font-semibold text-center hidden md:table-cell text-accent" title="Ganados">G</th>
-                            <th class="py-3 px-2 font-semibold text-center hidden md:table-cell text-red-400" title="Perdidos">P</th>
+                            <th class="py-3 px-2 font-sport font-black text-base text-center text-accent" title="Ganados">G</th>
+                            <th class="py-3 px-2 font-sport font-black text-base text-center text-red-400" title="Perdidos">P</th>
                             <th class="py-3 px-2 font-semibold text-center hidden md:table-cell" title="Sets Ganados">SG</th>
                             <th class="py-3 px-2 font-semibold text-center hidden md:table-cell" title="Sets Perdidos">SP</th>
-                            <th class="py-3 px-3 font-sport font-bold text-base text-center text-white">PTS</th>
                         </tr>
                     </thead>
                     <tbody id="standings-table-body" class="divide-y divide-raptor/30">
@@ -399,7 +398,16 @@
                         ...m,
                         date: this.normalizeDateStr(m.date) // <-- Estandarización obligatoria
                     })) : [];
-                    this.data.standings = Array.isArray(resClasificacion?.data) ? resClasificacion.data : [];
+this.data.standings = Array.isArray(resClasificacion?.data) ? resClasificacion.data : [];
+
+                    // [MOTOR NEXO SPORTS] - Jerarquía estricta FIVB
+                    this.data.standings.sort((a, b) => {
+                        if (b.won !== a.won) return (Number(b.won) || 0) - (Number(a.won) || 0);   // 1. Partidos Ganados (Mayor a menor)
+                        if (a.lst !== b.lst) return (Number(a.lst) || 0) - (Number(b.lst) || 0);   // 2. Partidos Perdidos (Menor a mayor)
+                        if (b.sw !== a.sw) return (Number(b.sw) || 0) - (Number(a.sw) || 0);       // 3. Sets Ganados (Mayor a menor)
+                        if (a.sl !== b.sl) return (Number(a.sl) || 0) - (Number(b.sl) || 0);       // 4. Sets Perdidos (Menor a mayor)
+                        return (Number(b.pts) || 0) - (Number(a.pts) || 0);                        // 5. Puntos Totales de Sets (Mayor a menor)
+                    });
 
                     this.switchView('home');
                 } catch (error) {
@@ -607,7 +615,7 @@
                                         <span class="font-semibold truncate max-w-[100px] text-xs text-gray-100">${s.team}</span>
                                     </div>
                                 </td>
-                                <td class="py-2 px-2 text-right font-sport font-bold text-sm text-white">${s.pts}</td>
+<td class="py-2 px-2 text-right font-sport font-bold text-base text-accent">${s.won} G</td>
                             </tr>
                         `;
                     });
@@ -744,7 +752,7 @@
                     const rankClass = i === 0 ? 'bg-accent/10 text-accent font-black' : 'text-gray-200 font-bold';
                     tbody.innerHTML += `
                         <tr class="even:bg-raptor-dark/80 hover:bg-raptor/50 transition duration-150">
-                            <td class="py-3 px-2 text-center ${rankClass}">${i+1}</td>
+<td class="py-3 px-2 text-center ${rankClass}">${i+1}</td>
                             <td class="py-3 px-2">
                                 <div class="flex items-center gap-2">
                                     <div class="w-6 h-6 md:w-8 md:h-8 bg-dark rounded-full flex items-center justify-center border border-raptor-light shrink-0 shadow-inner">
@@ -754,11 +762,10 @@
                                 </div>
                             </td>
                             <td class="py-3 px-2 text-center text-gray-300 hidden md:table-cell">${s.pld}</td>
-                            <td class="py-3 px-2 text-center text-accent font-medium hidden md:table-cell">${s.won}</td>
-                            <td class="py-3 px-2 text-center text-red-400 font-medium hidden md:table-cell">${s.lst}</td>
+                            <td class="py-3 px-2 text-center font-sport font-black text-lg text-accent">${s.won}</td>
+                            <td class="py-3 px-2 text-center font-sport font-black text-lg text-red-400">${s.lst}</td>
                             <td class="py-3 px-2 text-center text-gray-300 hidden md:table-cell">${s.sw}</td>
                             <td class="py-3 px-2 text-center text-gray-300 hidden md:table-cell">${s.sl}</td>
-                            <td class="py-3 px-3 text-center font-sport font-black text-xl text-white">${s.pts}</td>
                         </tr>
                     `;
                 });
