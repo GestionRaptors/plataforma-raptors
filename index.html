@@ -931,22 +931,19 @@
                     this.closePinPrompt();
                     document.getElementById('btn-coach-contact').classList.add('hidden');
                     
-                    // [SANITIZADOR ESTRICTO] Eliminar espacios, guiones, paréntesis o letras
+                    // [SANITIZADOR ESTRICTO V2] 
                     let cleanPhone = this.currentCoachPhone.replace(/\D/g, '');
                     
-                    // Inyección de código de país (México) para que la API de WA no falle
                     if(cleanPhone.length === 10) cleanPhone = '52' + cleanPhone;
 
                     const callBtn = document.getElementById('link-coach-call');
                     const waBtn = document.getElementById('link-coach-wa');
                     
                     callBtn.href = `tel:${cleanPhone}`;
-                    waBtn.href = `https://wa.me/${cleanPhone}`;
+                    // [CORRECCIÓN] Enrutador API Universal de WhatsApp
+                    waBtn.href = `https://api.whatsapp.com/send?phone=${cleanPhone}`;
                     
-                    // Revelar el contenedor con ambos botones
                     document.getElementById('links-coach-contact').classList.remove('hidden');
-                    
-                    // Recrear iconos por si lucide no inyectó los nuevos
                     lucide.createIcons();
                 } else {
                     errorMsg.classList.remove('hidden');
