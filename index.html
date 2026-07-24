@@ -476,7 +476,16 @@ this.data.standings = Array.isArray(resClasificacion?.data) ? resClasificacion.d
                 const matchStatus = m?.status || 'Programado';
                 const matchCategory = m?.category || 'Sin Cat';
                 const matchCourt = m?.court || 'Cancha por asignar';
-                const matchDate = m?.date || 'Sin fecha'; // [NUEVO] Inyección de variable de Fecha
+                const matchDate = m?.date || 'Sin fecha';
+                
+                // [NUEVO] Conversor visual de fecha de YYYY-MM-DD a DD/MM/YYYY
+                let displayDate = matchDate;
+                if (displayDate && displayDate.includes('-')) {
+                    const parts = displayDate.split('-');
+                    if (parts.length === 3) {
+                        displayDate = `${parts[2]}/${parts[1]}/${parts[0]}`;
+                    }
+                }
                 
                 // Motor de formateo estricto de hora (Soporta 12h y 24h dinámicamente)
                 let matchTime = m?.time || '00:00';
@@ -544,13 +553,13 @@ this.data.standings = Array.isArray(resClasificacion?.data) ? resClasificacion.d
                             </div>
                         </div>
 
-                        <!-- Footer: Fecha y Hora -->
+                        <!-- Footer: Fecha y Hora (Rediseñado) -->
                         <div class="bg-black/60 border-t border-raptor/30 px-4 py-2 flex justify-center items-center gap-5 w-full">
-                            <span class="text-[10px] font-bold text-gray-400 tracking-wider uppercase flex items-center gap-1.5">
-                                <i data-lucide="calendar" class="w-3 h-3 text-gray-500"></i> ${matchDate}
+                            <span class="text-[10px] font-bold text-white tracking-wider uppercase flex items-center gap-1.5">
+                                <i data-lucide="calendar" class="w-3.5 h-3.5 text-raptor-light"></i> ${displayDate}
                             </span>
-                            <span class="text-[10px] font-bold text-gray-400 tracking-wider uppercase flex items-center gap-1.5">
-                                <i data-lucide="clock" class="w-3 h-3 text-gray-500"></i> ${matchTime}
+                            <span class="text-[10px] font-bold text-white tracking-wider uppercase flex items-center gap-1.5">
+                                <i data-lucide="clock" class="w-3.5 h-3.5 text-raptor-light"></i> ${matchTime}
                             </span>
                         </div>
                     </div>
