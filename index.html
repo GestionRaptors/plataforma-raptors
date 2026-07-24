@@ -657,14 +657,32 @@ this.data.standings = Array.isArray(resClasificacion?.data) ? resClasificacion.d
                 lucide.createIcons();
             },
 
-            // [NEXO SPORTS MAPA] VISTA: EQUIPOS (LA CUADRÍCULA CON LOGOS)
+   // [NEXO SPORTS MAPA] VISTA: EQUIPOS (LA CUADRÍCULA CON LOGOS)
             renderTeams: function() {
                 const search = document.getElementById('teams-search').value.toLowerCase();
                 const catFilter = document.getElementById('teams-category').value;
                 const grid = document.getElementById('teams-grid');
                 grid.innerHTML = '';
                 
-                let filtered = this.data.teams;
+                // [MOTOR DE FILTRADO: ESTATUS Y TEMPORADA]
+                // 1. Extraemos los IDs de los equipos que tienen registro en la temporada que se está visualizando
+                const idsEquiposParticipantes = this.data.standings
+                    .filter(s => s.temporada === this.activeSeason)
+                    .map(s => s.teamId);
+                
+                // 2. Filtramos el catálogo maestro de equipos
+                let filtered = this.data.teams.filter(t => {
+                    // REGLA A: Si el usuario está viendo la temporada ACTUAL en curso
+                    // Se exige estrictamente que el estatus sea "ACTIVO". Los "Baja" desaparecen.
+                    if (this.activeSeason === this.data.config.activa) {
+                        return t.estatus && t.estatus.toUpperCase() === 'ACTIVO';
+                    }
+                    // REGLA B: Si el usuario está viendo una temporada HISTÓRICA (pasada)
+                    // Se muestra si participó en esa temporada.
+                    return idsEquiposParticipantes.includes(t.id);
+                });
+
+                // 3. Aplicamos los filtros de categoría y búsqueda de la UI
                 if(catFilter !== "Todas") filtered = filtered.filter(t => t.category === catFilter);
                 if(search) filtered = filtered.filter(t => t.name.toLowerCase().includes(search));
 
@@ -677,7 +695,7 @@ this.data.standings = Array.isArray(resClasificacion?.data) ? resClasificacion.d
                     grid.innerHTML += `
                         <div onclick="app.openModal('${t.id}')" class="bg-raptor-dark border border-raptor rounded-xl p-4 flex flex-col items-center justify-center text-center cursor-pointer hover:border-raptor-light hover:bg-raptor transition-all shadow-lg">
                             
-                            <!-- [CORRECCIÓN] Renderizado dinámico del LOGO DEL EQUIPO en la cuadrícula -->
+                            <!-- Renderizado dinámico del LOGO DEL EQUIPO en la cuadrícula -->
                             ${t.logo 
                                 ? `<img src="${t.logo}" alt="${t.name}" class="w-14 h-14 rounded-full object-cover mb-3 border border-raptor-light shadow-inner bg-dark">`
                                 : `<div class="w-14 h-14 bg-dark rounded-full mb-3 flex items-center justify-center border border-raptor-light shadow-inner"><span class="font-sport font-bold text-xl text-white tracking-tighter">${t.name.substring(0,3).toUpperCase()}</span></div>`
@@ -689,7 +707,6 @@ this.data.standings = Array.isArray(resClasificacion?.data) ? resClasificacion.d
                     `;
                 });
             },
-
             // [NEXO SPORTS MAPA] VISTA: CALENDARIO Y CLASIFICACIÓN
             initCalendar: function() {
                 this.generateDaysSlider();
