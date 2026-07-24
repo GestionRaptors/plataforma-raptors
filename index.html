@@ -81,7 +81,6 @@
             <div class="absolute inset-0 bg-gradient-to-t from-dark/40 via-transparent to-transparent pointer-events-none"></div>
         </div>
     </div>
-    </div>
 
     <div class="bg-surface border-b border-zinc-800 sticky top-[57px] z-40 overflow-x-auto no-scrollbar">
         <div class="max-w-md mx-auto md:max-w-5xl px-2 flex justify-between min-w-max">
@@ -97,7 +96,7 @@
         <!-- ================= VISTA: INICIO ================= -->
         <section id="view-home" class="spa-view active space-y-8">
 
-<!-- Cabecera de Inicio: Temporada y Redes Sociales -->
+            <!-- Cabecera de Inicio: Temporada y Redes Sociales -->
             <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 border-b border-zinc-800 pb-4">
                 
                 <!-- Selector de Temporada -->
@@ -259,7 +258,7 @@
             <div class="bg-raptor-dark rounded-xl overflow-hidden border border-raptor text-sm shadow-lg">
                 <table class="w-full text-left">
                     <thead class="bg-raptor text-white text-[10px] uppercase tracking-wider border-b border-raptor-light/50">
-<tr>
+                        <tr>
                             <th class="py-3 px-2 font-semibold text-center w-10">POS</th>
                             <th class="py-3 px-2 font-semibold">EQUIPO</th>
                             <th class="py-3 px-2 font-semibold text-center hidden md:table-cell" title="Jugados">PJ</th>
@@ -307,15 +306,21 @@
                             <p id="modal-coach-name" class="text-base md:text-lg font-black text-white leading-tight">Cargando...</p>
                         </div>
                     </div>
-<div class="flex-shrink-0 z-10">
-                        <!-- Botón Inicial -->
+                    <div class="flex-shrink-0 z-10">
+                        <!-- Botón Inicial (Seguridad) -->
                         <button onclick="app.requestPin()" id="btn-coach-contact" class="flex items-center justify-center w-12 h-12 bg-surface hover:bg-zinc-800 border border-zinc-700 text-white rounded-full transition shadow-md">
-                            <i data-lucide="phone" class="w-5 h-5 text-accent"></i>
+                            <i data-lucide="lock" class="w-5 h-5 text-accent"></i>
                         </button>
-                        <!-- Enlace Revelado -->
-                        <a id="link-coach-contact" href="#" class="hidden flex items-center justify-center w-12 h-12 bg-green-600 hover:bg-green-500 text-white rounded-full transition shadow-md">
-                            <i data-lucide="phone-call" class="w-5 h-5"></i>
-                        </a>
+                        
+                        <!-- Enlaces Revelados (Llamada y WhatsApp) -->
+                        <div id="links-coach-contact" class="hidden flex gap-2">
+                            <a id="link-coach-call" href="#" class="flex items-center justify-center w-10 h-10 bg-blue-600 hover:bg-blue-500 text-white rounded-full transition shadow-md">
+                                <i data-lucide="phone-call" class="w-4 h-4"></i>
+                            </a>
+                            <a id="link-coach-wa" href="#" target="_blank" rel="noopener noreferrer" class="flex items-center justify-center w-10 h-10 bg-[#25D366] hover:bg-[#128C7E] text-white rounded-full transition shadow-md">
+                                <i data-lucide="message-circle" class="w-4 h-4"></i>
+                            </a>
+                        </div>
                     </div>
                     <!-- Elemento decorativo de fondo -->
                     <div class="absolute right-0 top-0 bottom-0 flex items-center pr-2 pointer-events-none">
@@ -417,7 +422,7 @@
                         ...m,
                         date: this.normalizeDateStr(m.date) // <-- Estandarización obligatoria
                     })) : [];
-this.data.standings = Array.isArray(resClasificacion?.data) ? resClasificacion.data : [];
+                    this.data.standings = Array.isArray(resClasificacion?.data) ? resClasificacion.data : [];
 
                     // [MOTOR NEXO SPORTS] - Jerarquía estricta FIVB
                     this.data.standings.sort((a, b) => {
@@ -486,7 +491,7 @@ this.data.standings = Array.isArray(resClasificacion?.data) ? resClasificacion.d
                         </div>`;
             },
 
-// [NEXO SPORTS MAPA] TARJETA DE PARTIDO (NUEVA ESTRUCTURA HEADER/BODY/FOOTER)
+            // [NEXO SPORTS MAPA] TARJETA DE PARTIDO (NUEVA ESTRUCTURA HEADER/BODY/FOOTER)
             getMatchCardHTML: function(m, isLive = false) {
                 const teamA = m?.teamA || 'Por Definir';
                 const teamB = m?.teamB || 'Por Definir';
@@ -647,7 +652,7 @@ this.data.standings = Array.isArray(resClasificacion?.data) ? resClasificacion.d
                                         <span class="font-semibold truncate max-w-[100px] text-xs text-gray-100">${s.team}</span>
                                     </div>
                                 </td>
-<td class="py-2 px-2 text-right font-sport font-bold text-base text-accent">${s.won} G</td>
+                                <td class="py-2 px-2 text-right font-sport font-bold text-base text-accent">${s.won} G</td>
                             </tr>
                         `;
                     });
@@ -657,7 +662,7 @@ this.data.standings = Array.isArray(resClasificacion?.data) ? resClasificacion.d
                 lucide.createIcons();
             },
 
-   // [NEXO SPORTS MAPA] VISTA: EQUIPOS (LA CUADRÍCULA CON LOGOS)
+            // [NEXO SPORTS MAPA] VISTA: EQUIPOS (LA CUADRÍCULA CON LOGOS)
             renderTeams: function() {
                 const search = document.getElementById('teams-search').value.toLowerCase();
                 const catFilter = document.getElementById('teams-category').value;
@@ -707,6 +712,7 @@ this.data.standings = Array.isArray(resClasificacion?.data) ? resClasificacion.d
                     `;
                 });
             },
+
             // [NEXO SPORTS MAPA] VISTA: CALENDARIO Y CLASIFICACIÓN
             initCalendar: function() {
                 this.generateDaysSlider();
@@ -801,7 +807,7 @@ this.data.standings = Array.isArray(resClasificacion?.data) ? resClasificacion.d
                     const rankClass = i === 0 ? 'bg-accent/10 text-accent font-black' : 'text-gray-200 font-bold';
                     tbody.innerHTML += `
                         <tr class="even:bg-raptor-dark/80 hover:bg-raptor/50 transition duration-150">
-<td class="py-3 px-2 text-center ${rankClass}">${i+1}</td>
+                            <td class="py-3 px-2 text-center ${rankClass}">${i+1}</td>
                             <td class="py-3 px-2">
                                 <div class="flex items-center gap-2">
                                     <div class="w-6 h-6 md:w-8 md:h-8 bg-dark rounded-full flex items-center justify-center border border-raptor-light shrink-0 shadow-inner">
@@ -821,7 +827,6 @@ this.data.standings = Array.isArray(resClasificacion?.data) ? resClasificacion.d
             },
 
             // [NEXO SPORTS MAPA] 3. MODAL DE EQUIPOS (LA VENTANA EMERGENTE CON LA PLANTILLA)
-// [NEXO SPORTS MAPA] 3. MODAL DE EQUIPOS (LA VENTANA EMERGENTE CON LA PLANTILLA)
             openModal: function(teamId) {
                 const team = this.data.teams.find(t => t.id === teamId);
                 if(!team) return;
@@ -836,22 +841,24 @@ this.data.standings = Array.isArray(resClasificacion?.data) ? resClasificacion.d
                 document.getElementById('modal-coach-name').innerText = team.coach;
                 this.currentCoachPhone = team.phone;
                 
-                // [NUEVO] Inyectar foto del entrenador
+                // Inyectar foto del entrenador
                 const coachPhotoContainer = document.getElementById('modal-coach-photo-container');
                 coachPhotoContainer.innerHTML = team.coachPhoto 
                     ? `<img src="${team.coachPhoto}" alt="${team.coach}" class="w-full h-full object-cover">`
                     : `<i data-lucide="user" class="w-8 h-8 text-zinc-500"></i>`;
                 
+                // Reiniciar estado visual de los botones de contacto
                 document.getElementById('btn-coach-contact').classList.remove('hidden');
-                document.getElementById('link-coach-contact').classList.add('hidden');
-                document.getElementById('link-coach-contact').href = "#";
+                document.getElementById('links-coach-contact').classList.add('hidden');
+                document.getElementById('link-coach-call').href = "#";
+                document.getElementById('link-coach-wa').href = "#";
 
                 document.getElementById('modal-roster-count').innerText = `${team.roster.length} Registrados`;
                 const rosterList = document.getElementById('modal-roster-list');
                 rosterList.innerHTML = '';
                 
                 team.roster.forEach(player => {
-                    // [NUEVO] Diseño de Tarjeta XXL para el árbitro
+                    // Diseño de Tarjeta XXL para el árbitro
                     rosterList.innerHTML += `
                         <li class="bg-zinc-900/40 border border-zinc-800/60 rounded-xl p-3 md:p-4 flex items-center gap-4 relative overflow-hidden shadow-sm">
                             
@@ -923,9 +930,24 @@ this.data.standings = Array.isArray(resClasificacion?.data) ? resClasificacion.d
                 if(pin === '7278') {
                     this.closePinPrompt();
                     document.getElementById('btn-coach-contact').classList.add('hidden');
-                    const linkBtn = document.getElementById('link-coach-contact');
-                    linkBtn.href = `tel:${this.currentCoachPhone}`;
-                    linkBtn.classList.remove('hidden');
+                    
+                    // [SANITIZADOR ESTRICTO] Eliminar espacios, guiones, paréntesis o letras
+                    let cleanPhone = this.currentCoachPhone.replace(/\D/g, '');
+                    
+                    // Inyección de código de país (México) para que la API de WA no falle
+                    if(cleanPhone.length === 10) cleanPhone = '52' + cleanPhone;
+
+                    const callBtn = document.getElementById('link-coach-call');
+                    const waBtn = document.getElementById('link-coach-wa');
+                    
+                    callBtn.href = `tel:${cleanPhone}`;
+                    waBtn.href = `https://wa.me/${cleanPhone}`;
+                    
+                    // Revelar el contenedor con ambos botones
+                    document.getElementById('links-coach-contact').classList.remove('hidden');
+                    
+                    // Recrear iconos por si lucide no inyectó los nuevos
+                    lucide.createIcons();
                 } else {
                     errorMsg.classList.remove('hidden');
                     document.getElementById('pin-input').value = '';
