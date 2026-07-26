@@ -805,15 +805,22 @@
 
                 filtered.forEach((s, i) => {
                     const rankClass = i === 0 ? 'bg-accent/10 text-accent font-black' : 'text-gray-200 font-bold';
+                    
+                    // [NUEVO MOTOR] Búsqueda de logo dinámica
+                    const teamData = this.data.teams.find(t => t.name === s.team);
+                    const logoHtml = (teamData && teamData.logo && teamData.logo.trim() !== "") 
+                        ? `<img src="${teamData.logo}" alt="${s.team}" class="w-6 h-6 md:w-8 md:h-8 rounded-full object-cover border border-raptor-light shrink-0 shadow-inner bg-dark">`
+                        : `<div class="w-6 h-6 md:w-8 md:h-8 bg-dark rounded-full flex items-center justify-center border border-raptor-light shrink-0 shadow-inner">
+                            <span class="font-sport font-bold text-[10px] md:text-xs text-white">${s.team.substring(0,3).toUpperCase()}</span>
+                           </div>`;
+
                     tbody.innerHTML += `
                         <tr class="even:bg-raptor-dark/80 hover:bg-raptor/50 transition duration-150">
                             <td class="py-3 px-2 text-center ${rankClass}">${i+1}</td>
                             <td class="py-3 px-2">
                                 <div class="flex items-center gap-2">
-                                    <div class="w-6 h-6 md:w-8 md:h-8 bg-dark rounded-full flex items-center justify-center border border-raptor-light shrink-0 shadow-inner">
-                                        <span class="font-sport font-bold text-[10px] md:text-xs text-white">${s.team.substring(0,3).toUpperCase()}</span>
-                                    </div>
-                                    <span class="font-bold text-sm text-white truncate">${s.team}</span>
+                                    ${logoHtml}
+                                    <span class="font-bold text-sm text-white truncate max-w-[120px] md:max-w-none block">${s.team}</span>
                                 </div>
                             </td>
                             <td class="py-3 px-2 text-center text-gray-300 hidden md:table-cell">${s.pld}</td>
