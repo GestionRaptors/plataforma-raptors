@@ -65,7 +65,7 @@
     <nav class="bg-dark/90 backdrop-blur-md border-b border-raptor/50 sticky top-0 z-50">
         <div class="max-w-md mx-auto md:max-w-5xl px-4 py-3 flex justify-between items-center">
             <div class="flex items-center gap-2">
- <img src="assets/TORNEO_LOGOTIPO.png" alt="Logo Torneo Raptors" width="50" height="50" style="object-fit: contain;">
+                <img src="assets/TORNEO_LOGOTIPO.png" alt="Logo Torneo Raptors" width="50" height="50" style="object-fit: contain;">
                 <span class="font-sport font-black text-2xl tracking-wide uppercase">Club Deportivo Raptors</span>
             </div>
             <div class="flex gap-4">
@@ -75,7 +75,7 @@
         </div>
     </nav>
 
-<div class="w-full max-w-md mx-auto md:max-w-5xl px-4 pt-4">
+    <div class="w-full max-w-md mx-auto md:max-w-5xl px-4 pt-4">
         <div class="w-full rounded-xl overflow-hidden relative shadow-md border border-raptor/40 aspect-[5/1]">
             <img src="assets/banner.jpg" alt="Banner Oficial" class="w-full h-full object-cover">
             <div class="absolute inset-0 bg-gradient-to-t from-dark/40 via-transparent to-transparent pointer-events-none"></div>
@@ -96,27 +96,21 @@
         <!-- ================= VISTA: INICIO ================= -->
         <section id="view-home" class="spa-view active space-y-8">
 
-            <!-- Cabecera de Inicio: Temporada y Redes Sociales -->
             <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 border-b border-zinc-800 pb-4">
-                
-                <!-- Selector de Temporada -->
                 <div class="flex flex-col sm:flex-row sm:items-center gap-4 w-full sm:w-auto">
                     <h1 class="font-sport font-black text-3xl md:text-4xl uppercase tracking-wider text-white">Temporada</h1>
                     <select id="season-filter" class="bg-surface border border-zinc-700 text-white text-sm font-bold rounded-lg px-3 py-2 outline-none focus:border-raptor">
                     </select>
                 </div>
                 
-                <!-- Botones de Transmisión -->
                 <div class="flex flex-wrap gap-2 items-center w-full sm:w-auto justify-start sm:justify-end mt-2 sm:mt-0">
                     <span class="text-[10px] font-bold uppercase tracking-widest text-zinc-500 w-full sm:w-auto mb-1 sm:mb-0">Transmisiones:</span>
                     
-                    <!-- Instagram (Oficial) -->
                     <a href="https://www.instagram.com/raptorsvoleybol/" target="_blank" rel="noopener noreferrer" class="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-zinc-950 border border-zinc-800 hover:border-raptor-light hover:bg-raptor-dark transition-all shadow-md group">
                         <img src="assets/ig-icon.png" alt="Instagram" class="w-4 h-4 object-contain group-hover:scale-110 transition-transform">
                         <span class="text-[9px] font-bold text-gray-300 group-hover:text-white uppercase tracking-wider">Instagram</span>
                     </a>
 
-                    <!-- Facebook (Fovissste) -->
                     <a href="https://www.facebook.com/raptors.voleibol.50" target="_blank" rel="noopener noreferrer" class="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-zinc-950 border border-zinc-800 hover:border-raptor-light hover:bg-raptor-dark transition-all shadow-md group">
                         <img src="assets/fb-icon.png" alt="Transmisiones FOVISSSTE" class="w-4 h-4 object-contain group-hover:scale-110 transition-transform">
                         <span class="text-[9px] font-bold text-gray-300 group-hover:text-white uppercase tracking-wider flex items-center gap-1">
@@ -124,7 +118,6 @@
                         </span>
                     </a>
 
-                    <!-- Facebook (Praderas) -->
                     <a href="https://www.facebook.com/profile.php?id=61591289053088&rdid=ER2UpZH3XiIh7osE&share_url=https%3A%2F%2Fwww.facebook.com%2Fshare%2F1LNwsua8j8%2F#" target="_blank" rel="noopener noreferrer" class="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-zinc-950 border border-zinc-800 hover:border-raptor-light hover:bg-raptor-dark transition-all shadow-md group">
                         <img src="assets/fb-icon.png" alt="Transmisiones PRADERAS" class="w-4 h-4 object-contain group-hover:scale-110 transition-transform">
                         <span class="text-[9px] font-bold text-gray-300 group-hover:text-white uppercase tracking-wider flex items-center gap-1">
@@ -134,18 +127,15 @@
                 </div>
             </div>
 
-            <!-- Partidos En Juego -->
             <div>
                 <div class="flex items-center gap-2 mb-4">
                     <div class="w-3 h-3 rounded-full animate-neon-bg"></div>
                     <h2 class="font-sport font-bold text-2xl md:text-3xl uppercase tracking-wider text-accent animate-neon-text">En Juego</h2>
                 </div>
                 <div id="live-matches-container" class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <!-- Inyectado vía JS -->
                 </div>
             </div>
 
-            <!-- Partidos del Día -->
             <div>
                 <div class="flex justify-between items-center mb-4 mt-2">
                     <h2 class="font-sport font-bold text-2xl md:text-3xl uppercase tracking-wider border-l-4 border-raptor pl-3 text-gray-100">Partidos del Día</h2>
@@ -158,15 +148,12 @@
                     </select>
                 </div>
                 <div id="home-matches-container" class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <!-- Inyectado vía JS -->
                 </div>
             </div>
 
-            <!-- Líderes -->
             <div class="pt-2">
                 <h2 class="font-sport font-bold text-2xl md:text-3xl uppercase tracking-wider mb-4 border-l-4 border-raptor pl-3 text-gray-100">Líderes de Clasificación</h2>
                 <div id="home-leaders-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-                    <!-- Inyectado vía JS -->
                 </div>
             </div>
         </section>
@@ -190,13 +177,11 @@
             </div>
 
             <div id="teams-grid" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
-                <!-- Inyectado vía JS -->
             </div>
         </section>
 
         <!-- ================= VISTA: CALENDARIO ================= -->
         <section id="view-calendar" class="spa-view space-y-6">
-            
             <div class="flex flex-col gap-2">
                 <div class="relative w-full">
                     <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
@@ -209,7 +194,6 @@
             <div>
                 <h2 class="font-sport font-bold text-2xl md:text-3xl uppercase tracking-wider text-gray-100 mb-4 border-l-4 border-raptor-light pl-3">Próximos Encuentros</h2>
                 <div id="calendar-upcoming-container" class="flex overflow-x-auto gap-3 pb-2 snap-x no-scrollbar">
-                    <!-- Inyectado vía JS -->
                 </div>
             </div>
 
@@ -217,7 +201,6 @@
                 <h2 class="font-sport font-bold text-2xl md:text-3xl uppercase tracking-wider text-gray-100 mb-4 border-l-4 border-raptor pl-3">Calendario General</h2>
                 
                 <div id="calendar-days-slider" class="flex overflow-x-auto gap-2 py-3 border-y border-zinc-800 no-scrollbar snap-x mb-4">
-                    <!-- Inyectado vía JS -->
                 </div>
 
                 <div class="flex flex-row gap-2 mb-4">
@@ -238,7 +221,6 @@
                 </div>
 
                 <div id="calendar-matches-container" class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <!-- Inyectado vía JS -->
                 </div>
             </div>
         </section>
@@ -269,7 +251,6 @@
                         </tr>
                     </thead>
                     <tbody id="standings-table-body" class="divide-y divide-raptor/30">
-                        <!-- Inyectado vía JS -->
                     </tbody>
                 </table>
             </div>
@@ -277,11 +258,10 @@
 
     </main>
 
-<!-- ================= MODAL CÉDULA EQUIPO ================= -->
+    <!-- ================= MODAL CÉDULA EQUIPO ================= -->
     <div id="team-modal" class="fixed inset-0 bg-black/90 backdrop-blur-sm z-[60] hidden flex items-end md:items-center justify-center">
         <div class="bg-surface w-full max-w-md h-[85vh] md:h-auto md:max-h-[80vh] md:rounded-2xl rounded-t-2xl flex flex-col border border-zinc-800 transform transition-transform translate-y-full" id="team-modal-content">
             
-            <!-- Cabecera del Modal (Equipo y Botón Cerrar) -->
             <div class="p-4 border-b border-zinc-800 flex justify-between items-center bg-dark rounded-t-2xl">
                 <div class="flex items-center gap-3">
                     <div id="modal-team-logo" class="w-10 h-10 bg-zinc-800 rounded-full flex items-center justify-center border border-zinc-700"></div>
@@ -294,12 +274,9 @@
             </div>
 
             <div class="p-4 overflow-y-auto flex-1 space-y-4">
-                
-                <!-- Contenedor del Entrenador (Rediseñado para fotos grandes) -->
                 <div class="bg-zinc-900/50 p-4 md:p-5 rounded-xl border border-zinc-800/50 flex justify-between items-center gap-3 relative overflow-hidden shadow-lg">
                     <div class="flex items-center gap-4 z-10">
                         <div id="modal-coach-photo-container" class="w-16 h-16 md:w-20 md:h-20 rounded-full bg-dark border-2 border-zinc-700 flex-shrink-0 flex justify-center items-center overflow-hidden shadow-inner">
-                            <!-- Inyectado vía JS -->
                         </div>
                         <div class="flex flex-col justify-center">
                             <p class="text-[10px] text-accent uppercase font-bold tracking-widest mb-0.5">Representante</p>
@@ -307,12 +284,10 @@
                         </div>
                     </div>
                     <div class="flex-shrink-0 z-10">
-                        <!-- Botón Inicial (Seguridad) -->
                         <button onclick="app.requestPin()" id="btn-coach-contact" class="flex items-center justify-center w-12 h-12 bg-surface hover:bg-zinc-800 border border-zinc-700 text-white rounded-full transition shadow-md">
                             <i data-lucide="lock" class="w-5 h-5 text-accent"></i>
                         </button>
                         
-                        <!-- Enlaces Revelados (Llamada y WhatsApp) -->
                         <div id="links-coach-contact" class="hidden flex gap-2">
                             <a id="link-coach-call" href="#" class="flex items-center justify-center w-10 h-10 bg-blue-600 hover:bg-blue-500 text-white rounded-full transition shadow-md">
                                 <i data-lucide="phone-call" class="w-4 h-4"></i>
@@ -322,23 +297,19 @@
                             </a>
                         </div>
                     </div>
-                    <!-- Elemento decorativo de fondo -->
                     <div class="absolute right-0 top-0 bottom-0 flex items-center pr-2 pointer-events-none">
                         <i data-lucide="shield" class="w-24 h-24 text-white/[0.02] transform rotate-12"></i>
                     </div>
                 </div>
 
-                <!-- Lista de Jugadores (Contenedor vacío para inyectar JS) -->
                 <div>
                     <div class="flex justify-between items-center mb-3">
                         <h4 class="text-xs font-bold text-gray-400 uppercase tracking-wider">Plantilla Oficial</h4>
                         <span id="modal-roster-count" class="text-[10px] bg-dark border border-zinc-800 px-2 py-1 rounded font-medium text-gray-400">0 Registrados</span>
                     </div>
                     <ul id="modal-roster-list" class="space-y-2">
-                        <!-- Inyectado vía JS -->
                     </ul>
                 </div>
-                
             </div>
         </div>
     </div>
@@ -379,10 +350,9 @@
         const app = {
             data: { matches: [], standings: [], teams: [], config: {} },
             selectedDate: todayStr,
-            currentCoachPhone: '',
+            currentTeamId: '',
             activeSeason: '', 
 
-            // 1. SANITIZADOR DE FECHAS
             normalizeDateStr: function(dateStr) {
                 if (!dateStr) return "";
                 if (dateStr.includes("-") && dateStr.split("-")[0].length === 4) {
@@ -397,7 +367,6 @@
                 return dateStr;
             },
 
-            // [MOTOR NEXO SPORTS] 2. SANITIZADOR DE HORA PARA ORDENAMIENTO CRONOLÓGICO
             parseTimeForSort: function(timeStr) {
                 if (!timeStr) return 9999;
                 let str = timeStr.toString().toLowerCase().trim();
@@ -417,7 +386,6 @@
                 return 9999;
             },
 
-            // [NEXO SPORTS MAPA] 3. INICIALIZACIÓN
             init: async function() {
                 try {
                     const [resConfig, resEquipos, resPartidos, resClasificacion] = await Promise.all([
@@ -434,22 +402,18 @@
                     }
                     this.data.teams = Array.isArray(resEquipos?.data) ? resEquipos.data : [];
                     
-                    // [CORRECCIÓN APLICADA] Asignación, Sanitización y Ordenamiento global estricto
                     this.data.matches = Array.isArray(resPartidos?.data) ? resPartidos.data.map(m => ({
                         ...m,
                         date: this.normalizeDateStr(m.date)
                     })).sort((a, b) => {
-                        // 1. Ordenar por Fecha primero
                         const dateA = a.date || "";
                         const dateB = b.date || "";
                         if (dateA !== dateB) return dateA.localeCompare(dateB);
-                        // 2. Ordenar por Hora ascendente
                         return this.parseTimeForSort(a.time) - this.parseTimeForSort(b.time);
                     }) : [];
                     
                     this.data.standings = Array.isArray(resClasificacion?.data) ? resClasificacion.data : [];
 
-                    // [MOTOR NEXO SPORTS] - Jerarquía estricta FIVB
                     this.data.standings.sort((a, b) => {
                         if (b.won !== a.won) return (Number(b.won) || 0) - (Number(a.won) || 0);
                         if (a.lst !== b.lst) return (Number(a.lst) || 0) - (Number(b.lst) || 0);
@@ -465,7 +429,6 @@
                 }
             },
 
-            // [NEXO SPORTS MAPA] NAVEGACIÓN
             populateSeasonFilter: function() {
                 const select = document.getElementById('season-filter');
                 select.innerHTML = '';
@@ -499,7 +462,6 @@
                 if(viewId === 'teams') this.renderTeams();
             },
 
-           // [NEXO SPORTS MAPA] BÚSQUEDA RELACIONAL DE LOGOS
             getLogoBadge: function(name) {
                 const team = this.data.teams.find(t => t.name === name);
                 
@@ -513,7 +475,6 @@
                         </div>`;
             },
 
-            // [NEXO SPORTS MAPA] TARJETA DE PARTIDO
             getMatchCardHTML: function(m, isLive = false) {
                 const teamA = m?.teamA || 'Por Definir';
                 const teamB = m?.teamB || 'Por Definir';
@@ -601,7 +562,6 @@
                 `;
             },
 
-            // [NEXO SPORTS MAPA] VISTA: INICIO
             renderHome: function() {
                 const seasonMatches = this.data.matches.filter(m => m.temporada === this.activeSeason);
 
@@ -673,7 +633,6 @@
                 lucide.createIcons();
             },
 
-            // [NEXO SPORTS MAPA] VISTA: EQUIPOS 
             renderTeams: function() {
                 const search = document.getElementById('teams-search').value.toLowerCase();
                 const catFilter = document.getElementById('teams-category').value;
@@ -713,7 +672,6 @@
                 });
             },
 
-            // [NEXO SPORTS MAPA] VISTA: CALENDARIO
             initCalendar: function() {
                 this.generateDaysSlider();
                 this.renderCalendarMatches();
@@ -806,7 +764,6 @@
                 filtered.forEach((s, i) => {
                     const rankClass = i === 0 ? 'bg-accent/10 text-accent font-black' : 'text-gray-200 font-bold';
                     
-                    // [NUEVO MOTOR] Búsqueda de logo dinámica
                     const teamData = this.data.teams.find(t => t.name === s.team);
                     const logoHtml = (teamData && teamData.logo && teamData.logo.trim() !== "") 
                         ? `<img src="${teamData.logo}" alt="${s.team}" class="w-6 h-6 md:w-8 md:h-8 rounded-full object-cover border border-raptor-light shrink-0 shadow-inner bg-dark">`
@@ -838,6 +795,9 @@
                 const team = this.data.teams.find(t => t.id === teamId);
                 if(!team) return;
 
+                // Guardamos la referencia para usarla al validar el PIN en el backend
+                this.currentTeamId = teamId;
+
                 document.getElementById('modal-team-name').innerText = team.name;
                 document.getElementById('modal-team-category').innerText = team.category;
                 
@@ -846,7 +806,6 @@
                     : `<span class="font-sport font-bold text-lg text-gray-300">${team.name.substring(0,3).toUpperCase()}</span>`;
                 
                 document.getElementById('modal-coach-name').innerText = team.coach;
-                this.currentCoachPhone = team.phone;
                 
                 const coachPhotoContainer = document.getElementById('modal-coach-photo-container');
                 coachPhotoContainer.innerHTML = team.coachPhoto 
@@ -901,7 +860,7 @@
                 setTimeout(() => { modal.classList.add('hidden'); }, 300);
             },
 
-            // [NEXO SPORTS MAPA] SEGURIDAD DE ACCESO
+            // [NEXO SPORTS MAPA] SEGURIDAD DE ACCESO (SERVER-SIDE VALIDATION)
             requestPin: function() {
                 document.getElementById('pin-input').value = '';
                 document.getElementById('pin-error-msg').classList.add('hidden');
@@ -921,29 +880,53 @@
                 setTimeout(() => { pinModal.classList.add('hidden'); }, 200);
             },
 
-            submitPinPrompt: function() {
+            submitPinPrompt: async function() {
                 const pin = document.getElementById('pin-input').value;
                 const errorMsg = document.getElementById('pin-error-msg');
+                const btnValidar = document.querySelector('#pin-modal button[onclick="app.submitPinPrompt()"]');
                 
-                if(pin === '7278') {
-                    this.closePinPrompt();
-                    document.getElementById('btn-coach-contact').classList.add('hidden');
-                    
-                    let cleanPhone = this.currentCoachPhone.replace(/\D/g, '');
-                    if(cleanPhone.length === 10) cleanPhone = '52' + cleanPhone;
+                if (!pin || pin.length < 4) {
+                    errorMsg.innerText = "Ingrese un PIN de 4 dígitos.";
+                    errorMsg.classList.remove('hidden');
+                    return;
+                }
 
-                    const callBtn = document.getElementById('link-coach-call');
-                    const waBtn = document.getElementById('link-coach-wa');
-                    
-                    callBtn.href = `tel:${cleanPhone}`;
-                    waBtn.href = `https://api.whatsapp.com/send?phone=${cleanPhone}`;
-                    
-                    document.getElementById('links-coach-contact').classList.remove('hidden');
-                    lucide.createIcons();
-                } else {
+                // Estado de carga en interfaz mientras verificamos con Google Apps Script
+                const textoOriginal = btnValidar.innerText;
+                btnValidar.innerText = "...";
+                btnValidar.disabled = true;
+                errorMsg.classList.add('hidden');
+
+                try {
+                    const res = await fetch(`${API_URL}?endpoint=contacto&id=${encodeURIComponent(this.currentTeamId)}&pin=${encodeURIComponent(pin)}`);
+                    const json = await res.json();
+
+                    if (json.status === "success" && json.data && json.data.phone) {
+                        this.closePinPrompt();
+                        document.getElementById('btn-coach-contact').classList.add('hidden');
+                        
+                        let cleanPhone = json.data.phone.toString().replace(/\D/g, '');
+                        if (cleanPhone.length === 10) cleanPhone = '52' + cleanPhone;
+
+                        const callBtn = document.getElementById('link-coach-call');
+                        const waBtn = document.getElementById('link-coach-wa');
+                        
+                        callBtn.href = `tel:${cleanPhone}`;
+                        waBtn.href = `https://api.whatsapp.com/send?phone=${cleanPhone}`;
+                        
+                        document.getElementById('links-coach-contact').classList.remove('hidden');
+                        lucide.createIcons();
+                    } else {
+                        throw new Error(json.message || "PIN incorrecto.");
+                    }
+                } catch (error) {
+                    errorMsg.innerText = "PIN incorrecto o no autorizado.";
                     errorMsg.classList.remove('hidden');
                     document.getElementById('pin-input').value = '';
                     document.getElementById('pin-input').focus();
+                } finally {
+                    btnValidar.innerText = textoOriginal;
+                    btnValidar.disabled = false;
                 }
             }
         };
@@ -952,7 +935,6 @@
             if (e.key === 'Enter') app.submitPinPrompt();
         });
 
-        // Arrancar la aplicación consumiendo la API
         app.init();
     </script>
 </body>
