@@ -237,17 +237,19 @@
                 <input type="text" id="standings-search" onkeyup="app.renderStandings()" placeholder="Buscar equipo..." class="bg-surface border border-zinc-800 text-white text-sm rounded-lg block w-full md:w-2/3 p-2.5 outline-none focus:border-raptor">
             </div>
 
-            <div class="bg-raptor-dark rounded-xl overflow-hidden border border-raptor text-sm shadow-lg">
-                <table class="w-full text-left">
+            <div class="bg-raptor-dark rounded-xl overflow-hidden border border-raptor text-sm shadow-lg overflow-x-auto">
+                <table class="w-full text-left min-w-[600px]">
                     <thead class="bg-raptor text-white text-[10px] uppercase tracking-wider border-b border-raptor-light/50">
                         <tr>
-                            <th class="py-3 px-2 font-semibold text-center w-10">POS</th>
+                            <th class="py-3 px-2 font-semibold text-center w-10">#</th>
                             <th class="py-3 px-2 font-semibold">EQUIPO</th>
-                            <th class="py-3 px-2 font-semibold text-center hidden md:table-cell" title="Jugados">PJ</th>
-                            <th class="py-3 px-2 font-sport font-black text-base text-center text-accent" title="Ganados">G</th>
-                            <th class="py-3 px-2 font-sport font-black text-base text-center text-red-400" title="Perdidos">P</th>
-                            <th class="py-3 px-2 font-semibold text-center hidden md:table-cell" title="Sets Ganados">SG</th>
-                            <th class="py-3 px-2 font-semibold text-center hidden md:table-cell" title="Sets Perdidos">SP</th>
+                            <th class="py-3 px-2 font-semibold text-center" title="Partidos Jugados">PJ</th>
+                            <th class="py-3 px-2 font-sport font-black text-base text-center text-accent" title="Partidos Ganados">PG</th>
+                            <th class="py-3 px-2 font-sport font-black text-base text-center text-red-400" title="Partidos Perdidos">PP</th>
+                            <th class="py-3 px-2 font-semibold text-center" title="Sets a Favor">SF</th>
+                            <th class="py-3 px-2 font-semibold text-center" title="Sets en Contra">SC</th>
+                            <th class="py-3 px-2 font-semibold text-center" title="Puntos a Favor">PF</th>
+                            <th class="py-3 px-2 font-semibold text-center" title="Puntos en Contra">PC</th>
                         </tr>
                     </thead>
                     <tbody id="standings-table-body" class="divide-y divide-raptor/30">
@@ -344,7 +346,7 @@
 
         const todayStr = getTodayString();
 
-        // [NEXO SPORTS MAPA] 1. CONFIGURACIÓN DE LA API (AQUÍ ESTÁ LA CONEXIÓN CON GOOGLE SHEETS)
+        // [NEXO SPORTS MAPA] 1. CONFIGURACIÓN DE LA API
         const API_URL = "https://script.google.com/macros/s/AKfycbxdKCkEmmeq3XmwCvkp9PO2ISYS-CWkRokw5UBSJ5lxBxfoaEa2pGUGl86x1xQ6F_0Myg/exec";
 
         const app = {
@@ -414,12 +416,31 @@
                     
                     this.data.standings = Array.isArray(resClasificacion?.data) ? resClasificacion.data : [];
 
+                    // [MOTOR NEXO SPORTS] - Jerarquía estricta FIVB (de izquierda a derecha: PG -> PP -> SF -> SC -> PF -> PC)
                     this.data.standings.sort((a, b) => {
-                        if (b.won !== a.won) return (Number(b.won) || 0) - (Number(a.won) || 0);
-                        if (a.lst !== b.lst) return (Number(a.lst) || 0) - (Number(b.lst) || 0);
-                        if (b.sw !== a.sw) return (Number(b.sw) || 0) - (Number(a.sw) || 0);
-                        if (a.sl !== b.sl) return (Number(a.sl) || 0) - (Number(b.sl) || 0);
-                        return (Number(b.pts) || 0) - (Number(a.pts) || 0);
+                        const pgA = Number(a.pg ?? a.won) || 0;
+                        const pgB = Number(b.pg ?? b.won) || 0;
+                        if (pgB !== pgA) return pgB - pgA;
+
+                        const ppA = Number(a.pp ?? a.lst) || 0;
+                        const ppB = Number(b.pp ?? b.lst) || 0;
+                        if (ppA !== ppB) return ppA - ppB;
+
+                        const sfA = Number(a.sf ?? a.sw) || 0;
+                        const sfB = Number(b.sf ?? b.sw) || 0;
+                        if (sfB !== sfA) return sfB - sfA;
+
+                        const scA = Number(a.sc ?? a.sl) || 0;
+                        const scB = Number(b.sc ?? b.sl) || 0;
+                        if (scA !== scB) return scA - scB;
+
+                        const pfA = Number(a.pf ?? a.pts) || 0;
+                        const pfB = Number(b.pf ?? b.pts) || 0;
+                        if (pfB !== pfA) return pfB - pfA;
+
+                        const pcA = Number(a.pc) || 0;
+                        const pcB = Number(b.pc) || 0;
+                        return pcA - pcB;
                     });
 
                     this.switchView('home');
@@ -612,6 +633,7 @@
                     
                     topTeams.forEach((s, i) => {
                         const rankColor = i === 0 ? 'text-accent' : 'text-gray-300';
+                        const pgVal = s.pg ?? s.won ?? 0;
                         tableHtml += `
                             <tr class="hover:bg-raptor/40 transition-colors">
                                 <td class="py-2 px-2 w-6 text-center font-bold ${rankColor}">${i+1}</td>
@@ -623,7 +645,7 @@
                                         <span class="font-semibold truncate max-w-[100px] text-xs text-gray-100">${s.team}</span>
                                     </div>
                                 </td>
-                                <td class="py-2 px-2 text-right font-sport font-bold text-base text-accent">${s.won} G</td>
+                                <td class="py-2 px-2 text-right font-sport font-bold text-base text-accent">${pgVal} PG</td>
                             </tr>
                         `;
                     });
@@ -757,7 +779,7 @@
                 if(search) filtered = filtered.filter(s => s.team.toLowerCase().includes(search));
 
                 if(filtered.length === 0) {
-                    tbody.innerHTML = `<tr><td colspan="8" class="text-center py-8 text-zinc-400 bg-raptor-dark">Sin datos registrados en esta temporada.</td></tr>`;
+                    tbody.innerHTML = `<tr><td colspan="9" class="text-center py-8 text-zinc-400 bg-raptor-dark">Sin datos registrados en esta temporada.</td></tr>`;
                     return;
                 }
 
@@ -771,6 +793,14 @@
                             <span class="font-sport font-bold text-[10px] md:text-xs text-white">${s.team.substring(0,3).toUpperCase()}</span>
                            </div>`;
 
+                    const pj = s.pj ?? s.pld ?? 0;
+                    const pg = s.pg ?? s.won ?? 0;
+                    const pp = s.pp ?? s.lst ?? 0;
+                    const sf = s.sf ?? s.sw ?? 0;
+                    const sc = s.sc ?? s.sl ?? 0;
+                    const pf = s.pf ?? s.pts ?? 0;
+                    const pc = s.pc ?? 0;
+
                     tbody.innerHTML += `
                         <tr class="even:bg-raptor-dark/80 hover:bg-raptor/50 transition duration-150">
                             <td class="py-3 px-2 text-center ${rankClass}">${i+1}</td>
@@ -780,22 +810,22 @@
                                     <span class="font-bold text-sm text-white truncate max-w-[120px] md:max-w-none block">${s.team}</span>
                                 </div>
                             </td>
-                            <td class="py-3 px-2 text-center text-gray-300 hidden md:table-cell">${s.pld}</td>
-                            <td class="py-3 px-2 text-center font-sport font-black text-lg text-accent">${s.won}</td>
-                            <td class="py-3 px-2 text-center font-sport font-black text-lg text-red-400">${s.lst}</td>
-                            <td class="py-3 px-2 text-center text-gray-300 hidden md:table-cell">${s.sw}</td>
-                            <td class="py-3 px-2 text-center text-gray-300 hidden md:table-cell">${s.sl}</td>
+                            <td class="py-3 px-2 text-center text-gray-300 font-semibold">${pj}</td>
+                            <td class="py-3 px-2 text-center font-sport font-black text-lg text-accent">${pg}</td>
+                            <td class="py-3 px-2 text-center font-sport font-black text-lg text-red-400">${pp}</td>
+                            <td class="py-3 px-2 text-center text-gray-300 font-medium">${sf}</td>
+                            <td class="py-3 px-2 text-center text-gray-300 font-medium">${sc}</td>
+                            <td class="py-3 px-2 text-center text-gray-300 font-medium">${pf}</td>
+                            <td class="py-3 px-2 text-center text-gray-300 font-medium">${pc}</td>
                         </tr>
                     `;
                 });
             },
 
-            // [NEXO SPORTS MAPA] MODAL CÉDULA
             openModal: function(teamId) {
                 const team = this.data.teams.find(t => t.id === teamId);
                 if(!team) return;
 
-                // Guardamos la referencia para usarla al validar el PIN en el backend
                 this.currentTeamId = teamId;
 
                 document.getElementById('modal-team-name').innerText = team.name;
@@ -860,7 +890,6 @@
                 setTimeout(() => { modal.classList.add('hidden'); }, 300);
             },
 
-            // [NEXO SPORTS MAPA] SEGURIDAD DE ACCESO (SERVER-SIDE VALIDATION)
             requestPin: function() {
                 document.getElementById('pin-input').value = '';
                 document.getElementById('pin-error-msg').classList.add('hidden');
@@ -891,7 +920,6 @@
                     return;
                 }
 
-                // Estado de carga en interfaz mientras verificamos con Google Apps Script
                 const textoOriginal = btnValidar.innerText;
                 btnValidar.innerText = "...";
                 btnValidar.disabled = true;
