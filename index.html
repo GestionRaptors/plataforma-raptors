@@ -632,20 +632,29 @@
                     `;
                     
                     topTeams.forEach((s, i) => {
-                        const rankColor = i === 0 ? 'text-accent' : 'text-gray-300';
+                        const rankColor = i === 0 ? 'text-accent font-black' : 'text-gray-300 font-bold';
                         const pgVal = s.pg ?? s.won ?? 0;
+                        const ppVal = s.pp ?? s.lst ?? 0;
+                        
+                        // [NEXO SPORTS FIX] Búsqueda real de la imagen del logo en el catálogo de equipos
+                        const teamData = this.data.teams.find(t => t.name === s.team);
+                        const logoHtml = (teamData && teamData.logo && teamData.logo.trim() !== "") 
+                            ? `<img src="${teamData.logo}" alt="${s.team}" class="w-6 h-6 md:w-7 md:h-7 rounded-full object-cover border border-raptor-light shrink-0 shadow-inner bg-dark">`
+                            : `<div class="w-6 h-6 md:w-7 md:h-7 bg-dark rounded-full flex items-center justify-center border border-raptor-light shrink-0 shadow-inner">
+                                <span class="font-sport font-bold text-[9px] md:text-[10px] text-white">${s.team.substring(0,3).toUpperCase()}</span>
+                               </div>`;
+
                         tableHtml += `
                             <tr class="hover:bg-raptor/40 transition-colors">
-                                <td class="py-2 px-2 w-6 text-center font-bold ${rankColor}">${i+1}</td>
-                                <td class="py-2 px-2">
+                                <td class="py-2.5 px-2 w-7 text-center ${rankColor}">${i+1}</td>
+                                <td class="py-2.5 px-2">
                                     <div class="flex items-center gap-2">
-                                        <div class="w-5 h-5 bg-dark rounded-full flex items-center justify-center border border-raptor-light shrink-0 shadow-inner">
-                                            <span class="font-sport font-bold text-[8px] text-gray-100">${s.team.substring(0,3).toUpperCase()}</span>
-                                        </div>
-                                        <span class="font-semibold truncate max-w-[100px] text-xs text-gray-100">${s.team}</span>
+                                        ${logoHtml}
+                                        <span class="font-semibold truncate max-w-[110px] text-xs text-gray-100">${s.team}</span>
                                     </div>
                                 </td>
-                                <td class="py-2 px-2 text-right font-sport font-bold text-base text-accent">${pgVal} PG</td>
+                                <!-- NOTA: Si tras mi crítica decides quitar 100% el dato numérico, elimina el <td> de abajo -->
+                                <td class="py-2.5 px-2 text-right font-sport font-bold text-sm text-accent" title="Ganados - Perdidos">${pgVal}-${ppVal}</td>
                             </tr>
                         `;
                     });
