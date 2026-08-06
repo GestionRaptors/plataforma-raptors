@@ -389,65 +389,101 @@
             },
 
             init: async function() {
-                try {
-                    const [resConfig, resEquipos, resPartidos, resClasificacion] = await Promise.all([
-                        fetch(`${API_URL}?endpoint=config`).then(r => r.json()).catch(() => ({ status: 'error', data: {} })),
-                        fetch(`${API_URL}?endpoint=equipos`).then(r => r.json()).catch(() => ({ status: 'error', data: [] })),
-                        fetch(`${API_URL}?endpoint=partidos`).then(r => r.json()).catch(() => ({ status: 'error', data: [] })),
-                        fetch(`${API_URL}?endpoint=clasificacion`).then(r => r.json()).catch(() => ({ status: 'error', data: [] }))
-                    ]);
-
-                    if(resConfig?.status === "success" && resConfig?.data) {
-                        this.data.config = resConfig.data;
-                        this.activeSeason = resConfig.data.activa || '';
-                        this.populateSeasonFilter();
+                // 1. CAPA INMEDIATA (0 ms): Intentar pintar desde caché local del navegador
+                const localCache = localStorage.getItem("raptors_bootstrap_cache");
+                if (localCache) {
+                    try {
+                        const parsed = JSON.parse(localCache);
+                        this.hydrateData(parsed);
+                        this.switchView('home');
+                    } catch (e) {
+                        console.warn("Caché local corrupta, limpiando...");
+                        localStorage.removeItem("raptors_bootstrap_cache");
                     }
-                    this.data.teams = Array.isArray(resEquipos?.data) ? resEquipos.data : [];
-                    
-                    this.data.matches = Array.isArray(resPartidos?.data) ? resPartidos.data.map(m => ({
-                        ...m,
-                        date: this.normalizeDateStr(m.date)
-                    })).sort((a, b) => {
-                        const dateA = a.date || "";
-                        const dateB = b.date || "";
-                        if (dateA !== dateB) return dateA.localeCompare(dateB);
-                        return this.parseTimeForSort(a.time) - this.parseTimeForSort(b.time);
-                    }) : [];
-                    
-                    this.data.standings = Array.isArray(resClasificacion?.data) ? resClasificacion.data : [];
-
-                    // [MOTOR NEXO SPORTS] - Jerarquía estricta FIVB (de izquierda a derecha: PG -> PP -> SF -> SC -> PF -> PC)
-                    this.data.standings.sort((a, b) => {
-                        const pgA = Number(a.pg ?? a.won) || 0;
-                        const pgB = Number(b.pg ?? b.won) || 0;
-                        if (pgB !== pgA) return pgB - pgA;
-
-                        const ppA = Number(a.pp ?? a.lst) || 0;
-                        const ppB = Number(b.pp ?? b.lst) || 0;
-                        if (ppA !== ppB) return ppA - ppB;
-
-                        const sfA = Number(a.sf ?? a.sw) || 0;
-                        const sfB = Number(b.sf ?? b.sw) || 0;
-                        if (sfB !== sfA) return sfB - sfA;
-
-                        const scA = Number(a.sc ?? a.sl) || 0;
-                        const scB = Number(b.sc ?? b.sl) || 0;
-                        if (scA !== scB) return scA - scB;
-
-                        const pfA = Number(a.pf ?? a.pts) || 0;
-                        const pfB = Number(b.pf ?? b.pts) || 0;
-                        if (pfB !== pfA) return pfB - pfA;
-
-                        const pcA = Number(a.pc) || 0;
-                        const pcB = Number(b.pc) || 0;
-                        return pcA - pcB;
-                    });
-
-                    this.switchView('home');
-                } catch (error) {
-                    console.error("Fallo crítico general:", error);
-                    document.getElementById('live-matches-container').innerHTML = `<div class="col-span-1 md:col-span-2 text-center text-red-500 bg-surface border border-red-500/50 p-4 rounded-xl font-bold">Error de sincronización. Servidor inaccesible.</div>`;
                 }
+
+                // 2. CAPA EN SEGUNDO PLANO: 1 sola petición HTTP en lugar de 4
+                try {
+                    const res = await fetch(`${API_URL}?endpoint=bootstrap`);
+                    const json = await res.json();
+
+                    if (json?.status === "success" && json?.data) {
+                        // Guardar la foto del estado en el navegador para la próxima visita
+                        localStorage.setItem("raptors_bootstrap_cache", JSON.stringify(json.data));
+                        
+                        this.hydrateData(json.data);
+                        
+                        // Si es la primera visita (no había caché local), activar la vista
+                        if (!localCache) {
+                            this.switchView('home');
+                        } else {
+                            // Actualización silenciosa de la vista actual si el usuario ya estaba viendo datos
+                            const activeView = document.querySelector('.spa-view.active')?.id?.replace('view-', '') || 'home';
+                            if (activeView === 'home') this.renderHome();
+                            if (activeView === 'calendar') this.initCalendar();
+                            if (activeView === 'standings') this.renderStandings();
+                            if (activeView === 'teams') this.renderTeams();
+                        }
+                    }
+                } catch (error) {
+                    console.error("Fallo de red en sincronización bootstrap:", error);
+                    if (!localCache) {
+                        document.getElementById('live-matches-container').innerHTML = 
+                            `<div class="col-span-1 md:col-span-2 text-center text-red-500 bg-surface border border-red-500/50 p-4 rounded-xl font-bold">
+                                Error de conexión con el servidor deportivo.
+                            </div>`;
+                    }
+                }
+            },
+
+            // Método auxiliar para limpiar y normalizar los datos de entrada
+            hydrateData: function(data) {
+                if (data.config) {
+                    this.data.config = data.config;
+                    this.activeSeason = data.config.activa || '';
+                    this.populateSeasonFilter();
+                }
+                
+                this.data.teams = Array.isArray(data.equipos) ? data.equipos : [];
+                
+                this.data.matches = Array.isArray(data.partidos) ? data.partidos.map(m => ({
+                    ...m,
+                    date: this.normalizeDateStr(m.date)
+                })).sort((a, b) => {
+                    const dateA = a.date || "";
+                    const dateB = b.date || "";
+                    if (dateA !== dateB) return dateA.localeCompare(dateB);
+                    return this.parseTimeForSort(a.time) - this.parseTimeForSort(b.time);
+                }) : [];
+                
+                this.data.standings = Array.isArray(data.clasificacion) ? data.clasificacion : [];
+
+                // Jerarquía FIVB (PG -> PP -> SF -> SC -> PF -> PC)
+                this.data.standings.sort((a, b) => {
+                    const pgA = Number(a.pg ?? a.won) || 0;
+                    const pgB = Number(b.pg ?? b.won) || 0;
+                    if (pgB !== pgA) return pgB - pgA;
+
+                    const ppA = Number(a.pp ?? a.lst) || 0;
+                    const ppB = Number(b.pp ?? b.lst) || 0;
+                    if (ppA !== ppB) return ppA - ppB;
+
+                    const sfA = Number(a.sf ?? a.sw) || 0;
+                    const sfB = Number(b.sf ?? b.sw) || 0;
+                    if (sfB !== sfA) return sfB - sfA;
+
+                    const scA = Number(a.sc ?? a.sl) || 0;
+                    const scB = Number(b.sc ?? b.sl) || 0;
+                    if (scA !== scB) return scA - scB;
+
+                    const pfA = Number(a.pf ?? a.pts) || 0;
+                    const pfB = Number(b.pf ?? b.pts) || 0;
+                    if (pfB !== pfA) return pfB - pfA;
+
+                    const pcA = Number(a.pc) || 0;
+                    const pcB = Number(b.pc) || 0;
+                    return pcA - pcB;
+                });
             },
 
             populateSeasonFilter: function() {
