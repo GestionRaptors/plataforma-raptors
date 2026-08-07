@@ -458,11 +458,16 @@
                 
                 this.data.standings = Array.isArray(data.clasificacion) ? data.clasificacion : [];
 
-                // Jerarquía FIVB (PG -> PP -> SF -> SC -> PF -> PC)
+                // Jerarquía Personalizada Raptors (PG -> PJ -> PP -> SF -> SC -> PF -> PC)
                 this.data.standings.sort((a, b) => {
                     const pgA = Number(a.pg ?? a.won) || 0;
                     const pgB = Number(b.pg ?? b.won) || 0;
                     if (pgB !== pgA) return pgB - pgA;
+
+                    // [NUEVO CRITERIO RAPTORS] Priorizar mayor cantidad de juegos jugados (PJ)
+                    const pjA = Number(a.pj ?? a.pld) || 0;
+                    const pjB = Number(b.pj ?? b.pld) || 0;
+                    if (pjB !== pjA) return pjB - pjA;
 
                     const ppA = Number(a.pp ?? a.lst) || 0;
                     const ppB = Number(b.pp ?? b.lst) || 0;
