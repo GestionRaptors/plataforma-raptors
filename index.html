@@ -140,9 +140,9 @@
                 <div class="flex justify-between items-center mb-4 mt-2">
                     <h2 class="font-sport font-bold text-2xl md:text-3xl uppercase tracking-wider border-l-4 border-raptor pl-3 text-gray-100">Partidos del Día</h2>
                     <select id="home-status-filter" onchange="app.renderHome()" class="bg-surface border border-zinc-700 text-white text-xs md:text-sm rounded-lg p-2 focus:ring-raptor outline-none transition-colors">
-                        <option value="Programado" selected>Programados</option>
+                        <option value="Programado">Programados</option>
                         <option value="En Vivo">En Vivo</option>
-                        <option value="Todos">Todos</option>
+                        <option value="Todos" selected>Todos</option>
                         <option value="Cancelado">Cancelados</option>
                         <option value="Finalizado">Finalizados</option>
                     </select>
@@ -217,11 +217,11 @@
                         <option value="Mixto">Mixto</option>
                     </select>
                     <select id="calendar-status" onchange="app.renderCalendarMatches()" class="bg-surface border border-zinc-700 text-white text-sm rounded-lg p-2.5 outline-none w-1/2 focus:border-raptor transition-colors">
-                        <option value="Programado" selected>Programados</option>
+                        <option value="Programado">Programados</option>
                         <option value="En Vivo">En Vivo</option>
                         <option value="Cancelado">Cancelados</option>
                         <option value="Finalizado">Finalizados</option>
-                        <option value="Todos">Todos</option>
+                        <option value="Todos" selected>Todos</option>
                     </select>
                 </div>
 
@@ -587,7 +587,18 @@
                     }
                 }
 
-                const statusColor = isLive ? 'text-accent animate-pulse' : (matchStatus === 'Finalizado' ? 'text-gray-400' : 'text-raptor-light');
+                // [NEXO SPORTS FIX] Colores vibrantes para cada estatus de partido
+                let statusColor = '';
+                if (isLive) {
+                    statusColor = 'text-accent animate-pulse font-black drop-shadow-md';
+                } else if (matchStatus === 'Finalizado') {
+                    statusColor = 'text-blue-400 font-black'; // Azul brillante en lugar de gris
+                } else if (matchStatus === 'Cancelado') {
+                    statusColor = 'text-red-500 font-black'; // Rojo alerta
+                } else {
+                    statusColor = 'text-raptor-light font-bold'; // Programado y otros
+                }
+
                 const liveBg = isLive ? 'bg-raptor border-raptor-light shadow-[0_0_15px_rgba(157,80,224,0.4)]' : 'bg-raptor-dark border-raptor hover:border-raptor-light hover:bg-raptor/80 shadow-lg transition-all';
                 
                 return `
@@ -600,7 +611,7 @@
                                 <i data-lucide="map-pin" class="w-3 h-3 text-raptor-light"></i> ${matchCourt}
                             </span>
                             
-                            <span class="text-[9px] font-bold uppercase ${statusColor} tracking-widest">${matchStatus}</span>
+                            <span class="text-[9px] uppercase ${statusColor} tracking-widest">${matchStatus}</span>
                         </div>
                         
                         <div class="flex justify-between items-center p-4 flex-1">
