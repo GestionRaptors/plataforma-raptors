@@ -198,7 +198,12 @@
             </div>
 
             <div class="pt-2">
-                <h2 class="font-sport font-bold text-2xl md:text-3xl uppercase tracking-wider text-gray-100 mb-4 border-l-4 border-raptor pl-3">Calendario General</h2>
+                <div class="flex justify-between items-center mb-4">
+                    <h2 class="font-sport font-bold text-2xl md:text-3xl uppercase tracking-wider text-gray-100 border-l-4 border-raptor pl-3">Calendario General</h2>
+                    <select id="calendar-month-selector" onchange="app.changeCalendarMonth()" class="bg-surface border border-zinc-700 text-white text-xs md:text-sm font-bold rounded-lg px-3 py-2 outline-none focus:border-raptor transition-colors">
+                        <!-- Opciones generadas por JS -->
+                    </select>
+                </div>
                 
                 <div id="calendar-days-slider" class="flex overflow-x-auto gap-2 py-3 border-y border-zinc-800 no-scrollbar snap-x mb-4">
                 </div>
@@ -354,6 +359,8 @@
             selectedDate: todayStr,
             currentTeamId: '',
             activeSeason: '', 
+            selectedMonth: new Date().getMonth(), 
+            selectedYear: new Date().getFullYear(),
 
             normalizeDateStr: function(dateStr) {
                 if (!dateStr) return "";
@@ -745,6 +752,36 @@
             },
 
             initCalendar: function() {
+                this.populateMonthSelector();
+                this.generateDaysSlider();
+                this.renderCalendarMatches();
+            },
+
+            populateMonthSelector: function() {
+                const selector = document.getElementById('calendar-month-selector');
+                const months = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
+                
+                if (selector.options.length === 0) {
+                    months.forEach((month, index) => {
+                        selector.innerHTML += `<option value="${index}">${month} ${this.selectedYear}</option>`;
+                    });
+                }
+                selector.value = this.selectedMonth;
+            },
+
+            changeCalendarMonth: function() {
+                const selector = document.getElementById('calendar-month-selector');
+                this.selectedMonth = parseInt(selector.value);
+                
+                // Al cambiar de mes, seleccionamos el día 1 por defecto para evitar errores (ej. 31 de feb)
+                this.selectedDate = `${this.selectedYear}-${String(this.selectedMonth + 1).padStart(2, '0')}-01`;
+                
+                // Si regresan al mes actual, los regresamos a "hoy"
+                const today = new Date();
+                if (this.selectedMonth === today.getMonth() && this.selectedYear === today.getFullYear()) {
+                    this.selectedDate = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`;
+                }
+
                 this.generateDaysSlider();
                 this.renderCalendarMatches();
             },
@@ -753,9 +790,9 @@
                 const slider = document.getElementById('calendar-days-slider');
                 slider.innerHTML = '';
                 
-                const today = new Date();
-                const currentMonth = today.getMonth();
-                const currentYear = today.getFullYear();
+                // [MODIFICADO] Ahora usa las variables de estado en lugar del mes actual estático
+                const currentMonth = this.selectedMonth;
+                const currentYear = this.selectedYear;
                 const daysInMonth = new Date(currentYear, currentMonth + 1, 0).getDate();
                 const daysOfWeek = ['DOM', 'LUN', 'MAR', 'MIE', 'JUE', 'VIE', 'SAB'];
 
@@ -771,7 +808,7 @@
                     const textAccent = isSelected ? 'text-accent' : 'text-raptor-light';
 
                     const btn = document.createElement('button');
-                    btn.onclick = () => { this.selectedDate = dateString; this.initCalendar(); };
+                    btn.onclick = () => { this.selectedDate = dateString; this.generateDaysSlider(); this.renderCalendarMatches(); };
                     btn.className = `flex flex-col items-center justify-center min-w-[65px] h-[75px] rounded-xl border ${bgClass} transition-all snap-center shrink-0 cursor-pointer`;
                     btn.innerHTML = `
                         <span class="text-[10px] font-semibold mb-1 ${textAccent}">${dayStr}</span>
