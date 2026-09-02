@@ -88,6 +88,7 @@
             <button onclick="app.switchView('teams')" id="tab-teams" class="nav-tab px-4 py-3 text-sm font-semibold border-b-2 border-transparent text-gray-400 hover:text-white transition">EQUIPOS</button>
             <button onclick="app.switchView('calendar')" id="tab-calendar" class="nav-tab px-4 py-3 text-sm font-semibold border-b-2 border-transparent text-gray-400 hover:text-white transition">CALENDARIO</button>
             <button onclick="app.switchView('standings')" id="tab-standings" class="nav-tab px-4 py-3 text-sm font-semibold border-b-2 border-transparent text-gray-400 hover:text-white transition">CLASIFICACIONES</button>
+            <button onclick="app.switchView('playoffs')" id="tab-playoffs" class="nav-tab px-4 py-3 text-sm font-semibold border-b-2 border-transparent text-gray-400 hover:text-white transition">PLAYOFFS</button>
         </div>
     </div>
 
@@ -262,6 +263,17 @@
                 </table>
             </div>
         </section>
+
+        <!-- ================= VISTA: PLAYOFFS ================= -->
+<section id="view-playoffs" class="spa-view flex-col items-center justify-center py-20 px-4">
+    <div class="text-center space-y-4 bg-surface p-8 rounded-2xl border border-zinc-800 border-dashed w-full max-w-md mx-auto shadow-2xl">
+        <div class="inline-flex items-center justify-center w-16 h-16 rounded-full bg-raptor-dark border border-raptor-light mb-2 shadow-inner">
+            <i data-lucide="hammer" class="w-8 h-8 text-accent"></i>
+        </div>
+        <h2 class="font-sport font-black text-3xl uppercase tracking-wider text-white">En Desarrollo</h2>
+        <p class="text-sm text-gray-400 font-medium">El sistema interactivo de PlayOffs para la fase final del torneo está en construcción. ¡Próximamente!</p>
+    </div>
+</section>
 
     </main>
 
