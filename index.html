@@ -99,8 +99,7 @@
             <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 border-b border-zinc-800 pb-4">
                 <div class="flex flex-col sm:flex-row sm:items-center gap-4 w-full sm:w-auto">
                     <h1 class="font-sport font-black text-3xl md:text-4xl uppercase tracking-wider text-white">Temporada</h1>
-                    <select id="season-filter" class="bg-surface border border-zinc-700 text-white text-sm font-bold rounded-lg px-3 py-2 outline-none focus:border-raptor">
-                    </select>
+                    <select id="season-filter" class="bg-surface border border-zinc-700 text-white text-sm font-bold rounded-lg px-3 py-2 outline-none focus:border-raptor"></select>
                 </div>
                 
                 <div class="flex flex-wrap gap-2 items-center w-full sm:w-auto justify-start sm:justify-end mt-2 sm:mt-0">
@@ -324,7 +323,7 @@
         };
         const todayStr = getTodayString();
 
-        // API REST URL ///
+        // ⚠️ PEGA AQUÍ LA URL DE TU API REST DE PRODUCCIÓN ⚠️
         const API_URL = "https://script.google.com/macros/s/AKfycbxdKCkEmmeq3XmwCvkp9PO2ISYS-CWkRokw5UBSJ5lxBxfoaEa2pGUGl86x1xQ6F_0Myg/exec";
 
         const app = {
@@ -506,6 +505,7 @@
                 return `<div class="${sizeClasses} bg-dark rounded-full border-4 ${borderClasses} flex items-center justify-center shadow-[inset_0_0_20px_rgba(0,0,0,0.5)] shrink-0"><span class="font-sport font-bold ${textClasses} text-white tracking-tighter">${short}</span></div>`;
             },
 
+            // ESTA ES LA FUNCIÓN QUE CORRIGE EL FOOTER DE INICIO Y CALENDARIO
             getMatchCardHTML: function(m, isLive = false) {
                 const teamA = m?.teamA || 'Por Definir';
                 const teamB = m?.teamB || 'Por Definir';
@@ -525,8 +525,8 @@
                 let matchTime = m?.time || '00:00';
                 if (matchTime) {
                     let timeStr = matchTime.toString().toLowerCase().trim();
-                    let isPM = /(p\.?m\.?|p\s*m)/i.test(timeStr);
-                    let isAM = /(a\.?m\.?|a\s*m)/i.test(timeStr);
+                    let isPM = /(p\.?m\.?|p\s*m)/i.test(str);
+                    let isAM = /(a\.?m\.?|a\s*m)/i.test(str);
                     let timeParts = timeStr.match(/\d+/g);
                     if (timeParts && timeParts.length >= 2) {
                         let h = parseInt(timeParts[0], 10);
