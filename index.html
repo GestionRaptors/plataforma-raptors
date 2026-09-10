@@ -101,29 +101,6 @@
                     <h1 class="font-sport font-black text-3xl md:text-4xl uppercase tracking-wider text-white">Temporada</h1>
                     <select id="season-filter" class="bg-surface border border-zinc-700 text-white text-sm font-bold rounded-lg px-3 py-2 outline-none focus:border-raptor"></select>
                 </div>
-                
-                <div class="flex flex-wrap gap-2 items-center w-full sm:w-auto justify-start sm:justify-end mt-2 sm:mt-0">
-                    <span class="text-[10px] font-bold uppercase tracking-widest text-zinc-500 w-full sm:w-auto mb-1 sm:mb-0">Transmisiones:</span>
-                    
-                    <a href="https://www.instagram.com/raptorsvoleybol/" target="_blank" rel="noopener noreferrer" class="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-zinc-950 border border-zinc-800 hover:border-raptor-light hover:bg-raptor-dark transition-all shadow-md group">
-                        <img src="assets/ig-icon.png" alt="Instagram" class="w-4 h-4 object-contain group-hover:scale-110 transition-transform">
-                        <span class="text-[9px] font-bold text-gray-300 group-hover:text-white uppercase tracking-wider">Instagram</span>
-                    </a>
-
-                    <a href="https://www.facebook.com/raptors.voleibol.50" target="_blank" rel="noopener noreferrer" class="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-zinc-950 border border-zinc-800 hover:border-raptor-light hover:bg-raptor-dark transition-all shadow-md group">
-                        <img src="assets/fb-icon.png" alt="Transmisiones FOVISSSTE" class="w-4 h-4 object-contain group-hover:scale-110 transition-transform">
-                        <span class="text-[9px] font-bold text-gray-300 group-hover:text-white uppercase tracking-wider flex items-center gap-1">
-                            <i data-lucide="map-pin" class="w-3 h-3 text-raptor-light"></i> Fovissste
-                        </span>
-                    </a>
-
-                    <a href="https://www.facebook.com/profile.php?id=61591289053088&rdid=ER2UpZH3XiIh7osE&share_url=https%3A%2F%2Fwww.facebook.com%2Fshare%2F1LNwsua8j8%2F#" target="_blank" rel="noopener noreferrer" class="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-zinc-950 border border-zinc-800 hover:border-raptor-light hover:bg-raptor-dark transition-all shadow-md group">
-                        <img src="assets/fb-icon.png" alt="Transmisiones PRADERAS" class="w-4 h-4 object-contain group-hover:scale-110 transition-transform">
-                        <span class="text-[9px] font-bold text-gray-300 group-hover:text-white uppercase tracking-wider flex items-center gap-1">
-                            <i data-lucide="map-pin" class="w-3 h-3 text-raptor-light"></i> Praderas
-                        </span>
-                    </a>
-                </div>
             </div>
             <div>
                 <div class="flex items-center gap-2 mb-4">
@@ -323,7 +300,7 @@
         };
         const todayStr = getTodayString();
 
-        // ⚠️ PEGA AQUÍ LA URL DE TU API REST DE PRODUCCIÓN ⚠️
+        // ⚠️ CAMBIA ESTO A TU URL DE PRODUCCIÓN ANTES DE DESPLEGAR EN VERCEL ⚠️
         const API_URL = "https://script.google.com/macros/s/AKfycbxdKCkEmmeq3XmwCvkp9PO2ISYS-CWkRokw5UBSJ5lxBxfoaEa2pGUGl86x1xQ6F_0Myg/exec";
 
         const app = {
@@ -496,6 +473,7 @@
                 return `<div class="w-10 h-10 md:w-12 md:h-12 bg-dark rounded-full flex items-center justify-center border border-raptor-light shadow-inner"><span class="font-sport font-bold text-sm md:text-lg text-white tracking-tighter">${short}</span></div>`;
             },
             
+            // UTILIDAD PARA EL PODIO: Extrae o genera el logo con clases personalizadas
             getPodiumLogo: function(teamName, sizeClasses, textClasses, borderClasses) {
                 const team = this.data.teams.find(t => t.name === teamName);
                 const short = teamName && teamName !== 'Por Definir' ? teamName.substring(0,3).toUpperCase() : '???';
@@ -505,7 +483,6 @@
                 return `<div class="${sizeClasses} bg-dark rounded-full border-4 ${borderClasses} flex items-center justify-center shadow-[inset_0_0_20px_rgba(0,0,0,0.5)] shrink-0"><span class="font-sport font-bold ${textClasses} text-white tracking-tighter">${short}</span></div>`;
             },
 
-            // ESTA ES LA FUNCIÓN QUE CORRIGE EL FOOTER DE INICIO Y CALENDARIO
             getMatchCardHTML: function(m, isLive = false) {
                 const teamA = m?.teamA || 'Por Definir';
                 const teamB = m?.teamB || 'Por Definir';
@@ -525,8 +502,8 @@
                 let matchTime = m?.time || '00:00';
                 if (matchTime) {
                     let timeStr = matchTime.toString().toLowerCase().trim();
-                    let isPM = /(p\.?m\.?|p\s*m)/i.test(str);
-                    let isAM = /(a\.?m\.?|a\s*m)/i.test(str);
+                    let isPM = /(p\.?m\.?|p\s*m)/i.test(timeStr);
+                    let isAM = /(a\.?m\.?|a\s*m)/i.test(timeStr);
                     let timeParts = timeStr.match(/\d+/g);
                     if (timeParts && timeParts.length >= 2) {
                         let h = parseInt(timeParts[0], 10);
@@ -593,8 +570,9 @@
                 `;
             },
 
+            // 1. GENERADOR DE TARJETAS PARA EL BRACKET ESTÁTICO DE PLAYOFFS
             getPlayoffCardHTML: function(m, roundName, order, top, isThirdPlace = false) {
-                const CARD_HEIGHT = 140; 
+                const CARD_HEIGHT = 140; // Altura ajustada para no desbordar el footer
                 const label = isThirdPlace ? `<h4 class="text-[10px] font-bold text-gray-500 uppercase tracking-widest absolute -top-6 w-full text-center">3er Lugar</h4>` : '';
 
                 if (!m) {
@@ -864,6 +842,7 @@
                 });
             },
 
+            // 2. RENDERIZADO DEL BRACKET VACÍO Y ESTÁTICO (8-4-2-1)
             renderPlayoffs: function() {
                 const category = document.getElementById('playoffs-category').value;
                 const container = document.getElementById('bracket-container');
@@ -1004,6 +983,7 @@
                             <div class="flex items-end justify-center gap-4 relative">
                                 <div class="absolute inset-0 bg-gradient-to-t from-[#FFD700]/5 to-transparent rounded-full blur-3xl -z-10"></div>
                                 
+                                <!-- 2DO LUGAR -->
                                 <div class="bg-surface/90 backdrop-blur-sm rounded-2xl border-t-4 border-[#C0C0C0] border-x border-b border-zinc-800 flex flex-col items-center justify-start p-4 w-[160px] h-[260px] relative shadow-[0_-5px_20px_rgba(192,192,192,0.15)] transition-transform hover:-translate-y-2 z-10">
                                     <div class="absolute -top-4 bg-dark border border-[#C0C0C0] text-[#C0C0C0] text-[10px] font-bold px-3 py-1 rounded-full uppercase tracking-widest">
                                         2do Lugar
@@ -1019,6 +999,7 @@
                                     </div>
                                 </div>
 
+                                <!-- 1ER LUGAR -->
                                 <div class="bg-surface rounded-2xl border-t-4 border-[#FFD700] border-x border-b border-[#FFD700]/30 flex flex-col items-center justify-start p-5 w-[200px] h-[320px] relative shadow-[0_-5px_30px_rgba(255,215,0,0.25)] z-20 transition-transform hover:-translate-y-2">
                                     <div class="absolute -top-5 bg-[#FFD700] text-dark text-xs font-black px-4 py-1.5 rounded-full uppercase tracking-widest shadow-[0_0_15px_rgba(255,215,0,0.6)] flex items-center gap-1.5">
                                         <i data-lucide="trophy" class="w-4 h-4"></i> Campeón
@@ -1035,6 +1016,7 @@
                                     </div>
                                 </div>
 
+                                <!-- 3ER LUGAR -->
                                 <div class="bg-surface/80 backdrop-blur-sm rounded-2xl border-t-4 border-[#CD7F32] border-x border-b border-zinc-800 flex flex-col items-center justify-start p-4 w-[160px] h-[230px] relative shadow-[0_-5px_20px_rgba(205,127,50,0.15)] transition-transform hover:-translate-y-2 z-10">
                                     <div class="absolute -top-4 bg-dark border border-[#CD7F32] text-[#CD7F32] text-[10px] font-bold px-3 py-1 rounded-full uppercase tracking-widest">
                                         3er Lugar
@@ -1062,6 +1044,7 @@
                 });
             },
 
+            // 3. LÍNEAS VECTORIALES CONECTADAS AL CENTRO DE LA TARJETA
             drawBracketLines: function() {
                 const container = document.getElementById('bracket-container');
                 if (!container) return;
@@ -1108,6 +1091,7 @@
                         const rectSource = matchEl.getBoundingClientRect();
                         const rectTarget = targetEl.getBoundingClientRect();
 
+                        // LAS LÍNEAS PARTEN EXACTAMENTE DESDE EL CENTRO DE LA TARJETA
                         const x1 = rectSource.right - svgRect.left;
                         const y1 = rectSource.top + (rectSource.height / 2) - svgRect.top;
 
@@ -1118,6 +1102,7 @@
 
                         const midX = x1 + Math.max(20, (x2 - x1) / 2);
 
+                        // DIBUJAR LÍNEA BASE
                         const pathBase = document.createElementNS(svgNS, "path");
                         pathBase.setAttribute("d", `M ${x1} ${y1} H ${midX} V ${y2} H ${x2}`);
                         pathBase.setAttribute("fill", "none");
@@ -1126,6 +1111,7 @@
                         pathBase.setAttribute("stroke-linejoin", "round");
                         svg.appendChild(pathBase);
 
+                        // DIBUJAR LÍNEA NEÓN (Solo si hay un ganador y avanza matemáticamente a esa tarjeta)
                         const winner = matchEl.getAttribute('data-winner');
                         if (winner && winner !== "") {
                             const teamA_Target = targetEl.getAttribute('data-team-a');
@@ -1135,7 +1121,7 @@
                                 const pathHighlight = document.createElementNS(svgNS, "path");
                                 pathHighlight.setAttribute("d", `M ${x1} ${y1} H ${midX} V ${y2} H ${x2}`);
                                 pathHighlight.setAttribute("fill", "none");
-                                pathHighlight.setAttribute("stroke", "#9D50E0"); 
+                                pathHighlight.setAttribute("stroke", "#9D50E0"); // Morado Raptor
                                 pathHighlight.setAttribute("stroke-width", "3");
                                 pathHighlight.setAttribute("stroke-linejoin", "round");
                                 pathHighlight.setAttribute("style", "filter: drop-shadow(0px 0px 6px rgba(157,80,224,0.8));");
