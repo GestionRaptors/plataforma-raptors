@@ -96,7 +96,6 @@
 
         <!-- ================= VISTA: INICIO ================= -->
         <section id="view-home" class="spa-view active space-y-8">
-
             <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 border-b border-zinc-800 pb-4">
                 <div class="flex flex-col sm:flex-row sm:items-center gap-4 w-full sm:w-auto">
                     <h1 class="font-sport font-black text-3xl md:text-4xl uppercase tracking-wider text-white">Temporada</h1>
@@ -127,16 +126,13 @@
                     </a>
                 </div>
             </div>
-
             <div>
                 <div class="flex items-center gap-2 mb-4">
                     <div class="w-3 h-3 rounded-full animate-neon-bg"></div>
                     <h2 class="font-sport font-bold text-2xl md:text-3xl uppercase tracking-wider text-accent animate-neon-text">En Juego</h2>
                 </div>
-                <div id="live-matches-container" class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                </div>
+                <div id="live-matches-container" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div>
             </div>
-
             <div>
                 <div class="flex justify-between items-center mb-4 mt-2">
                     <h2 class="font-sport font-bold text-2xl md:text-3xl uppercase tracking-wider border-l-4 border-raptor pl-3 text-gray-100">Partidos del Día</h2>
@@ -148,14 +144,11 @@
                         <option value="Finalizado">Finalizados</option>
                     </select>
                 </div>
-                <div id="home-matches-container" class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                </div>
+                <div id="home-matches-container" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div>
             </div>
-
             <div class="pt-2">
                 <h2 class="font-sport font-bold text-2xl md:text-3xl uppercase tracking-wider mb-4 border-l-4 border-raptor pl-3 text-gray-100">Líderes de Clasificación</h2>
-                <div id="home-leaders-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-                </div>
+                <div id="home-leaders-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4"></div>
             </div>
         </section>
 
@@ -163,9 +156,7 @@
         <section id="view-teams" class="spa-view space-y-4">
             <div class="flex gap-2">
                 <div class="relative w-full">
-                    <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
-                        <i data-lucide="search" class="w-4 h-4 text-gray-400"></i>
-                    </div>
+                    <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none"><i data-lucide="search" class="w-4 h-4 text-gray-400"></i></div>
                     <input type="text" id="teams-search" onkeyup="app.renderTeams()" placeholder="Buscar equipo..." class="bg-surface border border-zinc-800 text-white text-sm rounded-lg block w-full pl-10 p-2.5 focus:border-raptor outline-none">
                 </div>
                 <select id="teams-category" onchange="app.renderTeams()" class="bg-surface border border-zinc-800 text-white text-sm rounded-lg p-2.5 outline-none min-w-[120px]">
@@ -176,39 +167,27 @@
                     <option value="Mixto">Mixto</option>
                 </select>
             </div>
-
-            <div id="teams-grid" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
-            </div>
+            <div id="teams-grid" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3"></div>
         </section>
 
         <!-- ================= VISTA: CALENDARIO ================= -->
         <section id="view-calendar" class="spa-view space-y-6">
             <div class="flex flex-col gap-2">
                 <div class="relative w-full">
-                    <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
-                        <i data-lucide="search" class="w-4 h-4 text-gray-400"></i>
-                    </div>
+                    <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none"><i data-lucide="search" class="w-4 h-4 text-gray-400"></i></div>
                     <input type="text" id="calendar-search" onkeyup="app.renderCalendarMatches()" placeholder="Buscar equipo por nombre..." class="bg-surface border border-zinc-700 text-white text-sm rounded-lg block w-full pl-10 p-2.5 focus:border-raptor outline-none transition-colors">
                 </div>
             </div>
-
             <div>
                 <h2 class="font-sport font-bold text-2xl md:text-3xl uppercase tracking-wider text-gray-100 mb-4 border-l-4 border-raptor-light pl-3">Próximos Encuentros</h2>
-                <div id="calendar-upcoming-container" class="flex overflow-x-auto gap-3 pb-2 snap-x no-scrollbar">
-                </div>
+                <div id="calendar-upcoming-container" class="flex overflow-x-auto gap-3 pb-2 snap-x no-scrollbar"></div>
             </div>
-
             <div class="pt-2">
                 <div class="flex justify-between items-center mb-4">
                     <h2 class="font-sport font-bold text-2xl md:text-3xl uppercase tracking-wider text-gray-100 border-l-4 border-raptor pl-3">Calendario General</h2>
-                    <select id="calendar-month-selector" onchange="app.changeCalendarMonth()" class="bg-surface border border-zinc-700 text-white text-xs md:text-sm font-bold rounded-lg px-3 py-2 outline-none focus:border-raptor transition-colors">
-                        <!-- Opciones generadas por JS -->
-                    </select>
+                    <select id="calendar-month-selector" onchange="app.changeCalendarMonth()" class="bg-surface border border-zinc-700 text-white text-xs md:text-sm font-bold rounded-lg px-3 py-2 outline-none focus:border-raptor transition-colors"></select>
                 </div>
-                
-                <div id="calendar-days-slider" class="flex overflow-x-auto gap-2 py-3 border-y border-zinc-800 no-scrollbar snap-x mb-4">
-                </div>
-
+                <div id="calendar-days-slider" class="flex overflow-x-auto gap-2 py-3 border-y border-zinc-800 no-scrollbar snap-x mb-4"></div>
                 <div class="flex flex-row gap-2 mb-4">
                     <select id="calendar-category" onchange="app.renderCalendarMatches()" class="bg-surface border border-zinc-700 text-white text-sm rounded-lg p-2.5 outline-none w-1/2 focus:border-raptor transition-colors">
                         <option value="Todas">Todas las Categorías</option>
@@ -225,9 +204,7 @@
                         <option value="Todos" selected>Todos</option>
                     </select>
                 </div>
-
-                <div id="calendar-matches-container" class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                </div>
+                <div id="calendar-matches-container" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div>
             </div>
         </section>
 
@@ -242,7 +219,6 @@
                 </select>
                 <input type="text" id="standings-search" onkeyup="app.renderStandings()" placeholder="Buscar equipo..." class="bg-surface border border-zinc-800 text-white text-sm rounded-lg block w-full md:w-2/3 p-2.5 outline-none focus:border-raptor">
             </div>
-
             <div class="bg-raptor-dark rounded-xl overflow-hidden border border-raptor text-sm shadow-lg overflow-x-auto">
                 <table class="w-full text-left min-w-[600px]">
                     <thead class="bg-raptor text-white text-[10px] uppercase tracking-wider border-b border-raptor-light/50">
@@ -258,29 +234,33 @@
                             <th class="py-3 px-2 font-semibold text-center" title="Puntos en Contra">PC</th>
                         </tr>
                     </thead>
-                    <tbody id="standings-table-body" class="divide-y divide-raptor/30">
-                    </tbody>
+                    <tbody id="standings-table-body" class="divide-y divide-raptor/30"></tbody>
                 </table>
             </div>
         </section>
 
         <!-- ================= VISTA: PLAYOFFS ================= -->
-<section id="view-playoffs" class="spa-view flex-col items-center justify-center py-20 px-4">
-    <div class="text-center space-y-4 bg-surface p-8 rounded-2xl border border-zinc-800 border-dashed w-full max-w-md mx-auto shadow-2xl">
-        <div class="inline-flex items-center justify-center w-16 h-16 rounded-full bg-raptor-dark border border-raptor-light mb-2 shadow-inner">
-            <i data-lucide="hammer" class="w-8 h-8 text-accent"></i>
-        </div>
-        <h2 class="font-sport font-black text-3xl uppercase tracking-wider text-white">En Desarrollo</h2>
-        <p class="text-sm text-gray-400 font-medium">El sistema interactivo de PlayOffs para la fase final del torneo está en construcción. ¡Próximamente!</p>
-    </div>
-</section>
+        <section id="view-playoffs" class="spa-view space-y-4">
+            <div class="flex gap-2 mb-2">
+                <select id="playoffs-category" onchange="app.renderPlayoffs()" class="bg-surface border border-zinc-800 text-white text-sm rounded-lg block w-full md:w-1/3 p-2.5 outline-none focus:border-raptor">
+                    <option value="Varonil">Varonil</option>
+                    <option value="Femenil A">Femenil A</option>
+                    <option value="Femenil B">Femenil B</option>
+                    <option value="Mixto">Mixto</option>
+                </select>
+            </div>
+            <div class="overflow-x-auto pb-8 no-scrollbar bg-dark/50 rounded-xl border border-zinc-800/50 p-4 relative">
+                <div id="bracket-container" class="flex gap-16 min-w-max items-center justify-start min-h-[500px]">
+                    <!-- Las rondas se inyectan dinámicamente aquí -->
+                </div>
+            </div>
+        </section>
 
     </main>
 
-    <!-- ================= MODAL CÉDULA EQUIPO ================= -->
+    <!-- ================= MODALES (CÉDULA Y PIN) ================= -->
     <div id="team-modal" class="fixed inset-0 bg-black/90 backdrop-blur-sm z-[60] hidden flex items-end md:items-center justify-center">
         <div class="bg-surface w-full max-w-md h-[85vh] md:h-auto md:max-h-[80vh] md:rounded-2xl rounded-t-2xl flex flex-col border border-zinc-800 transform transition-transform translate-y-full" id="team-modal-content">
-            
             <div class="p-4 border-b border-zinc-800 flex justify-between items-center bg-dark rounded-t-2xl">
                 <div class="flex items-center gap-3">
                     <div id="modal-team-logo" class="w-10 h-10 bg-zinc-800 rounded-full flex items-center justify-center border border-zinc-700"></div>
@@ -291,12 +271,10 @@
                 </div>
                 <button onclick="app.closeModal()" class="text-gray-400 hover:text-white bg-surface p-2 rounded-full"><i data-lucide="x" class="w-5 h-5"></i></button>
             </div>
-
             <div class="p-4 overflow-y-auto flex-1 space-y-4">
                 <div class="bg-zinc-900/50 p-4 md:p-5 rounded-xl border border-zinc-800/50 flex justify-between items-center gap-3 relative overflow-hidden shadow-lg">
                     <div class="flex items-center gap-4 z-10">
-                        <div id="modal-coach-photo-container" class="w-16 h-16 md:w-20 md:h-20 rounded-full bg-dark border-2 border-zinc-700 flex-shrink-0 flex justify-center items-center overflow-hidden shadow-inner">
-                        </div>
+                        <div id="modal-coach-photo-container" class="w-16 h-16 md:w-20 md:h-20 rounded-full bg-dark border-2 border-zinc-700 flex-shrink-0 flex justify-center items-center overflow-hidden shadow-inner"></div>
                         <div class="flex flex-col justify-center">
                             <p class="text-[10px] text-accent uppercase font-bold tracking-widest mb-0.5">Representante</p>
                             <p id="modal-coach-name" class="text-base md:text-lg font-black text-white leading-tight">Cargando...</p>
@@ -306,45 +284,30 @@
                         <button onclick="app.requestPin()" id="btn-coach-contact" class="flex items-center justify-center w-12 h-12 bg-surface hover:bg-zinc-800 border border-zinc-700 text-white rounded-full transition shadow-md">
                             <i data-lucide="lock" class="w-5 h-5 text-accent"></i>
                         </button>
-                        
                         <div id="links-coach-contact" class="hidden flex gap-2">
-                            <a id="link-coach-call" href="#" class="flex items-center justify-center w-10 h-10 bg-blue-600 hover:bg-blue-500 text-white rounded-full transition shadow-md">
-                                <i data-lucide="phone-call" class="w-4 h-4"></i>
-                            </a>
-                            <a id="link-coach-wa" href="#" target="_blank" rel="noopener noreferrer" class="flex items-center justify-center w-10 h-10 bg-[#25D366] hover:bg-[#128C7E] text-white rounded-full transition shadow-md">
-                                <i data-lucide="message-circle" class="w-4 h-4"></i>
-                            </a>
+                            <a id="link-coach-call" href="#" class="flex items-center justify-center w-10 h-10 bg-blue-600 hover:bg-blue-500 text-white rounded-full transition shadow-md"><i data-lucide="phone-call" class="w-4 h-4"></i></a>
+                            <a id="link-coach-wa" href="#" target="_blank" rel="noopener noreferrer" class="flex items-center justify-center w-10 h-10 bg-[#25D366] hover:bg-[#128C7E] text-white rounded-full transition shadow-md"><i data-lucide="message-circle" class="w-4 h-4"></i></a>
                         </div>
                     </div>
-                    <div class="absolute right-0 top-0 bottom-0 flex items-center pr-2 pointer-events-none">
-                        <i data-lucide="shield" class="w-24 h-24 text-white/[0.02] transform rotate-12"></i>
-                    </div>
                 </div>
-
                 <div>
                     <div class="flex justify-between items-center mb-3">
                         <h4 class="text-xs font-bold text-gray-400 uppercase tracking-wider">Plantilla Oficial</h4>
                         <span id="modal-roster-count" class="text-[10px] bg-dark border border-zinc-800 px-2 py-1 rounded font-medium text-gray-400">0 Registrados</span>
                     </div>
-                    <ul id="modal-roster-list" class="space-y-2">
-                    </ul>
+                    <ul id="modal-roster-list" class="space-y-2"></ul>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- ================= MODAL PIN ÁRBITRO ================= -->
     <div id="pin-modal" class="fixed inset-0 bg-black/80 z-[70] hidden flex items-center justify-center p-4">
         <div class="bg-dark border border-zinc-800 rounded-xl w-full max-w-xs p-5 text-center shadow-2xl transform scale-95 transition-transform" id="pin-modal-content">
-            <div class="mx-auto w-12 h-12 bg-surface rounded-full flex items-center justify-center mb-3">
-                <i data-lucide="lock" class="w-5 h-5 text-accent"></i>
-            </div>
+            <div class="mx-auto w-12 h-12 bg-surface rounded-full flex items-center justify-center mb-3"><i data-lucide="lock" class="w-5 h-5 text-accent"></i></div>
             <h3 class="font-sport font-bold text-xl uppercase tracking-wide mb-1">Acceso Restringido</h3>
             <p class="text-xs text-gray-400 mb-4">Ingrese PIN de árbitro para revelar el contacto.</p>
-            
             <input type="password" id="pin-input" placeholder="PIN de 4 dígitos" class="bg-surface border border-zinc-700 text-white text-center text-lg tracking-[0.5em] rounded-lg block w-full p-3 mb-2 outline-none focus:border-accent" maxlength="4" autocomplete="off">
             <p id="pin-error-msg" class="text-[10px] text-red-400 mb-4 hidden h-3">PIN incorrecto o inválido.</p>
-            
             <div class="flex gap-2">
                 <button onclick="app.closePinPrompt()" class="flex-1 bg-surface border border-zinc-800 text-gray-300 text-sm font-bold rounded-lg py-2 hover:bg-zinc-800 transition">Cancelar</button>
                 <button onclick="app.submitPinPrompt()" class="flex-1 bg-raptor text-white text-sm font-bold rounded-lg py-2 hover:bg-raptor-light transition">Validar</button>
@@ -355,15 +318,13 @@
     <!-- ================= JAVASCRIPT ASÍNCRONO ================= -->
     <script>
         lucide.createIcons();
-
         const getTodayString = () => {
             const d = new Date();
             return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
         };
-
         const todayStr = getTodayString();
 
-        // [NEXO SPORTS MAPA] 1. CONFIGURACIÓN DE LA API
+        // API REST URL ///
         const API_URL = "https://script.google.com/macros/s/AKfycbxdKCkEmmeq3XmwCvkp9PO2ISYS-CWkRokw5UBSJ5lxBxfoaEa2pGUGl86x1xQ6F_0Myg/exec";
 
         const app = {
@@ -376,9 +337,7 @@
 
             normalizeDateStr: function(dateStr) {
                 if (!dateStr) return "";
-                if (dateStr.includes("-") && dateStr.split("-")[0].length === 4) {
-                    return dateStr;
-                }
+                if (dateStr.includes("-") && dateStr.split("-")[0].length === 4) return dateStr;
                 if (dateStr.includes("/")) {
                     const parts = dateStr.split("/");
                     if (parts.length === 3 && parts[2].length === 4) {
@@ -394,11 +353,9 @@
                 let isPM = /(p\.?m\.?|p\s*m)/i.test(str);
                 let isAM = /(a\.?m\.?|a\s*m)/i.test(str);
                 let timeParts = str.match(/\d+/g);
-                
                 if (timeParts && timeParts.length >= 2) {
                     let h = parseInt(timeParts[0], 10);
                     let m = parseInt(timeParts[1], 10);
-                    
                     if (!isPM && !isAM) return (h * 60) + m;
                     if (isPM && h !== 12) h += 12;
                     if (isAM && h === 12) h = 0;
@@ -408,7 +365,11 @@
             },
 
             init: async function() {
-                // 1. CAPA INMEDIATA (0 ms): Intentar pintar desde caché local del navegador
+                window.addEventListener('resize', () => {
+                    const activeView = document.querySelector('.spa-view.active')?.id;
+                    if (activeView === 'view-playoffs') this.drawBracketLines();
+                });
+
                 const localCache = localStorage.getItem("raptors_bootstrap_cache");
                 if (localCache) {
                     try {
@@ -421,27 +382,24 @@
                     }
                 }
 
-                // 2. CAPA EN SEGUNDO PLANO: 1 sola petición HTTP en lugar de 4
                 try {
                     const res = await fetch(`${API_URL}?endpoint=bootstrap`);
                     const json = await res.json();
 
                     if (json?.status === "success" && json?.data) {
-                        // Guardar la foto del estado en el navegador para la próxima visita
                         localStorage.setItem("raptors_bootstrap_cache", JSON.stringify(json.data));
                         
                         this.hydrateData(json.data);
                         
-                        // Si es la primera visita (no había caché local), activar la vista
                         if (!localCache) {
                             this.switchView('home');
                         } else {
-                            // Actualización silenciosa de la vista actual si el usuario ya estaba viendo datos
                             const activeView = document.querySelector('.spa-view.active')?.id?.replace('view-', '') || 'home';
                             if (activeView === 'home') this.renderHome();
                             if (activeView === 'calendar') this.initCalendar();
                             if (activeView === 'standings') this.renderStandings();
                             if (activeView === 'teams') this.renderTeams();
+                            if (activeView === 'playoffs') this.renderPlayoffs();
                         }
                     }
                 } catch (error) {
@@ -455,16 +413,13 @@
                 }
             },
 
-            // Método auxiliar para limpiar y normalizar los datos de entrada
             hydrateData: function(data) {
                 if (data.config) {
                     this.data.config = data.config;
                     this.activeSeason = data.config.activa || '';
                     this.populateSeasonFilter();
                 }
-                
                 this.data.teams = Array.isArray(data.equipos) ? data.equipos : [];
-                
                 this.data.matches = Array.isArray(data.partidos) ? data.partidos.map(m => ({
                     ...m,
                     date: this.normalizeDateStr(m.date)
@@ -474,36 +429,26 @@
                     if (dateA !== dateB) return dateA.localeCompare(dateB);
                     return this.parseTimeForSort(a.time) - this.parseTimeForSort(b.time);
                 }) : [];
-                
                 this.data.standings = Array.isArray(data.clasificacion) ? data.clasificacion : [];
-
-                // Jerarquía Personalizada Raptors (PG -> PJ -> PP -> SF -> SC -> PF -> PC)
                 this.data.standings.sort((a, b) => {
                     const pgA = Number(a.pg ?? a.won) || 0;
                     const pgB = Number(b.pg ?? b.won) || 0;
                     if (pgB !== pgA) return pgB - pgA;
-
-                    // [NUEVO CRITERIO RAPTORS] Priorizar mayor cantidad de juegos jugados (PJ)
                     const pjA = Number(a.pj ?? a.pld) || 0;
                     const pjB = Number(b.pj ?? b.pld) || 0;
                     if (pjB !== pjA) return pjB - pjA;
-
                     const ppA = Number(a.pp ?? a.lst) || 0;
                     const ppB = Number(b.pp ?? b.lst) || 0;
                     if (ppA !== ppB) return ppA - ppB;
-
                     const sfA = Number(a.sf ?? a.sw) || 0;
                     const sfB = Number(b.sf ?? b.sw) || 0;
                     if (sfB !== sfA) return sfB - sfA;
-
                     const scA = Number(a.sc ?? a.sl) || 0;
                     const scB = Number(b.sc ?? b.sl) || 0;
                     if (scA !== scB) return scA - scB;
-
                     const pfA = Number(a.pf ?? a.pts) || 0;
                     const pfB = Number(b.pf ?? b.pts) || 0;
                     if (pfB !== pfA) return pfB - pfA;
-
                     const pcA = Number(a.pc) || 0;
                     const pcB = Number(b.pc) || 0;
                     return pcA - pcB;
@@ -517,7 +462,6 @@
                     const isSelected = (t.temporada === this.activeSeason) ? 'selected' : '';
                     select.innerHTML += `<option value="${t.temporada}" ${isSelected}>${t.temporada}</option>`;
                 });
-                
                 select.addEventListener('change', (e) => {
                     this.activeSeason = e.target.value;
                     this.switchView(document.querySelector('.spa-view.active').id.replace('view-', ''));
@@ -541,19 +485,25 @@
                 if(viewId === 'calendar') this.initCalendar();
                 if(viewId === 'standings') this.renderStandings();
                 if(viewId === 'teams') this.renderTeams();
+                if(viewId === 'playoffs') this.renderPlayoffs(); 
             },
 
             getLogoBadge: function(name) {
                 const team = this.data.teams.find(t => t.name === name);
-                
                 if (team && team.logo && team.logo.trim() !== "") {
                     return `<img src="${team.logo}" alt="${name}" class="w-10 h-10 md:w-12 md:h-12 rounded-full object-cover border border-raptor-light shadow-inner bg-dark">`;
                 }
-                
                 const short = name.substring(0,3).toUpperCase();
-                return `<div class="w-10 h-10 md:w-12 md:h-12 bg-dark rounded-full flex items-center justify-center border border-raptor-light shadow-inner">
-                            <span class="font-sport font-bold text-sm md:text-lg text-white tracking-tighter">${short}</span>
-                        </div>`;
+                return `<div class="w-10 h-10 md:w-12 md:h-12 bg-dark rounded-full flex items-center justify-center border border-raptor-light shadow-inner"><span class="font-sport font-bold text-sm md:text-lg text-white tracking-tighter">${short}</span></div>`;
+            },
+            
+            getPodiumLogo: function(teamName, sizeClasses, textClasses, borderClasses) {
+                const team = this.data.teams.find(t => t.name === teamName);
+                const short = teamName && teamName !== 'Por Definir' ? teamName.substring(0,3).toUpperCase() : '???';
+                if (team && team.logo && team.logo.trim() !== "") {
+                    return `<img src="${team.logo}" alt="${teamName}" class="${sizeClasses} rounded-full object-cover border-4 ${borderClasses} shadow-[inset_0_0_20px_rgba(0,0,0,0.5)] bg-dark shrink-0">`;
+                }
+                return `<div class="${sizeClasses} bg-dark rounded-full border-4 ${borderClasses} flex items-center justify-center shadow-[inset_0_0_20px_rgba(0,0,0,0.5)] shrink-0"><span class="font-sport font-bold ${textClasses} text-white tracking-tighter">${short}</span></div>`;
             },
 
             getMatchCardHTML: function(m, isLive = false) {
@@ -569,9 +519,7 @@
                 let displayDate = matchDate;
                 if (displayDate && displayDate.includes('-')) {
                     const parts = displayDate.split('-');
-                    if (parts.length === 3) {
-                        displayDate = `${parts[2]}/${parts[1]}/${parts[0]}`;
-                    }
+                    if (parts.length === 3) displayDate = `${parts[2]}/${parts[1]}/${parts[0]}`;
                 }
                 
                 let matchTime = m?.time || '00:00';
@@ -583,71 +531,169 @@
                     if (timeParts && timeParts.length >= 2) {
                         let h = parseInt(timeParts[0], 10);
                         let min = timeParts[1].padStart(2, '0');
-
                         if (!isPM && !isAM) {
                             if (h >= 12) isPM = true;
                             else isAM = true;
                         }
-
                         if (h > 12) h -= 12;
                         else if (h === 0) h = 12;
-
                         let suffix = isPM ? 'p.m.' : 'a.m.';
                         matchTime = `${h}:${min} ${suffix}`;
-                    } else {
-                        matchTime = '00:00';
-                    }
+                    } else matchTime = '00:00';
                 }
 
-                // [NEXO SPORTS FIX] Colores vibrantes para cada estatus de partido
                 let statusColor = '';
-                if (isLive) {
-                    statusColor = 'text-accent animate-pulse font-black drop-shadow-md';
-                } else if (matchStatus === 'Finalizado') {
-                    statusColor = 'text-blue-400 font-black'; // Azul brillante en lugar de gris
-                } else if (matchStatus === 'Cancelado') {
-                    statusColor = 'text-red-500 font-black'; // Rojo alerta
-                } else {
-                    statusColor = 'text-raptor-light font-bold'; // Programado y otros
-                }
+                if (isLive) statusColor = 'text-accent animate-pulse font-black drop-shadow-md';
+                else if (matchStatus === 'Finalizado') statusColor = 'text-blue-400 font-black';
+                else if (matchStatus === 'Cancelado') statusColor = 'text-red-500 font-black';
+                else statusColor = 'text-raptor-light font-bold';
 
                 const liveBg = isLive ? 'bg-raptor border-raptor-light shadow-[0_0_15px_rgba(157,80,224,0.4)]' : 'bg-raptor-dark border-raptor hover:border-raptor-light hover:bg-raptor/80 shadow-lg transition-all';
                 
+                let playoffBadgeHTML = "";
+                const isPlayoffFase = m?.fase && m.fase !== "Temporada Regular" && m.fase !== "";
+                
+                if (isPlayoffFase) {
+                    let displayFase = m.fase;
+                    if (displayFase.toUpperCase() === "OCTAVOS DE FINAL") displayFase = "8vos de Final";
+                    else if (displayFase.toUpperCase() === "CUARTOS DE FINAL") displayFase = "4tos de Final";
+                    else if (displayFase.toUpperCase() === "TERCER LUGAR") displayFase = "3er Lugar";
+
+                    playoffBadgeHTML = `
+                        <span class="text-[9px] md:text-[10px] font-black text-yellow-400 tracking-widest uppercase flex items-center gap-1 border border-yellow-500/60 bg-yellow-500/20 px-2 py-0.5 rounded shadow-[0_0_10px_rgba(234,179,8,0.3)] whitespace-nowrap">
+                            <i data-lucide="trophy" class="w-3 h-3"></i> ${displayFase}
+                        </span>
+                    `;
+                }
+
                 return `
                     <div class="${liveBg} border rounded-xl flex flex-col relative h-full overflow-hidden">
-                        
                         <div class="bg-black/40 border-b border-raptor-light/20 px-4 py-2 flex justify-between items-center w-full">
                             <span class="text-[9px] text-white uppercase tracking-widest font-bold bg-dark px-2 py-0.5 rounded border border-raptor/50">${matchCategory}</span>
-                            
-                            <span class="text-[10px] font-bold text-gray-200 tracking-wider flex items-center gap-1.5 uppercase">
-                                <i data-lucide="map-pin" class="w-3 h-3 text-raptor-light"></i> ${matchCourt}
-                            </span>
-                            
+                            <span class="text-[10px] font-bold text-gray-200 tracking-wider flex items-center gap-1.5 uppercase"><i data-lucide="map-pin" class="w-3 h-3 text-raptor-light"></i> ${matchCourt}</span>
                             <span class="text-[9px] uppercase ${statusColor} tracking-widest">${matchStatus}</span>
                         </div>
-                        
                         <div class="flex justify-between items-center p-4 flex-1">
-                            <div class="flex flex-col items-center gap-2 w-1/3">
-                                ${this.getLogoBadge(teamA)}
-                                <span class="text-xs font-bold text-center leading-tight truncate w-full text-white">${teamA}</span>
-                            </div>
-                            <div class="flex justify-center items-center gap-3 w-1/3">
-                                <span class="font-sport font-black text-3xl md:text-4xl text-white">${scoreA}</span>
-                                <span class="text-raptor-light font-bold">-</span>
-                                <span class="font-sport font-black text-3xl md:text-4xl text-white">${scoreB}</span>
-                            </div>
-                            <div class="flex flex-col items-center gap-2 w-1/3">
-                                ${this.getLogoBadge(teamB)}
-                                <span class="text-xs font-bold text-center leading-tight truncate w-full text-white">${teamB}</span>
-                            </div>
+                            <div class="flex flex-col items-center gap-2 w-1/3">${this.getLogoBadge(teamA)}<span class="text-xs font-bold text-center leading-tight truncate w-full text-white">${teamA}</span></div>
+                            <div class="flex justify-center items-center gap-3 w-1/3"><span class="font-sport font-black text-3xl md:text-4xl text-white">${scoreA}</span><span class="text-raptor-light font-bold">-</span><span class="font-sport font-black text-3xl md:text-4xl text-white">${scoreB}</span></div>
+                            <div class="flex flex-col items-center gap-2 w-1/3">${this.getLogoBadge(teamB)}<span class="text-xs font-bold text-center leading-tight truncate w-full text-white">${teamB}</span></div>
                         </div>
-
-                        <div class="bg-black/60 border-t border-raptor/30 px-4 py-2 flex justify-center items-center gap-5 w-full">
-                            <span class="text-[10px] font-bold text-white tracking-wider uppercase flex items-center gap-1.5">
+                        <div class="bg-black/60 border-t border-raptor/30 px-4 py-2 flex justify-between items-center w-full relative z-10 min-h-[40px]">
+                            <span class="text-[10px] font-bold text-white tracking-wider uppercase flex items-center gap-1.5 w-1/3 justify-start">
                                 <i data-lucide="calendar" class="w-3.5 h-3.5 text-raptor-light"></i> ${displayDate}
                             </span>
-                            <span class="text-[10px] font-bold text-white tracking-wider uppercase flex items-center gap-1.5">
+                            <div class="w-1/3 flex justify-center">
+                                ${playoffBadgeHTML}
+                            </div>
+                            <span class="text-[10px] font-bold text-white tracking-wider uppercase flex items-center gap-1.5 w-1/3 justify-end">
                                 <i data-lucide="clock" class="w-3.5 h-3.5 text-raptor-light"></i> ${matchTime}
+                            </span>
+                        </div>
+                    </div>
+                `;
+            },
+
+            getPlayoffCardHTML: function(m, roundName, order, top, isThirdPlace = false) {
+                const CARD_HEIGHT = 140; 
+                const label = isThirdPlace ? `<h4 class="text-[10px] font-bold text-gray-500 uppercase tracking-widest absolute -top-6 w-full text-center">3er Lugar</h4>` : '';
+
+                if (!m) {
+                    return `
+                        <div data-fase="${roundName}" data-orden="${order}" class="bg-dark/40 rounded-xl border border-zinc-800/50 flex flex-col items-center justify-center w-full border-dashed shrink-0 absolute z-10" style="height:${CARD_HEIGHT}px; top:${top}px; left:0;">
+                            ${label}
+                            <i data-lucide="shield-question" class="w-6 h-6 text-zinc-700 mb-2"></i>
+                            <span class="text-[10px] font-bold text-zinc-600 uppercase tracking-widest">Por Definir</span>
+                        </div>
+                    `;
+                }
+
+                const teamA = m.teamA || 'Por Definir';
+                const teamB = m.teamB || 'Por Definir';
+                const scoreA = m.scoreA !== undefined && m.scoreA !== "" ? m.scoreA : '-';
+                const scoreB = m.scoreB !== undefined && m.scoreB !== "" ? m.scoreB : '-';
+                const matchStatus = m.status || 'Programado';
+                const matchCourt = m.court || 'Por asignar';
+                const matchDate = m.date || 'Pendiente';
+
+                let displayDate = matchDate;
+                if (displayDate && displayDate.includes('-')) {
+                    const parts = displayDate.split('-');
+                    if (parts.length === 3) displayDate = `${parts[2]}/${parts[1]}/${parts[0]}`;
+                }
+
+                let matchTime = m.time || '--:--';
+                if (matchTime && matchTime !== '--:--') {
+                    let str = matchTime.toString().toLowerCase().trim();
+                    let isPM = /(p\.?m\.?|p\s*m)/i.test(str);
+                    let isAM = /(a\.?m\.?|a\s*m)/i.test(str);
+                    let timeParts = str.match(/\d+/g);
+                    if (timeParts && timeParts.length >= 2) {
+                        let h = parseInt(timeParts[0], 10);
+                        let min = timeParts[1].padStart(2, '0');
+                        if (!isPM && !isAM) { if (h >= 12) isPM = true; else isAM = true; }
+                        if (h > 12) h -= 12; else if (h === 0) h = 12;
+                        matchTime = `${h}:${min} ${isPM ? 'p.m.' : 'a.m.'}`;
+                    } else matchTime = '--:--';
+                }
+
+                const isLive = matchStatus === 'En Vivo';
+                const isFinal = matchStatus === 'Finalizado';
+
+                let winner = "";
+                if (isFinal) {
+                    if (Number(scoreA) > Number(scoreB)) winner = teamA;
+                    else if (Number(scoreB) > Number(scoreA)) winner = teamB;
+                }
+
+                const borderClass = isLive ? 'border-accent shadow-[0_0_12px_rgba(0,255,135,0.2)]' : (isFinal ? 'border-zinc-700 bg-surface/80' : 'border-zinc-800 hover:border-raptor-light transition-colors');
+                const pingIndicator = isLive ? `<span class="absolute -top-1.5 -left-1.5 flex h-3.5 w-3.5 z-20"><span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-accent opacity-75"></span><span class="relative inline-flex rounded-full h-3.5 w-3.5 bg-accent border border-dark"></span></span>` : '';
+                
+                const logoA_Html = this.getLogoBadge(teamA).replace('w-10 h-10 md:w-12 md:h-12', 'w-7 h-7').replace('text-sm md:text-lg', 'text-[10px]');
+                const logoB_Html = this.getLogoBadge(teamB).replace('w-10 h-10 md:w-12 md:h-12', 'w-7 h-7').replace('text-sm md:text-lg', 'text-[10px]');
+
+                const colorScoreA = (isFinal && Number(scoreA) > Number(scoreB)) ? 'text-accent' : 'text-gray-300';
+                const colorScoreB = (isFinal && Number(scoreB) > Number(scoreA)) ? 'text-accent' : 'text-gray-300';
+                const colorNameA = (isFinal && Number(scoreA) < Number(scoreB)) ? 'text-zinc-500' : 'text-white';
+                const colorNameB = (isFinal && Number(scoreB) < Number(scoreA)) ? 'text-zinc-500' : 'text-white';
+
+                const statusBadge = isLive 
+                    ? 'bg-accent text-dark font-black shadow-[0_0_10px_#00FF87]' 
+                    : (isFinal 
+                        ? 'bg-zinc-800 border-2 border-zinc-500 text-gray-100 font-bold' 
+                        : 'bg-raptor border border-raptor-light text-white font-bold shadow-[0_0_8px_rgba(157,80,224,0.5)]');
+
+                return `
+                    <div id="bracket-match-${m.id}" data-fase="${roundName}" data-orden="${order}" data-winner="${winner}" data-team-a="${teamA}" data-team-b="${teamB}" class="bg-surface rounded-xl border ${borderClass} flex flex-col relative w-full z-10 cursor-default shadow-md h-[${CARD_HEIGHT}px] shrink-0 overflow-hidden" style="position:absolute; top:${top}px; left:0;">
+                        ${label}
+                        ${pingIndicator}
+                        <div class="flex justify-between items-center border-b border-zinc-800 bg-zinc-900/90 px-3 py-1.5 rounded-t-xl h-[32px]">
+                            <span class="text-[9px] font-bold text-gray-200 uppercase tracking-widest flex items-center gap-1.5 w-[65%]">
+                                <i data-lucide="map-pin" class="w-3 h-3 text-raptor-light shrink-0"></i> <span class="truncate">${matchCourt}</span>
+                            </span>
+                            <span class="text-[9px] px-2 py-0.5 rounded uppercase tracking-widest shrink-0 ${statusBadge}">${matchStatus}</span>
+                        </div>
+                        <div class="p-2 flex-1 flex flex-col justify-center gap-1.5">
+                            <div class="flex justify-between items-center min-h-[26px]">
+                                <div class="flex items-center gap-2 overflow-hidden w-4/5">
+                                    ${logoA_Html}
+                                    <span class="font-bold text-xs ${colorNameA} truncate block">${teamA}</span>
+                                </div>
+                                <span class="font-sport font-black text-xl ${colorScoreA}">${scoreA}</span>
+                            </div>
+                            <div class="flex justify-between items-center min-h-[26px]">
+                                <div class="flex items-center gap-2 overflow-hidden w-4/5">
+                                    ${logoB_Html}
+                                    <span class="font-bold text-xs ${colorNameB} truncate block">${teamB}</span>
+                                </div>
+                                <span class="font-sport font-black text-xl ${colorScoreB}">${scoreB}</span>
+                            </div>
+                        </div>
+                        <div class="bg-black/60 border-t border-zinc-800 px-3 py-1.5 flex justify-between items-center w-full h-[32px] rounded-b-xl">
+                            <span class="text-[9px] font-bold text-gray-300 tracking-wider uppercase flex items-center gap-1.5 w-[50%]">
+                                <i data-lucide="calendar" class="w-3 h-3 text-raptor-light shrink-0"></i> <span class="truncate">${displayDate}</span>
+                            </span>
+                            <span class="text-[9px] font-bold text-gray-300 tracking-wider uppercase flex items-center gap-1.5 justify-end w-[50%]">
+                                <i data-lucide="clock" class="w-3 h-3 text-raptor-light shrink-0"></i> ${matchTime}
                             </span>
                         </div>
                     </div>
@@ -656,78 +702,38 @@
 
             renderHome: function() {
                 const seasonMatches = this.data.matches.filter(m => m.temporada === this.activeSeason);
-
                 const liveContainer = document.getElementById('live-matches-container');
                 liveContainer.innerHTML = '';
                 const liveMatches = seasonMatches.filter(m => m.status === "En Vivo");
-                
-                if(liveMatches.length > 0) {
-                    liveMatches.forEach(m => { liveContainer.innerHTML += this.getMatchCardHTML(m, true); });
-                } else {
-                    liveContainer.innerHTML = `<div class="col-span-1 md:col-span-2 text-center py-6 text-sm text-zinc-400 bg-surface border border-zinc-700/50 border-dashed rounded-xl">No hay partidos en juego.</div>`;
-                }
+                if(liveMatches.length > 0) liveMatches.forEach(m => { liveContainer.innerHTML += this.getMatchCardHTML(m, true); });
+                else liveContainer.innerHTML = `<div class="col-span-1 md:col-span-2 text-center py-6 text-sm text-zinc-400 bg-surface border border-zinc-700/50 border-dashed rounded-xl">No hay partidos en juego.</div>`;
 
                 const statusFilter = document.getElementById('home-status-filter').value;
                 const homeMatchesContainer = document.getElementById('home-matches-container');
                 homeMatchesContainer.innerHTML = '';
-                
                 let dayMatches = seasonMatches.filter(m => m.date === todayStr);
-                if (statusFilter !== "Todos") {
-                    dayMatches = dayMatches.filter(m => m.status === statusFilter);
-                } else {
-                    dayMatches = dayMatches.filter(m => m.status !== "En Vivo");
-                }
+                if (statusFilter !== "Todos") dayMatches = dayMatches.filter(m => m.status === statusFilter);
+                else dayMatches = dayMatches.filter(m => m.status !== "En Vivo");
 
-                if(dayMatches.length > 0) {
-                    dayMatches.forEach(m => { homeMatchesContainer.innerHTML += this.getMatchCardHTML(m, false); });
-                } else {
-                    homeMatchesContainer.innerHTML = `<div class="col-span-1 md:col-span-2 text-center py-6 text-sm text-zinc-400 bg-surface border border-zinc-700/50 border-dashed rounded-xl">No hay partidos para mostrar con este filtro.</div>`;
-                }
+                if(dayMatches.length > 0) dayMatches.forEach(m => { homeMatchesContainer.innerHTML += this.getMatchCardHTML(m, false); });
+                else homeMatchesContainer.innerHTML = `<div class="col-span-1 md:col-span-2 text-center py-6 text-sm text-zinc-400 bg-surface border border-zinc-700/50 border-dashed rounded-xl">No hay partidos para mostrar con este filtro.</div>`;
 
                 const leadersContainer = document.getElementById('home-leaders-container');
                 leadersContainer.innerHTML = '';
                 const cats = ["Varonil", "Femenil A", "Femenil B", "Mixto"];
-                
                 cats.forEach(cat => {
                     const topTeams = this.data.standings.filter(s => s.category === cat && s.temporada === this.activeSeason).slice(0, 5);
                     if(topTeams.length === 0) return;
-
-                    let tableHtml = `
-                    <div class="bg-raptor-dark/60 rounded-xl border border-raptor overflow-hidden shadow-lg">
-                        <div class="bg-raptor px-3 py-2 border-b border-raptor-light/50 flex items-center justify-between">
-                            <span class="text-xs font-bold text-white uppercase tracking-wider">${cat}</span>
-                            <i data-lucide="trophy" class="w-3 h-3 text-accent"></i>
-                        </div>
-                        <table class="w-full text-left text-xs">
-                            <tbody class="divide-y divide-raptor/50">
-                    `;
-                    
+                    let tableHtml = `<div class="bg-raptor-dark/60 rounded-xl border border-raptor overflow-hidden shadow-lg"><div class="bg-raptor px-3 py-2 border-b border-raptor-light/50 flex items-center justify-between"><span class="text-xs font-bold text-white uppercase tracking-wider">${cat}</span><i data-lucide="trophy" class="w-3 h-3 text-accent"></i></div><table class="w-full text-left text-xs"><tbody class="divide-y divide-raptor/50">`;
                     topTeams.forEach((s, i) => {
                         const rankColor = i === 0 ? 'text-accent font-black' : 'text-gray-300 font-bold';
                         const pgVal = s.pg ?? s.won ?? 0;
                         const ppVal = s.pp ?? s.lst ?? 0;
-                        
-                        // [NEXO SPORTS FIX] Búsqueda real de la imagen del logo en el catálogo de equipos
                         const teamData = this.data.teams.find(t => t.name === s.team);
                         const logoHtml = (teamData && teamData.logo && teamData.logo.trim() !== "") 
                             ? `<img src="${teamData.logo}" alt="${s.team}" class="w-6 h-6 md:w-7 md:h-7 rounded-full object-cover border border-raptor-light shrink-0 shadow-inner bg-dark">`
-                            : `<div class="w-6 h-6 md:w-7 md:h-7 bg-dark rounded-full flex items-center justify-center border border-raptor-light shrink-0 shadow-inner">
-                                <span class="font-sport font-bold text-[9px] md:text-[10px] text-white">${s.team.substring(0,3).toUpperCase()}</span>
-                               </div>`;
-
-                        tableHtml += `
-                            <tr class="hover:bg-raptor/40 transition-colors">
-                                <td class="py-2.5 px-2 w-7 text-center ${rankColor}">${i+1}</td>
-                                <td class="py-2.5 px-2">
-                                    <div class="flex items-center gap-2">
-                                        ${logoHtml}
-                                        <span class="font-semibold truncate max-w-[110px] text-xs text-gray-100">${s.team}</span>
-                                    </div>
-                                </td>
-                                <!-- NOTA: Si tras mi crítica decides quitar 100% el dato numérico, elimina el <td> de abajo -->
-                                <td class="py-2.5 px-2 text-right font-sport font-bold text-sm text-accent" title="Ganados - Perdidos">${pgVal}-${ppVal}</td>
-                            </tr>
-                        `;
+                            : `<div class="w-6 h-6 md:w-7 md:h-7 bg-dark rounded-full flex items-center justify-center border border-raptor-light shrink-0 shadow-inner"><span class="font-sport font-bold text-[9px] md:text-[10px] text-white">${s.team.substring(0,3).toUpperCase()}</span></div>`;
+                        tableHtml += `<tr class="hover:bg-raptor/40 transition-colors"><td class="py-2.5 px-2 w-7 text-center ${rankColor}">${i+1}</td><td class="py-2.5 px-2"><div class="flex items-center gap-2">${logoHtml}<span class="font-semibold truncate max-w-[110px] text-xs text-gray-100">${s.team}</span></div></td><td class="py-2.5 px-2 text-right font-sport font-bold text-sm text-accent">${pgVal}-${ppVal}</td></tr>`;
                     });
                     tableHtml += `</tbody></table></div>`;
                     leadersContainer.innerHTML += tableHtml;
@@ -740,18 +746,11 @@
                 const catFilter = document.getElementById('teams-category').value;
                 const grid = document.getElementById('teams-grid');
                 grid.innerHTML = '';
-                
-                const idsEquiposParticipantes = this.data.standings
-                    .filter(s => s.temporada === this.activeSeason)
-                    .map(s => s.teamId);
-                
+                const idsEquiposParticipantes = this.data.standings.filter(s => s.temporada === this.activeSeason).map(s => s.teamId);
                 let filtered = this.data.teams.filter(t => {
-                    if (this.activeSeason === this.data.config.activa) {
-                        return t.estatus && t.estatus.toUpperCase() === 'ACTIVO';
-                    }
+                    if (this.activeSeason === this.data.config.activa) return t.estatus && t.estatus.toUpperCase() === 'ACTIVO';
                     return idsEquiposParticipantes.includes(t.id);
                 });
-
                 if(catFilter !== "Todas") filtered = filtered.filter(t => t.category === catFilter);
                 if(search) filtered = filtered.filter(t => t.name.toLowerCase().includes(search));
 
@@ -759,18 +758,8 @@
                     grid.innerHTML = `<div class="col-span-2 md:col-span-4 text-center py-10 text-sm text-zinc-400 bg-surface border border-zinc-700/50 border-dashed rounded-xl">No se encontraron equipos.</div>`;
                     return;
                 }
-
                 filtered.forEach(t => {
-                    grid.innerHTML += `
-                        <div onclick="app.openModal('${t.id}')" class="bg-raptor-dark border border-raptor rounded-xl p-4 flex flex-col items-center justify-center text-center cursor-pointer hover:border-raptor-light hover:bg-raptor transition-all shadow-lg">
-                            ${t.logo 
-                                ? `<img src="${t.logo}" alt="${t.name}" class="w-14 h-14 rounded-full object-cover mb-3 border border-raptor-light shadow-inner bg-dark">`
-                                : `<div class="w-14 h-14 bg-dark rounded-full mb-3 flex items-center justify-center border border-raptor-light shadow-inner"><span class="font-sport font-bold text-xl text-white tracking-tighter">${t.name.substring(0,3).toUpperCase()}</span></div>`
-                            }
-                            <h3 class="font-bold text-sm leading-tight text-white">${t.name}</h3>
-                            <span class="text-[10px] font-bold text-accent uppercase tracking-widest mt-1.5 bg-dark border border-raptor-light/50 px-2 py-0.5 rounded">${t.category}</span>
-                        </div>
-                    `;
+                    grid.innerHTML += `<div onclick="app.openModal('${t.id}')" class="bg-raptor-dark border border-raptor rounded-xl p-4 flex flex-col items-center justify-center text-center cursor-pointer hover:border-raptor-light hover:bg-raptor transition-all shadow-lg">${t.logo ? `<img src="${t.logo}" alt="${t.name}" class="w-14 h-14 rounded-full object-cover mb-3 border border-raptor-light shadow-inner bg-dark">` : `<div class="w-14 h-14 bg-dark rounded-full mb-3 flex items-center justify-center border border-raptor-light shadow-inner"><span class="font-sport font-bold text-xl text-white tracking-tighter">${t.name.substring(0,3).toUpperCase()}</span></div>`}<h3 class="font-bold text-sm leading-tight text-white">${t.name}</h3><span class="text-[10px] font-bold text-accent uppercase tracking-widest mt-1.5 bg-dark border border-raptor-light/50 px-2 py-0.5 rounded">${t.category}</span></div>`;
                 });
             },
 
@@ -783,11 +772,8 @@
             populateMonthSelector: function() {
                 const selector = document.getElementById('calendar-month-selector');
                 const months = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
-                
                 if (selector.options.length === 0) {
-                    months.forEach((month, index) => {
-                        selector.innerHTML += `<option value="${index}">${month} ${this.selectedYear}</option>`;
-                    });
+                    months.forEach((month, index) => { selector.innerHTML += `<option value="${index}">${month} ${this.selectedYear}</option>`; });
                 }
                 selector.value = this.selectedMonth;
             },
@@ -795,16 +781,11 @@
             changeCalendarMonth: function() {
                 const selector = document.getElementById('calendar-month-selector');
                 this.selectedMonth = parseInt(selector.value);
-                
-                // Al cambiar de mes, seleccionamos el día 1 por defecto para evitar errores (ej. 31 de feb)
                 this.selectedDate = `${this.selectedYear}-${String(this.selectedMonth + 1).padStart(2, '0')}-01`;
-                
-                // Si regresan al mes actual, los regresamos a "hoy"
                 const today = new Date();
                 if (this.selectedMonth === today.getMonth() && this.selectedYear === today.getFullYear()) {
                     this.selectedDate = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`;
                 }
-
                 this.generateDaysSlider();
                 this.renderCalendarMatches();
             },
@@ -812,20 +793,16 @@
             generateDaysSlider: function() {
                 const slider = document.getElementById('calendar-days-slider');
                 slider.innerHTML = '';
-                
-                // [MODIFICADO] Ahora usa las variables de estado en lugar del mes actual estático
                 const currentMonth = this.selectedMonth;
                 const currentYear = this.selectedYear;
                 const daysInMonth = new Date(currentYear, currentMonth + 1, 0).getDate();
                 const daysOfWeek = ['DOM', 'LUN', 'MAR', 'MIE', 'JUE', 'VIE', 'SAB'];
-
                 let todayBtn = null;
 
                 for (let i = 1; i <= daysInMonth; i++) {
                     const dateObj = new Date(currentYear, currentMonth, i);
                     const dayStr = daysOfWeek[dateObj.getDay()];
                     const dateString = `${currentYear}-${String(currentMonth + 1).padStart(2, '0')}-${String(i).padStart(2, '0')}`;
-                    
                     const isSelected = this.selectedDate === dateString;
                     const bgClass = isSelected ? 'bg-raptor text-white border-raptor-light shadow-[0_0_10px_rgba(157,80,224,0.4)] scale-105' : 'bg-raptor-dark text-gray-300 border-raptor hover:bg-raptor/80 hover:border-raptor-light transition-colors';
                     const textAccent = isSelected ? 'text-accent' : 'text-raptor-light';
@@ -833,14 +810,10 @@
                     const btn = document.createElement('button');
                     btn.onclick = () => { this.selectedDate = dateString; this.generateDaysSlider(); this.renderCalendarMatches(); };
                     btn.className = `flex flex-col items-center justify-center min-w-[65px] h-[75px] rounded-xl border ${bgClass} transition-all snap-center shrink-0 cursor-pointer`;
-                    btn.innerHTML = `
-                        <span class="text-[10px] font-semibold mb-1 ${textAccent}">${dayStr}</span>
-                        <span class="text-2xl font-sport font-bold leading-none">${i}</span>
-                    `;
+                    btn.innerHTML = `<span class="text-[10px] font-semibold mb-1 ${textAccent}">${dayStr}</span><span class="text-2xl font-sport font-bold leading-none">${i}</span>`;
                     slider.appendChild(btn);
                     if (isSelected) todayBtn = btn;
                 }
-
                 if (todayBtn) setTimeout(() => { todayBtn.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' }); }, 50);
             },
 
@@ -848,35 +821,23 @@
                 const search = document.getElementById('calendar-search').value.toLowerCase();
                 const category = document.getElementById('calendar-category').value;
                 const status = document.getElementById('calendar-status').value;
-
                 let matches = this.data.matches.filter(m => m.temporada === this.activeSeason);
-
                 const upcomingContainer = document.getElementById('calendar-upcoming-container');
                 upcomingContainer.innerHTML = '';
                 const upcoming = matches.filter(m => m.status === "Programado").slice(0,3);
                 
-                if(upcoming.length > 0) {
-                    upcoming.forEach(m => {
-                        const html = this.getMatchCardHTML(m, false);
-                        upcomingContainer.innerHTML += `<div class="w-72 md:w-80 shrink-0 snap-center h-full">${html}</div>`;
-                    });
-                } else {
-                    upcomingContainer.innerHTML = `<div class="w-full text-center text-sm text-zinc-400 py-4 bg-surface border border-zinc-700/50 border-dashed rounded-xl">No hay encuentros programados próximamente.</div>`;
-                }
+                if(upcoming.length > 0) upcoming.forEach(m => { upcomingContainer.innerHTML += `<div class="w-72 md:w-80 shrink-0 snap-center h-full">${this.getMatchCardHTML(m, false)}</div>`; });
+                else upcomingContainer.innerHTML = `<div class="w-full text-center text-sm text-zinc-400 py-4 bg-surface border border-zinc-700/50 border-dashed rounded-xl">No hay encuentros programados próximamente.</div>`;
 
                 const matchesContainer = document.getElementById('calendar-matches-container');
                 matchesContainer.innerHTML = '';
-
                 let filteredDay = matches.filter(m => m.date === this.selectedDate);
                 if(category !== "Todas") filteredDay = filteredDay.filter(m => m.category === category);
                 if(status !== "Todos") filteredDay = filteredDay.filter(m => m.status === status);
                 if(search) filteredDay = filteredDay.filter(m => m.teamA.toLowerCase().includes(search) || m.teamB.toLowerCase().includes(search));
 
-                if(filteredDay.length > 0) {
-                    filteredDay.forEach(m => { matchesContainer.innerHTML += this.getMatchCardHTML(m, false); });
-                } else {
-                    matchesContainer.innerHTML = `<div class="col-span-1 md:col-span-2 text-center py-10 text-sm text-zinc-400 font-medium bg-surface border border-zinc-700/50 border-dashed rounded-xl">No hay partidos registrados para esta fecha.</div>`;
-                }
+                if(filteredDay.length > 0) filteredDay.forEach(m => { matchesContainer.innerHTML += this.getMatchCardHTML(m, false); });
+                else matchesContainer.innerHTML = `<div class="col-span-1 md:col-span-2 text-center py-10 text-sm text-zinc-400 font-medium bg-surface border border-zinc-700/50 border-dashed rounded-xl">No hay partidos registrados para esta fecha.</div>`;
             },
 
             renderStandings: function() {
@@ -884,7 +845,6 @@
                 const search = document.getElementById('standings-search').value.toLowerCase();
                 const tbody = document.getElementById('standings-table-body');
                 tbody.innerHTML = '';
-                
                 let filtered = this.data.standings.filter(s => s.category === category && s.temporada === this.activeSeason);
                 if(search) filtered = filtered.filter(s => s.team.toLowerCase().includes(search));
 
@@ -892,100 +852,318 @@
                     tbody.innerHTML = `<tr><td colspan="9" class="text-center py-8 text-zinc-400 bg-raptor-dark">Sin datos registrados en esta temporada.</td></tr>`;
                     return;
                 }
-
                 filtered.forEach((s, i) => {
                     const rankClass = i === 0 ? 'bg-accent/10 text-accent font-black' : 'text-gray-200 font-bold';
-                    
                     const teamData = this.data.teams.find(t => t.name === s.team);
                     const logoHtml = (teamData && teamData.logo && teamData.logo.trim() !== "") 
                         ? `<img src="${teamData.logo}" alt="${s.team}" class="w-6 h-6 md:w-8 md:h-8 rounded-full object-cover border border-raptor-light shrink-0 shadow-inner bg-dark">`
-                        : `<div class="w-6 h-6 md:w-8 md:h-8 bg-dark rounded-full flex items-center justify-center border border-raptor-light shrink-0 shadow-inner">
-                            <span class="font-sport font-bold text-[10px] md:text-xs text-white">${s.team.substring(0,3).toUpperCase()}</span>
-                           </div>`;
-
-                    const pj = s.pj ?? s.pld ?? 0;
-                    const pg = s.pg ?? s.won ?? 0;
-                    const pp = s.pp ?? s.lst ?? 0;
-                    const sf = s.sf ?? s.sw ?? 0;
-                    const sc = s.sc ?? s.sl ?? 0;
-                    const pf = s.pf ?? s.pts ?? 0;
-                    const pc = s.pc ?? 0;
-
-                    tbody.innerHTML += `
-                        <tr class="even:bg-raptor-dark/80 hover:bg-raptor/50 transition duration-150">
-                            <td class="py-3 px-2 text-center ${rankClass}">${i+1}</td>
-                            <td class="py-3 px-2">
-                                <div class="flex items-center gap-2">
-                                    ${logoHtml}
-                                    <span class="font-bold text-sm text-white truncate max-w-[120px] md:max-w-none block">${s.team}</span>
-                                </div>
-                            </td>
-                            <td class="py-3 px-2 text-center text-gray-300 font-semibold">${pj}</td>
-                            <td class="py-3 px-2 text-center font-sport font-black text-lg text-accent">${pg}</td>
-                            <td class="py-3 px-2 text-center font-sport font-black text-lg text-red-400">${pp}</td>
-                            <td class="py-3 px-2 text-center text-gray-300 font-medium">${sf}</td>
-                            <td class="py-3 px-2 text-center text-gray-300 font-medium">${sc}</td>
-                            <td class="py-3 px-2 text-center text-gray-300 font-medium">${pf}</td>
-                            <td class="py-3 px-2 text-center text-gray-300 font-medium">${pc}</td>
-                        </tr>
-                    `;
+                        : `<div class="w-6 h-6 md:w-8 md:h-8 bg-dark rounded-full flex items-center justify-center border border-raptor-light shrink-0 shadow-inner"><span class="font-sport font-bold text-[10px] md:text-xs text-white">${s.team.substring(0,3).toUpperCase()}</span></div>`;
+                    const pj = s.pj ?? s.pld ?? 0; const pg = s.pg ?? s.won ?? 0; const pp = s.pp ?? s.lst ?? 0;
+                    const sf = s.sf ?? s.sw ?? 0; const sc = s.sc ?? s.sl ?? 0; const pf = s.pf ?? s.pts ?? 0; const pc = s.pc ?? 0;
+                    tbody.innerHTML += `<tr class="even:bg-raptor-dark/80 hover:bg-raptor/50 transition duration-150"><td class="py-3 px-2 text-center ${rankClass}">${i+1}</td><td class="py-3 px-2"><div class="flex items-center gap-2">${logoHtml}<span class="font-bold text-sm text-white truncate max-w-[120px] md:max-w-none block">${s.team}</span></div></td><td class="py-3 px-2 text-center text-gray-300 font-semibold">${pj}</td><td class="py-3 px-2 text-center font-sport font-black text-lg text-accent">${pg}</td><td class="py-3 px-2 text-center font-sport font-black text-lg text-red-400">${pp}</td><td class="py-3 px-2 text-center text-gray-300 font-medium">${sf}</td><td class="py-3 px-2 text-center text-gray-300 font-medium">${sc}</td><td class="py-3 px-2 text-center text-gray-300 font-medium">${pf}</td><td class="py-3 px-2 text-center text-gray-300 font-medium">${pc}</td></tr>`;
                 });
+            },
+
+            renderPlayoffs: function() {
+                const category = document.getElementById('playoffs-category').value;
+                const container = document.getElementById('bracket-container');
+                container.innerHTML = '';
+
+                const playoffMatches = this.data.matches.filter(m =>
+                    m.temporada === this.activeSeason &&
+                    m.category === category &&
+                    m.fase &&
+                    m.fase !== "Temporada Regular"
+                );
+
+                const roundsMap = {
+                    'Octavos de Final': [],
+                    'Cuartos de Final': [],
+                    'Semifinal': [],
+                    'Final': [],
+                    'Tercer Lugar': []
+                };
+
+                playoffMatches.forEach(m => {
+                    let faseKey = m.fase ? m.fase.trim() : "";
+                    if (faseKey.toLowerCase() === "octavos de final") faseKey = "Octavos de Final";
+                    if (faseKey.toLowerCase() === "cuartos de final") faseKey = "Cuartos de Final";
+                    if (faseKey.toLowerCase() === "semifinal") faseKey = "Semifinal";
+                    if (faseKey.toLowerCase() === "final") faseKey = "Final";
+                    if (faseKey.toLowerCase() === "tercer lugar") faseKey = "Tercer Lugar";
+                    
+                    if (roundsMap[faseKey]) roundsMap[faseKey].push(m);
+                });
+
+                const roundOrder = ['Octavos de Final', 'Cuartos de Final', 'Semifinal', 'Final'];
+                const roundSizes = { 'Octavos de Final': 8, 'Cuartos de Final': 4, 'Semifinal': 2, 'Final': 1 };
+                
+                const teamExpectedOrder = {};
+                roundOrder.forEach(roundName => {
+                    const matches = roundsMap[roundName];
+                    matches.sort((a, b) => (Number(a.orden) || 999) - (Number(b.orden) || 999));
+                    
+                    const usedOrders = new Set();
+                    matches.forEach((m, idx) => {
+                        let order = Number(m.orden) > 0 ? Number(m.orden) : idx + 1;
+                        
+                        if (m.teamA && teamExpectedOrder[m.teamA]) order = teamExpectedOrder[m.teamA];
+                        else if (m.teamB && teamExpectedOrder[m.teamB]) order = teamExpectedOrder[m.teamB];
+                        
+                        while (usedOrders.has(order)) order++;
+                        usedOrders.add(order);
+                        m.calculatedOrder = order;
+                        
+                        const nextOrder = Math.ceil(order / 2);
+                        if (m.teamA && m.teamA !== 'Por Definir') teamExpectedOrder[m.teamA] = nextOrder;
+                        if (m.teamB && m.teamB !== 'Por Definir') teamExpectedOrder[m.teamB] = nextOrder;
+                    });
+                });
+
+                if (roundsMap['Tercer Lugar'].length > 0) {
+                    roundsMap['Tercer Lugar'][0].calculatedOrder = 1;
+                }
+
+                const CARD_HEIGHT = 140;
+                const CARD_GAP = 24; 
+                const SLOT_HEIGHT = CARD_HEIGHT + CARD_GAP;
+                const bracketHeight = (8 * SLOT_HEIGHT) + CARD_GAP;
+
+                container.className = "flex min-w-max items-start justify-start p-4 pt-12 relative";
+                container.style.minHeight = `${bracketHeight}px`;
+
+                roundOrder.forEach((roundName, roundIndex) => {
+                    const totalSlots = roundSizes[roundName];
+                    let roundTitle = roundName;
+                    if (roundName === 'Octavos de Final') roundTitle = '8vos de Final';
+                    if (roundName === 'Cuartos de Final') roundTitle = '4tos de Final';
+
+                    let roundHtml = `
+                        <div class="relative shrink-0 w-[280px] ${roundIndex > 0 ? 'ml-16' : ''}" data-fase-col="${roundName}" style="height:${bracketHeight}px;">
+                            <h3 class="font-sport font-black text-xl text-center uppercase tracking-widest text-white absolute -top-10 w-full">
+                                ${roundTitle}
+                            </h3>
+                    `;
+
+                    for (let order = 1; order <= totalSlots; order++) {
+                        const m = roundsMap[roundName].find(match => match.calculatedOrder === order);
+                        
+                        const roundFactor = Math.pow(2, roundIndex);
+                        const top = ((order - 1) * roundFactor * SLOT_HEIGHT) + (((roundFactor - 1) * SLOT_HEIGHT) / 2);
+
+                        roundHtml += this.getPlayoffCardHTML(m, roundName, order, top, false);
+                    }
+
+                    if (roundName === 'Final') {
+                        const thirdMatch = roundsMap['Tercer Lugar'].length > 0 ? roundsMap['Tercer Lugar'][0] : null;
+                        const finalTop = (((Math.pow(2, roundIndex) - 1) * SLOT_HEIGHT) / 2);
+                        const thirdTop = finalTop + CARD_HEIGHT + 60;
+
+                        roundHtml += this.getPlayoffCardHTML(thirdMatch, 'Tercer Lugar', 1, thirdTop, true);
+                    }
+
+                    roundHtml += `</div>`;
+                    container.innerHTML += roundHtml;
+                });
+
+                const finalMatch = roundsMap['Final'].find(m => m.status === 'Finalizado');
+                
+                if (finalMatch) {
+                    let champion = { name: 'Por Definir' };
+                    let runnerUp = { name: 'Por Definir' };
+                    let thirdPlace = { name: 'Por Definir' };
+
+                    const scoreAFinal = Number(finalMatch.scoreA);
+                    const scoreBFinal = Number(finalMatch.scoreB);
+                    
+                    if (scoreAFinal > scoreBFinal) {
+                        champion.name = finalMatch.teamA;
+                        runnerUp.name = finalMatch.teamB;
+                    } else if (scoreBFinal > scoreAFinal) {
+                        champion.name = finalMatch.teamB;
+                        runnerUp.name = finalMatch.teamA;
+                    }
+
+                    const thirdMatch = roundsMap['Tercer Lugar'].find(m => m.status === 'Finalizado');
+                    if (thirdMatch) {
+                        const scoreAThird = Number(thirdMatch.scoreA);
+                        const scoreBThird = Number(thirdMatch.scoreB);
+                        if (scoreAThird > scoreBThird) {
+                            thirdPlace.name = thirdMatch.teamA;
+                        } else if (scoreBThird > scoreAThird) {
+                            thirdPlace.name = thirdMatch.teamB;
+                        }
+                    }
+
+                    const logo1 = this.getPodiumLogo(champion.name, 'w-32 h-32', 'text-4xl', 'border-[#FFD700]');
+                    const logo2 = this.getPodiumLogo(runnerUp.name, 'w-24 h-24', 'text-2xl', 'border-[#C0C0C0]');
+                    const logo3 = this.getPodiumLogo(thirdPlace.name, 'w-20 h-20', 'text-xl', 'border-[#CD7F32]');
+
+                    const podiumHtml = `
+                        <div class="relative shrink-0 flex items-center justify-center ml-12 z-10" style="height:${bracketHeight}px;">
+                            <div class="flex items-end justify-center gap-4 relative">
+                                <div class="absolute inset-0 bg-gradient-to-t from-[#FFD700]/5 to-transparent rounded-full blur-3xl -z-10"></div>
+                                
+                                <div class="bg-surface/90 backdrop-blur-sm rounded-2xl border-t-4 border-[#C0C0C0] border-x border-b border-zinc-800 flex flex-col items-center justify-start p-4 w-[160px] h-[260px] relative shadow-[0_-5px_20px_rgba(192,192,192,0.15)] transition-transform hover:-translate-y-2 z-10">
+                                    <div class="absolute -top-4 bg-dark border border-[#C0C0C0] text-[#C0C0C0] text-[10px] font-bold px-3 py-1 rounded-full uppercase tracking-widest">
+                                        2do Lugar
+                                    </div>
+                                    <span class="mt-4 font-sport font-black text-5xl text-[#C0C0C0]/20 absolute top-4 left-4 pointer-events-none">2</span>
+                                    
+                                    <div class="mt-6 relative z-10 shrink-0">${logo2}</div>
+                                    <h3 class="font-black text-sm text-white text-center w-full truncate relative z-10 mt-3">${runnerUp.name}</h3>
+                                    
+                                    <div class="flex gap-1 mt-auto pb-1 relative z-10">
+                                        <i data-lucide="star" class="w-4 h-4 text-[#C0C0C0] fill-[#C0C0C0]"></i>
+                                        <i data-lucide="star" class="w-4 h-4 text-[#C0C0C0] fill-[#C0C0C0]"></i>
+                                    </div>
+                                </div>
+
+                                <div class="bg-surface rounded-2xl border-t-4 border-[#FFD700] border-x border-b border-[#FFD700]/30 flex flex-col items-center justify-start p-5 w-[200px] h-[320px] relative shadow-[0_-5px_30px_rgba(255,215,0,0.25)] z-20 transition-transform hover:-translate-y-2">
+                                    <div class="absolute -top-5 bg-[#FFD700] text-dark text-xs font-black px-4 py-1.5 rounded-full uppercase tracking-widest shadow-[0_0_15px_rgba(255,215,0,0.6)] flex items-center gap-1.5">
+                                        <i data-lucide="trophy" class="w-4 h-4"></i> Campeón
+                                    </div>
+                                    <span class="mt-4 font-sport font-black text-8xl text-[#FFD700]/10 absolute top-4 left-0 right-0 text-center pointer-events-none">1</span>
+                                    
+                                    <div class="mt-6 relative z-10 shrink-0">${logo1}</div>
+                                    <h3 class="font-black text-lg text-white text-center w-full truncate uppercase relative z-10 mt-4">${champion.name}</h3>
+                                    
+                                    <div class="flex gap-1.5 mt-auto pb-1 relative z-10">
+                                        <i data-lucide="star" class="w-5 h-5 text-[#FFD700] fill-[#FFD700]"></i>
+                                        <i data-lucide="star" class="w-5 h-5 text-[#FFD700] fill-[#FFD700]"></i>
+                                        <i data-lucide="star" class="w-5 h-5 text-[#FFD700] fill-[#FFD700]"></i>
+                                    </div>
+                                </div>
+
+                                <div class="bg-surface/80 backdrop-blur-sm rounded-2xl border-t-4 border-[#CD7F32] border-x border-b border-zinc-800 flex flex-col items-center justify-start p-4 w-[160px] h-[230px] relative shadow-[0_-5px_20px_rgba(205,127,50,0.15)] transition-transform hover:-translate-y-2 z-10">
+                                    <div class="absolute -top-4 bg-dark border border-[#CD7F32] text-[#CD7F32] text-[10px] font-bold px-3 py-1 rounded-full uppercase tracking-widest">
+                                        3er Lugar
+                                    </div>
+                                    <span class="mt-4 font-sport font-black text-5xl text-[#CD7F32]/20 absolute top-4 right-4 pointer-events-none">3</span>
+                                    
+                                    <div class="mt-4 relative z-10 shrink-0">${logo3}</div>
+                                    <h3 class="font-bold text-sm text-white text-center w-full truncate relative z-10 mt-3">${thirdPlace.name}</h3>
+                                    
+                                    <div class="flex gap-1 mt-auto pb-1 relative z-10">
+                                        <i data-lucide="star" class="w-4 h-4 text-[#CD7F32] fill-[#CD7F32]"></i>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                    `;
+                    container.innerHTML += podiumHtml;
+                }
+
+                lucide.createIcons();
+
+                requestAnimationFrame(() => {
+                    requestAnimationFrame(() => this.drawBracketLines());
+                });
+            },
+
+            drawBracketLines: function() {
+                const container = document.getElementById('bracket-container');
+                if (!container) return;
+
+                let svg = document.getElementById('bracket-svg');
+                if (svg) svg.remove();
+
+                const svgNS = "http://www.w3.org/2000/svg";
+                svg = document.createElementNS(svgNS, "svg");
+                svg.setAttribute("id", "bracket-svg");
+                svg.setAttribute("class", "absolute top-0 left-0 pointer-events-none z-0");
+                svg.setAttribute("width", container.scrollWidth);
+                svg.setAttribute("height", container.scrollHeight);
+                svg.setAttribute("viewBox", `0 0 ${container.scrollWidth} ${container.scrollHeight}`);
+                svg.style.width = `${container.scrollWidth}px`;
+                svg.style.height = `${container.scrollHeight}px`;
+                container.appendChild(svg);
+
+                const roundsNodes = ['Octavos de Final', 'Cuartos de Final', 'Semifinal', 'Final'];
+
+                const svgRect = svg.getBoundingClientRect();
+
+                for (let i = 0; i < roundsNodes.length - 1; i++) {
+                    const currentRound = roundsNodes[i];
+                    const nextRound = roundsNodes[i + 1];
+
+                    const currentMatches = Array.from(
+                        container.querySelectorAll(`[data-fase="${CSS.escape(currentRound)}"]`)
+                    );
+
+                    const nextMatches = Array.from(
+                        container.querySelectorAll(`[data-fase="${CSS.escape(nextRound)}"]`)
+                    );
+
+                    currentMatches.forEach(matchEl => {
+                        const currentOrder = parseInt(matchEl.getAttribute('data-orden'));
+                        if (isNaN(currentOrder)) return;
+
+                        const targetOrder = Math.ceil(currentOrder / 2);
+
+                        const targetEl = nextMatches.find(el => parseInt(el.getAttribute('data-orden')) === targetOrder);
+                        if (!targetEl) return;
+
+                        const rectSource = matchEl.getBoundingClientRect();
+                        const rectTarget = targetEl.getBoundingClientRect();
+
+                        const x1 = rectSource.right - svgRect.left;
+                        const y1 = rectSource.top + (rectSource.height / 2) - svgRect.top;
+
+                        const x2 = rectTarget.left - svgRect.left;
+                        const y2 = rectTarget.top + (rectTarget.height / 2) - svgRect.top;
+
+                        if (![x1, y1, x2, y2].every(Number.isFinite) || x2 <= x1) return;
+
+                        const midX = x1 + Math.max(20, (x2 - x1) / 2);
+
+                        const pathBase = document.createElementNS(svgNS, "path");
+                        pathBase.setAttribute("d", `M ${x1} ${y1} H ${midX} V ${y2} H ${x2}`);
+                        pathBase.setAttribute("fill", "none");
+                        pathBase.setAttribute("stroke", "#3f3f46"); // zinc-700
+                        pathBase.setAttribute("stroke-width", "2");
+                        pathBase.setAttribute("stroke-linejoin", "round");
+                        svg.appendChild(pathBase);
+
+                        const winner = matchEl.getAttribute('data-winner');
+                        if (winner && winner !== "") {
+                            const teamA_Target = targetEl.getAttribute('data-team-a');
+                            const teamB_Target = targetEl.getAttribute('data-team-b');
+
+                            if (winner === teamA_Target || winner === teamB_Target) {
+                                const pathHighlight = document.createElementNS(svgNS, "path");
+                                pathHighlight.setAttribute("d", `M ${x1} ${y1} H ${midX} V ${y2} H ${x2}`);
+                                pathHighlight.setAttribute("fill", "none");
+                                pathHighlight.setAttribute("stroke", "#9D50E0"); 
+                                pathHighlight.setAttribute("stroke-width", "3");
+                                pathHighlight.setAttribute("stroke-linejoin", "round");
+                                pathHighlight.setAttribute("style", "filter: drop-shadow(0px 0px 6px rgba(157,80,224,0.8));");
+                                svg.appendChild(pathHighlight);
+                            }
+                        }
+                    });
+                }
             },
 
             openModal: function(teamId) {
                 const team = this.data.teams.find(t => t.id === teamId);
                 if(!team) return;
-
                 this.currentTeamId = teamId;
-
                 document.getElementById('modal-team-name').innerText = team.name;
                 document.getElementById('modal-team-category').innerText = team.category;
-                
-                document.getElementById('modal-team-logo').innerHTML = team.logo 
-                    ? `<img src="${team.logo}" class="w-full h-full object-cover rounded-full border border-zinc-700">` 
-                    : `<span class="font-sport font-bold text-lg text-gray-300">${team.name.substring(0,3).toUpperCase()}</span>`;
-                
+                document.getElementById('modal-team-logo').innerHTML = team.logo ? `<img src="${team.logo}" class="w-full h-full object-cover rounded-full border border-zinc-700">` : `<span class="font-sport font-bold text-lg text-gray-300">${team.name.substring(0,3).toUpperCase()}</span>`;
                 document.getElementById('modal-coach-name').innerText = team.coach;
-                
                 const coachPhotoContainer = document.getElementById('modal-coach-photo-container');
-                coachPhotoContainer.innerHTML = team.coachPhoto 
-                    ? `<img src="${team.coachPhoto}" alt="${team.coach}" class="w-full h-full object-cover">`
-                    : `<i data-lucide="user" class="w-8 h-8 text-zinc-500"></i>`;
-                
+                coachPhotoContainer.innerHTML = team.coachPhoto ? `<img src="${team.coachPhoto}" alt="${team.coach}" class="w-full h-full object-cover">` : `<i data-lucide="user" class="w-8 h-8 text-zinc-500"></i>`;
                 document.getElementById('btn-coach-contact').classList.remove('hidden');
                 document.getElementById('links-coach-contact').classList.add('hidden');
-                document.getElementById('link-coach-call').href = "#";
-                document.getElementById('link-coach-wa').href = "#";
-
                 document.getElementById('modal-roster-count').innerText = `${team.roster.length} Registrados`;
                 const rosterList = document.getElementById('modal-roster-list');
                 rosterList.innerHTML = '';
-                
                 team.roster.forEach(player => {
-                    rosterList.innerHTML += `
-                        <li class="bg-zinc-900/40 border border-zinc-800/60 rounded-xl p-3 md:p-4 flex items-center gap-4 relative overflow-hidden shadow-sm">
-                            <div class="w-16 h-16 md:w-20 md:h-20 rounded-lg bg-dark border border-zinc-700 flex-shrink-0 flex justify-center items-center overflow-hidden shadow-inner">
-                                ${player.photo 
-                                    ? `<img src="${player.photo}" alt="${player.name}" class="w-full h-full object-cover">` 
-                                    : `<i data-lucide="user" class="w-8 h-8 text-zinc-500"></i>`
-                                }
-                            </div>
-                            <div class="flex-1 flex flex-col justify-center py-1 z-10">
-                                <span class="text-base md:text-lg font-black text-white leading-tight uppercase">${player.name}</span>
-                                <span class="text-[9px] text-gray-400 font-bold tracking-widest mt-1">JUGADOR OFICIAL</span>
-                            </div>
-                            <div class="absolute right-0 top-0 bottom-0 flex items-center pr-3 pointer-events-none">
-                                <div class="font-sport font-black text-6xl text-white/[0.03] select-none -translate-x-2">
-                                    ${player.num}
-                                </div>
-                            </div>
-                            <div class="flex-shrink-0 w-12 h-12 md:w-14 md:h-14 bg-raptor text-white font-sport text-2xl md:text-3xl font-black flex justify-center items-center rounded-lg transform -skew-x-6 shadow-md border border-raptor-light/50 relative z-10">
-                                ${player.num}
-                            </div>
-                        </li>
-                    `;
+                    rosterList.innerHTML += `<li class="bg-zinc-900/40 border border-zinc-800/60 rounded-xl p-3 md:p-4 flex items-center gap-4 relative overflow-hidden shadow-sm"><div class="w-16 h-16 md:w-20 md:h-20 rounded-lg bg-dark border border-zinc-700 flex-shrink-0 flex justify-center items-center overflow-hidden shadow-inner">${player.photo ? `<img src="${player.photo}" alt="${player.name}" class="w-full h-full object-cover">` : `<i data-lucide="user" class="w-8 h-8 text-zinc-500"></i>`}</div><div class="flex-1 flex flex-col justify-center py-1 z-10"><span class="text-base md:text-lg font-black text-white leading-tight uppercase">${player.name}</span><span class="text-[9px] text-gray-400 font-bold tracking-widest mt-1">JUGADOR OFICIAL</span></div><div class="flex-shrink-0 w-12 h-12 md:w-14 md:h-14 bg-raptor text-white font-sport text-2xl md:text-3xl font-black flex justify-center items-center rounded-lg transform -skew-x-6 shadow-md border border-raptor-light/50 relative z-10">${player.num}</div></li>`;
                 });
-
                 const modal = document.getElementById('team-modal');
                 const content = document.getElementById('team-modal-content');
                 modal.classList.remove('hidden');
@@ -1003,7 +1181,6 @@
             requestPin: function() {
                 document.getElementById('pin-input').value = '';
                 document.getElementById('pin-error-msg').classList.add('hidden');
-                
                 const pinModal = document.getElementById('pin-modal');
                 const pinContent = document.getElementById('pin-modal-content');
                 pinModal.classList.remove('hidden');
@@ -1023,56 +1200,31 @@
                 const pin = document.getElementById('pin-input').value;
                 const errorMsg = document.getElementById('pin-error-msg');
                 const btnValidar = document.querySelector('#pin-modal button[onclick="app.submitPinPrompt()"]');
-                
-                if (!pin || pin.length < 4) {
-                    errorMsg.innerText = "Ingrese un PIN de 4 dígitos.";
-                    errorMsg.classList.remove('hidden');
-                    return;
-                }
-
+                if (!pin || pin.length < 4) { errorMsg.innerText = "Ingrese un PIN de 4 dígitos."; errorMsg.classList.remove('hidden'); return; }
                 const textoOriginal = btnValidar.innerText;
-                btnValidar.innerText = "...";
-                btnValidar.disabled = true;
-                errorMsg.classList.add('hidden');
-
+                btnValidar.innerText = "..."; btnValidar.disabled = true; errorMsg.classList.add('hidden');
                 try {
                     const res = await fetch(`${API_URL}?endpoint=contacto&id=${encodeURIComponent(this.currentTeamId)}&pin=${encodeURIComponent(pin)}`);
                     const json = await res.json();
-
                     if (json.status === "success" && json.data && json.data.phone) {
                         this.closePinPrompt();
                         document.getElementById('btn-coach-contact').classList.add('hidden');
-                        
                         let cleanPhone = json.data.phone.toString().replace(/\D/g, '');
                         if (cleanPhone.length === 10) cleanPhone = '52' + cleanPhone;
-
-                        const callBtn = document.getElementById('link-coach-call');
-                        const waBtn = document.getElementById('link-coach-wa');
-                        
-                        callBtn.href = `tel:${cleanPhone}`;
-                        waBtn.href = `https://api.whatsapp.com/send?phone=${cleanPhone}`;
-                        
+                        document.getElementById('link-coach-call').href = `tel:${cleanPhone}`;
+                        document.getElementById('link-coach-wa').href = `https://api.whatsapp.com/send?phone=${cleanPhone}`;
                         document.getElementById('links-coach-contact').classList.remove('hidden');
-                        lucide.createIcons();
-                    } else {
-                        throw new Error(json.message || "PIN incorrecto.");
-                    }
+                    } else throw new Error();
                 } catch (error) {
-                    errorMsg.innerText = "PIN incorrecto o no autorizado.";
-                    errorMsg.classList.remove('hidden');
-                    document.getElementById('pin-input').value = '';
-                    document.getElementById('pin-input').focus();
+                    errorMsg.innerText = "PIN incorrecto o no autorizado."; errorMsg.classList.remove('hidden');
+                    document.getElementById('pin-input').value = ''; document.getElementById('pin-input').focus();
                 } finally {
-                    btnValidar.innerText = textoOriginal;
-                    btnValidar.disabled = false;
+                    btnValidar.innerText = textoOriginal; btnValidar.disabled = false;
                 }
             }
         };
 
-        document.getElementById('pin-input').addEventListener('keypress', function (e) {
-            if (e.key === 'Enter') app.submitPinPrompt();
-        });
-
+        document.getElementById('pin-input').addEventListener('keypress', function (e) { if (e.key === 'Enter') app.submitPinPrompt(); });
         app.init();
     </script>
 </body>
