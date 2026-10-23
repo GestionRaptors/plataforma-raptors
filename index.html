@@ -82,6 +82,13 @@
         </div>
     </div>
 
+    <!-- ================= SELECTOR GLOBAL DE TEMPORADA ================= -->
+    <div class="w-full max-w-md mx-auto md:max-w-5xl px-4 pt-3 pb-3 flex items-center gap-3">
+        <span class="text-[10px] font-bold text-gray-400 uppercase tracking-widest shrink-0">Temporada</span>
+        <select id="season-filter" onchange="app.changeSeason(this.value)" class="bg-surface border border-zinc-700 text-white text-sm font-bold rounded-lg px-3 py-2 outline-none focus:border-raptor min-w-0 flex-1 md:flex-none"></select>
+        <span id="season-badge" class="hidden text-[9px] font-black text-yellow-400 tracking-widest uppercase border border-yellow-500/60 bg-yellow-500/20 px-2 py-1 rounded shrink-0">Finalizada</span>
+    </div>
+
     <div class="bg-surface border-b border-zinc-800 sticky top-[57px] z-40 overflow-x-auto no-scrollbar">
         <div class="max-w-md mx-auto md:max-w-5xl px-2 flex justify-between min-w-max">
             <button onclick="app.switchView('home')" id="tab-home" class="nav-tab px-4 py-3 text-sm font-semibold border-b-2 border-raptor-light text-white transition">INICIO</button>
@@ -96,11 +103,8 @@
 
         <!-- ================= VISTA: INICIO ================= -->
         <section id="view-home" class="spa-view active space-y-8">
-            <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 border-b border-zinc-800 pb-4">
-                <div class="flex flex-col sm:flex-row sm:items-center gap-4 w-full sm:w-auto">
-                    <h1 class="font-sport font-black text-3xl md:text-4xl uppercase tracking-wider text-white">Temporada</h1>
-                    <select id="season-filter" class="bg-surface border border-zinc-700 text-white text-sm font-bold rounded-lg px-3 py-2 outline-none focus:border-raptor"></select>
-                </div>
+            <div class="border-b border-zinc-800 pb-4">
+                <h1 id="home-season-title" class="font-sport font-black text-3xl md:text-4xl uppercase tracking-wider text-white">Temporada</h1>
             </div>
             <div>
                 <div class="flex items-center gap-2 mb-4">
@@ -303,11 +307,28 @@
         // API URL ⚠️
         const API_URL = "https://script.google.com/macros/s/AKfycbxe2KKG5d8cmW-uWc3q_sy_burTnQt_nfwcndXIYHoIMRdwAQrSPWHRdwhhq4RIemT2Lw/exec";
 
+        // Constantes de interfaz (sin valores sueltos en el código).
+        const UI = {
+            // false = tarjetas de equipo sin modal de plantilla. Si se reactiva, activar
+            // también INCLUIR_DETALLE_EQUIPO_PUBLICO en Api_Config.gs (si no, la plantilla llega vacía).
+            MODAL_EQUIPO_ACTIVO: false,
+            CACHE_BOOTSTRAP: "raptors_bootstrap_cache_v2",
+            CACHE_BOOTSTRAP_LEGACY: "raptors_bootstrap_cache",
+            CACHE_HISTORIAL_PREFIJO: "raptors_hist_v2_",
+            ESTATUS_TEMPORADA_FINALIZADA: "FINALIZADA",
+            VISTAS_HISTORICAS: ['standings', 'playoffs'],
+            VISTAS_ACTUAL: ['home', 'teams', 'calendar', 'standings', 'playoffs']
+        };
+
         const app = {
             data: { matches: [], standings: [], teams: [], config: {} },
             selectedDate: todayStr,
             currentTeamId: '',
-            activeSeason: '', 
+            activeSeason: '',      // temporada seleccionada en el selector
+            live: null,            // dataset de la temporada Actual (bootstrap)
+            history: {},           // datasets de temporadas finalizadas, por nombre
+            historyFetched: {},    // temporadas ya actualizadas desde la red en esta sesión
+            seasonStatus: 'ready', // 'ready' | 'loading' | 'error' (solo aplica a temporadas finalizadas)
             selectedMonth: new Date().getMonth(), 
             selectedYear: new Date().getFullYear(),
 
@@ -341,12 +362,13 @@
             },
 
             init: async function() {
+                localStorage.removeItem(UI.CACHE_BOOTSTRAP_LEGACY);
                 window.addEventListener('resize', () => {
                     const activeView = document.querySelector('.spa-view.active')?.id;
                     if (activeView === 'view-playoffs') this.drawBracketLines();
                 });
 
-                const localCache = localStorage.getItem("raptors_bootstrap_cache");
+                const localCache = localStorage.getItem(UI.CACHE_BOOTSTRAP);
                 if (localCache) {
                     try {
                         const parsed = JSON.parse(localCache);
@@ -354,7 +376,7 @@
                         this.switchView('home');
                     } catch (e) {
                         console.warn("Caché local corrupta, limpiando...");
-                        localStorage.removeItem("raptors_bootstrap_cache");
+                        localStorage.removeItem(UI.CACHE_BOOTSTRAP);
                     }
                 }
 
@@ -363,7 +385,7 @@
                     const json = await res.json();
 
                     if (json?.status === "success" && json?.data) {
-                        localStorage.setItem("raptors_bootstrap_cache", JSON.stringify(json.data));
+                        localStorage.setItem(UI.CACHE_BOOTSTRAP, JSON.stringify(json.data));
                         
                         this.hydrateData(json.data);
                         
@@ -389,14 +411,11 @@
                 }
             },
 
-            hydrateData: function(data) {
-                if (data.config) {
-                    this.data.config = data.config;
-                    this.activeSeason = data.config.activa || '';
-                    this.populateSeasonFilter();
-                }
-                this.data.teams = Array.isArray(data.equipos) ? data.equipos : [];
-                this.data.matches = Array.isArray(data.partidos) ? data.partidos.map(m => ({
+            // Dataset = {teams, matches, standings} normalizado y ordenado. Lo usan igual la temporada
+            // Actual (bootstrap) y las finalizadas (historial): misma forma de datos.
+            buildDataset: function(data) {
+                const teams = Array.isArray(data.equipos) ? data.equipos : [];
+                const matches = Array.isArray(data.partidos) ? data.partidos.map(m => ({
                     ...m,
                     date: this.normalizeDateStr(m.date)
                 })).sort((a, b) => {
@@ -405,8 +424,8 @@
                     if (dateA !== dateB) return dateA.localeCompare(dateB);
                     return this.parseTimeForSort(a.time) - this.parseTimeForSort(b.time);
                 }) : [];
-                this.data.standings = Array.isArray(data.clasificacion) ? data.clasificacion : [];
-                this.data.standings.sort((a, b) => {
+                const standings = Array.isArray(data.clasificacion) ? data.clasificacion : [];
+                standings.sort((a, b) => {
                     const pgA = Number(a.pg ?? a.won) || 0;
                     const pgB = Number(b.pg ?? b.won) || 0;
                     if (pgB !== pgA) return pgB - pgA;
@@ -429,22 +448,149 @@
                     const pcB = Number(b.pc) || 0;
                     return pcA - pcB;
                 });
+                return { teams, matches, standings };
+            },
+
+            // Cambia el dataset que leen todas las vistas (this.data.*).
+            useDataset: function(ds) {
+                this.data.teams = ds.teams;
+                this.data.matches = ds.matches;
+                this.data.standings = ds.standings;
+            },
+
+            hydrateData: function(data) {
+                if (data.config) {
+                    this.data.config = data.config;
+                    const validas = this.getSelectableSeasons().map(t => t.temporada);
+                    // No se pisa la elección del usuario cuando llega la actualización de red.
+                    if (!this.activeSeason || !validas.includes(this.activeSeason)) {
+                        this.activeSeason = data.config.activa || validas[0] || '';
+                    }
+                    this.populateSeasonFilter();
+                }
+                this.live = this.buildDataset(data);
+                this.applySeasonMode();
+                if (this.isHistoricSeason()) {
+                    this.loadHistory(this.activeSeason);
+                } else {
+                    this.useDataset(this.live);
+                    this.seasonStatus = 'ready';
+                }
+            },
+
+            // Temporadas que el selector puede mostrar: la Actual primero y luego las Finalizadas.
+            getSelectableSeasons: function() {
+                const lista = (this.data.config && this.data.config.temporadas) || [];
+                const activa = this.data.config.activa;
+                return lista
+                    .filter(t => t.temporada === activa || String(t.estatus).trim().toUpperCase() === UI.ESTATUS_TEMPORADA_FINALIZADA)
+                    .sort((a, b) => (b.temporada === activa) - (a.temporada === activa));
+            },
+
+            // true cuando la temporada seleccionada NO es la Actual (solo clasificación y playoffs).
+            isHistoricSeason: function() {
+                return !!this.activeSeason && this.activeSeason !== this.data.config.activa;
+            },
+
+            allowedViews: function() {
+                return this.isHistoricSeason() ? UI.VISTAS_HISTORICAS : UI.VISTAS_ACTUAL;
+            },
+
+            // Muestra u oculta las pestañas según el modo y actualiza insignia y título.
+            applySeasonMode: function() {
+                const historic = this.isHistoricSeason();
+                ['home', 'teams', 'calendar'].forEach(v => document.getElementById(`tab-${v}`).classList.toggle('hidden', historic));
+                document.getElementById('season-badge').classList.toggle('hidden', !historic);
+                const title = document.getElementById('home-season-title');
+                if (title) title.innerText = this.activeSeason || 'Temporada';
             },
 
             populateSeasonFilter: function() {
                 const select = document.getElementById('season-filter');
-                select.innerHTML = '';
-                this.data.config.temporadas.forEach(t => {
-                    const isSelected = (t.temporada === this.activeSeason) ? 'selected' : '';
-                    select.innerHTML += `<option value="${t.temporada}" ${isSelected}>${t.temporada}</option>`;
-                });
-                select.addEventListener('change', (e) => {
-                    this.activeSeason = e.target.value;
-                    this.switchView(document.querySelector('.spa-view.active').id.replace('view-', ''));
-                });
+                select.innerHTML = this.getSelectableSeasons()
+                    .map(t => `<option value="${t.temporada}" ${t.temporada === this.activeSeason ? 'selected' : ''}>${t.temporada}</option>`)
+                    .join('');
+            },
+
+            // Llamado por el selector (onchange).
+            changeSeason: function(temporada) {
+                this.activeSeason = temporada;
+                this.applySeasonMode();
+                if (this.isHistoricSeason()) {
+                    this.loadHistory(temporada);
+                } else {
+                    this.useDataset(this.live || { teams: [], matches: [], standings: [] });
+                    this.seasonStatus = 'ready';
+                }
+                this.refreshActiveView();
+            },
+
+            // Vuelve a dibujar la vista abierta (switchView redirige si no existe en este modo).
+            refreshActiveView: function() {
+                const vista = document.querySelector('.spa-view.active')?.id?.replace('view-', '') || 'home';
+                this.switchView(vista);
+            },
+
+            // Temporada finalizada: se muestra al instante lo guardado (el historial no cambia)
+            // y se actualiza desde la red una vez por sesión.
+            loadHistory: async function(temporada) {
+                if (!this.history[temporada]) {
+                    const guardado = this.readHistoryCache(temporada);
+                    if (guardado) this.history[temporada] = this.buildDataset(guardado);
+                }
+                if (this.history[temporada]) {
+                    this.useDataset(this.history[temporada]);
+                    this.seasonStatus = 'ready';
+                } else {
+                    this.useDataset({ teams: [], matches: [], standings: [] });
+                    this.seasonStatus = 'loading';
+                }
+                if (this.historyFetched[temporada]) return;
+
+                try {
+                    const res = await fetch(`${API_URL}?endpoint=historial&temporada=${encodeURIComponent(temporada)}`);
+                    const json = await res.json();
+                    if (json?.status !== 'success' || !json.data) throw new Error(json?.message || 'Respuesta inválida');
+                    this.historyFetched[temporada] = true;
+                    this.writeHistoryCache(temporada, json.data);
+                    this.history[temporada] = this.buildDataset(json.data);
+                    if (this.activeSeason === temporada) {   // el usuario pudo cambiar de temporada mientras cargaba
+                        this.useDataset(this.history[temporada]);
+                        this.seasonStatus = 'ready';
+                        this.refreshActiveView();
+                    }
+                } catch (error) {
+                    console.error('Fallo al cargar el historial:', error);
+                    if (this.activeSeason === temporada && !this.history[temporada]) {
+                        this.seasonStatus = 'error';
+                        this.refreshActiveView();
+                    }
+                }
+            },
+
+            getSeasonStatusMessage: function() {
+                return this.seasonStatus === 'error'
+                    ? 'No se pudo cargar esta temporada. Revisa tu conexión e intenta de nuevo.'
+                    : 'Cargando temporada...';
+            },
+
+            historyCacheKey: function(temporada) {
+                return UI.CACHE_HISTORIAL_PREFIJO + temporada.replace(/[^A-Za-z0-9]+/g, '_');
+            },
+            readHistoryCache: function(temporada) {
+                try {
+                    const raw = localStorage.getItem(this.historyCacheKey(temporada));
+                    return raw ? JSON.parse(raw) : null;
+                } catch (e) { return null; }
+            },
+            writeHistoryCache: function(temporada, data) {
+                try { localStorage.setItem(this.historyCacheKey(temporada), JSON.stringify(data)); }
+                catch (e) { console.warn('No se pudo guardar el historial en la caché local:', e); }
             },
 
             switchView: function(viewId) {
+                const permitidas = this.allowedViews();
+                if (!permitidas.includes(viewId)) viewId = permitidas[0];
                 document.querySelectorAll('.nav-tab').forEach(tab => {
                     tab.classList.remove('border-accent', 'border-raptor-light', 'text-white');
                     tab.classList.add('border-transparent', 'text-gray-400');
@@ -743,11 +889,7 @@
                 const catFilter = document.getElementById('teams-category').value;
                 const grid = document.getElementById('teams-grid');
                 grid.innerHTML = '';
-                const idsEquiposParticipantes = this.data.standings.filter(s => s.temporada === this.activeSeason).map(s => s.teamId);
-                let filtered = this.data.teams.filter(t => {
-                    if (this.activeSeason === this.data.config.activa) return t.estatus && t.estatus.toUpperCase() === 'ACTIVO';
-                    return idsEquiposParticipantes.includes(t.id);
-                });
+                let filtered = this.data.teams.filter(t => t.temporada === this.activeSeason && t.estatus && t.estatus.toUpperCase() === 'ACTIVO');
                 if(catFilter !== "Todas") filtered = filtered.filter(t => t.category === catFilter);
                 if(search) filtered = filtered.filter(t => t.name.toLowerCase().includes(search));
 
@@ -756,7 +898,7 @@
                     return;
                 }
                 filtered.forEach(t => {
-                    grid.innerHTML += `<div onclick="app.openModal('${t.id}')" class="bg-raptor-dark border border-raptor rounded-xl p-4 flex flex-col items-center justify-center text-center cursor-pointer hover:border-raptor-light hover:bg-raptor transition-all shadow-lg">${t.logo ? `<img src="${t.logo}" alt="${t.name}" class="w-14 h-14 rounded-full object-cover mb-3 border border-raptor-light shadow-inner bg-dark">` : `<div class="w-14 h-14 bg-dark rounded-full mb-3 flex items-center justify-center border border-raptor-light shadow-inner"><span class="font-sport font-bold text-xl text-white tracking-tighter">${t.name.substring(0,3).toUpperCase()}</span></div>`}<h3 class="font-bold text-sm leading-tight text-white">${t.name}</h3><span class="text-[10px] font-bold text-accent uppercase tracking-widest mt-1.5 bg-dark border border-raptor-light/50 px-2 py-0.5 rounded">${t.category}</span></div>`;
+                    grid.innerHTML += `<div ${UI.MODAL_EQUIPO_ACTIVO ? `onclick="app.openModal('${t.id}')"` : ''} class="bg-raptor-dark border border-raptor rounded-xl p-4 flex flex-col items-center justify-center text-center ${UI.MODAL_EQUIPO_ACTIVO ? 'cursor-pointer hover:border-raptor-light hover:bg-raptor transition-all' : ''} shadow-lg">${t.logo ? `<img src="${t.logo}" alt="${t.name}" class="w-14 h-14 rounded-full object-cover mb-3 border border-raptor-light shadow-inner bg-dark">` : `<div class="w-14 h-14 bg-dark rounded-full mb-3 flex items-center justify-center border border-raptor-light shadow-inner"><span class="font-sport font-bold text-xl text-white tracking-tighter">${t.name.substring(0,3).toUpperCase()}</span></div>`}<h3 class="font-bold text-sm leading-tight text-white">${t.name}</h3><span class="text-[10px] font-bold text-accent uppercase tracking-widest mt-1.5 bg-dark border border-raptor-light/50 px-2 py-0.5 rounded">${t.category}</span></div>`;
                 });
             },
 
@@ -842,6 +984,10 @@
                 const search = document.getElementById('standings-search').value.toLowerCase();
                 const tbody = document.getElementById('standings-table-body');
                 tbody.innerHTML = '';
+                if (this.seasonStatus !== 'ready') {
+                    tbody.innerHTML = `<tr><td colspan="9" class="text-center py-8 text-zinc-400 bg-raptor-dark">${this.getSeasonStatusMessage()}</td></tr>`;
+                    return;
+                }
                 let filtered = this.data.standings.filter(s => s.category === category && s.temporada === this.activeSeason);
                 if(search) filtered = filtered.filter(s => s.team.toLowerCase().includes(search));
 
@@ -866,6 +1012,13 @@
                 const category = document.getElementById('playoffs-category').value;
                 const container = document.getElementById('bracket-container');
                 container.innerHTML = '';
+
+                if (this.seasonStatus !== 'ready') {
+                    container.className = "flex justify-center items-center p-4";
+                    container.style.minHeight = '300px';
+                    container.innerHTML = `<div class="text-center text-sm text-zinc-400">${this.getSeasonStatusMessage()}</div>`;
+                    return;
+                }
 
                 const playoffMatches = this.data.matches.filter(m =>
                     m.temporada === this.activeSeason &&
