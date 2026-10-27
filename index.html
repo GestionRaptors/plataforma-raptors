@@ -1,4 +1,43 @@
 <!DOCTYPE html>
+<!--
+============================================================================
+ index-plataforma.html
+----------------------------------------------------------------------------
+ Propósito   : Plataforma pública del torneo (SPA): inicio, equipos,
+               calendario, clasificaciones y playoffs. Consume la API de
+               Apps Script (bootstrap e historial). Al tocar un equipo se
+               abre un modal con sus RESULTADOS (récord, próximos y
+               partidos jugados). Ya NO muestra plantilla ni entrenador.
+ Dependencias: Tailwind (CDN), Lucide (CDN), Google Fonts, API Apps Script
+               (endpoints: bootstrap, historial). Assets: assets/*.
+ Autor/Fecha : Nexo Sports - 2026-10-26
+----------------------------------------------------------------------------
+ CAMBIOS (E1):
+   - El modal de equipo muestra resultados en lugar de plantilla/entrenador.
+   - Eliminado el modal de PIN y el consumo del endpoint "contacto".
+   - Eliminada la constante UI.MODAL_EQUIPO_ACTIVO (ya no es interruptor).
+   - El cruce partidos/clasificación del modal es por NOMBRE + CATEGORÍA
+     (el API público no expone IDs de equipo en los partidos).
+----------------------------------------------------------------------------
+ ÍNDICE DE FUNCIONES (objeto app)
+   Utilidades      : normalizeDateStr, parseTimeForSort, esc,
+                     formatDateLabel, formatTimeLabel, phaseLabel
+   Arranque        : init
+   Datos           : buildDataset, useDataset, hydrateData
+   Temporadas      : getSelectableSeasons, isHistoricSeason, allowedViews,
+                     applySeasonMode, populateSeasonFilter, changeSeason,
+                     refreshActiveView, loadHistory, getSeasonStatusMessage,
+                     historyCacheKey, readHistoryCache, writeHistoryCache
+   Navegación      : switchView
+   Componentes     : getLogoBadge, getPodiumLogo, getMatchCardHTML,
+                     getPlayoffCardHTML
+   Vistas          : renderHome, renderTeams, initCalendar,
+                     populateMonthSelector, changeCalendarMonth,
+                     generateDaysSlider, renderCalendarMatches,
+                     renderStandings, renderPlayoffs, drawBracketLines
+   Modal equipo    : openTeamResults, buildTeamMatchRow, closeModal
+============================================================================
+-->
 <html lang="es">
 <head>
     <meta charset="UTF-8">
@@ -238,8 +277,9 @@
 
     </main>
 
-    <!-- ================= MODALES (CÉDULA Y PIN) ================= -->
-    <div id="team-modal" class="fixed inset-0 bg-black/90 backdrop-blur-sm z-[60] hidden flex items-end md:items-center justify-center">
+    <!-- ================= MODAL DE RESULTADOS DEL EQUIPO =================
+         Se llena desde app.openTeamResults(). Tocar el fondo oscuro lo cierra. -->
+    <div id="team-modal" onclick="if(event.target===this)app.closeModal()" class="fixed inset-0 bg-black/90 backdrop-blur-sm z-[60] hidden flex items-end md:items-center justify-center">
         <div class="bg-surface w-full max-w-md h-[85vh] md:h-auto md:max-h-[80vh] md:rounded-2xl rounded-t-2xl flex flex-col border border-zinc-800 transform transition-transform translate-y-full" id="team-modal-content">
             <div class="p-4 border-b border-zinc-800 flex justify-between items-center bg-dark rounded-t-2xl">
                 <div class="flex items-center gap-3">
@@ -251,46 +291,22 @@
                 </div>
                 <button onclick="app.closeModal()" class="text-gray-400 hover:text-white bg-surface p-2 rounded-full"><i data-lucide="x" class="w-5 h-5"></i></button>
             </div>
-            <div class="p-4 overflow-y-auto flex-1 space-y-4">
-                <div class="bg-zinc-900/50 p-4 md:p-5 rounded-xl border border-zinc-800/50 flex justify-between items-center gap-3 relative overflow-hidden shadow-lg">
-                    <div class="flex items-center gap-4 z-10">
-                        <div id="modal-coach-photo-container" class="w-16 h-16 md:w-20 md:h-20 rounded-full bg-dark border-2 border-zinc-700 flex-shrink-0 flex justify-center items-center overflow-hidden shadow-inner"></div>
-                        <div class="flex flex-col justify-center">
-                            <p class="text-[10px] text-accent uppercase font-bold tracking-widest mb-0.5">Representante</p>
-                            <p id="modal-coach-name" class="text-base md:text-lg font-black text-white leading-tight">Cargando...</p>
-                        </div>
-                    </div>
-                    <div class="flex-shrink-0 z-10">
-                        <button onclick="app.requestPin()" id="btn-coach-contact" class="flex items-center justify-center w-12 h-12 bg-surface hover:bg-zinc-800 border border-zinc-700 text-white rounded-full transition shadow-md">
-                            <i data-lucide="lock" class="w-5 h-5 text-accent"></i>
-                        </button>
-                        <div id="links-coach-contact" class="hidden flex gap-2">
-                            <a id="link-coach-call" href="#" class="flex items-center justify-center w-10 h-10 bg-blue-600 hover:bg-blue-500 text-white rounded-full transition shadow-md"><i data-lucide="phone-call" class="w-4 h-4"></i></a>
-                            <a id="link-coach-wa" href="#" target="_blank" rel="noopener noreferrer" class="flex items-center justify-center w-10 h-10 bg-[#25D366] hover:bg-[#128C7E] text-white rounded-full transition shadow-md"><i data-lucide="message-circle" class="w-4 h-4"></i></a>
-                        </div>
-                    </div>
-                </div>
+            <div class="p-4 overflow-y-auto flex-1 space-y-5">
                 <div>
                     <div class="flex justify-between items-center mb-3">
-                        <h4 class="text-xs font-bold text-gray-400 uppercase tracking-wider">Plantilla Oficial</h4>
-                        <span id="modal-roster-count" class="text-[10px] bg-dark border border-zinc-800 px-2 py-1 rounded font-medium text-gray-400">0 Registrados</span>
+                        <h4 class="text-xs font-bold text-gray-400 uppercase tracking-wider">Récord</h4>
+                        <span id="modal-team-position" class="text-[10px] bg-dark border border-zinc-800 px-2 py-1 rounded font-medium text-gray-400"></span>
                     </div>
-                    <ul id="modal-roster-list" class="space-y-2"></ul>
+                    <div id="modal-team-record"></div>
                 </div>
-            </div>
-        </div>
-    </div>
-
-    <div id="pin-modal" class="fixed inset-0 bg-black/80 z-[70] hidden flex items-center justify-center p-4">
-        <div class="bg-dark border border-zinc-800 rounded-xl w-full max-w-xs p-5 text-center shadow-2xl transform scale-95 transition-transform" id="pin-modal-content">
-            <div class="mx-auto w-12 h-12 bg-surface rounded-full flex items-center justify-center mb-3"><i data-lucide="lock" class="w-5 h-5 text-accent"></i></div>
-            <h3 class="font-sport font-bold text-xl uppercase tracking-wide mb-1">Acceso Restringido</h3>
-            <p class="text-xs text-gray-400 mb-4">Ingrese PIN de árbitro para revelar el contacto.</p>
-            <input type="password" id="pin-input" placeholder="PIN de 4 dígitos" class="bg-surface border border-zinc-700 text-white text-center text-lg tracking-[0.5em] rounded-lg block w-full p-3 mb-2 outline-none focus:border-accent" maxlength="4" autocomplete="off">
-            <p id="pin-error-msg" class="text-[10px] text-red-400 mb-4 hidden h-3">PIN incorrecto o inválido.</p>
-            <div class="flex gap-2">
-                <button onclick="app.closePinPrompt()" class="flex-1 bg-surface border border-zinc-800 text-gray-300 text-sm font-bold rounded-lg py-2 hover:bg-zinc-800 transition">Cancelar</button>
-                <button onclick="app.submitPinPrompt()" class="flex-1 bg-raptor text-white text-sm font-bold rounded-lg py-2 hover:bg-raptor-light transition">Validar</button>
+                <div>
+                    <h4 class="text-xs font-bold text-gray-400 uppercase tracking-wider mb-3">En juego y próximos</h4>
+                    <ul id="modal-team-upcoming" class="space-y-2"></ul>
+                </div>
+                <div>
+                    <h4 class="text-xs font-bold text-gray-400 uppercase tracking-wider mb-3">Resultados</h4>
+                    <ul id="modal-team-results" class="space-y-2"></ul>
+                </div>
             </div>
         </div>
     </div>
@@ -298,6 +314,10 @@
     <!-- ================= JAVASCRIPT ASÍNCRONO ================= -->
     <script>
         lucide.createIcons();
+
+        /**
+         * @return {string} Fecha local de hoy en formato YYYY-MM-DD.
+         */
         const getTodayString = () => {
             const d = new Date();
             return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
@@ -309,21 +329,20 @@
 
         // Constantes de interfaz (sin valores sueltos en el código).
         const UI = {
-            // false = tarjetas de equipo sin modal de plantilla. Si se reactiva, activar
-            // también INCLUIR_DETALLE_EQUIPO_PUBLICO en Api_Config.gs (si no, la plantilla llega vacía).
-            MODAL_EQUIPO_ACTIVO: false,
             CACHE_BOOTSTRAP: "raptors_bootstrap_cache_v2",
             CACHE_BOOTSTRAP_LEGACY: "raptors_bootstrap_cache",
             CACHE_HISTORIAL_PREFIJO: "raptors_hist_v2_",
             ESTATUS_TEMPORADA_FINALIZADA: "FINALIZADA",
             VISTAS_HISTORICAS: ['standings', 'playoffs'],
-            VISTAS_ACTUAL: ['home', 'teams', 'calendar', 'standings', 'playoffs']
+            VISTAS_ACTUAL: ['home', 'teams', 'calendar', 'standings', 'playoffs'],
+            // Estatus de partido que aún no tienen resultado (modal de resultados del equipo).
+            ESTATUS_PENDIENTES: ['Programado', 'En Vivo', 'Por Definir'],
+            FASE_REGULAR: 'Temporada Regular'
         };
 
         const app = {
             data: { matches: [], standings: [], teams: [], config: {} },
             selectedDate: todayStr,
-            currentTeamId: '',
             activeSeason: '',      // temporada seleccionada en el selector
             live: null,            // dataset de la temporada Actual (bootstrap)
             history: {},           // datasets de temporadas finalizadas, por nombre
@@ -332,6 +351,15 @@
             selectedMonth: new Date().getMonth(), 
             selectedYear: new Date().getFullYear(),
 
+            // =================================================================
+            // UTILIDADES
+            // =================================================================
+
+            /**
+             * Convierte fechas DD/MM/YYYY a YYYY-MM-DD; deja pasar las que ya vienen normalizadas.
+             * @param {string} dateStr Fecha cruda de la hoja.
+             * @return {string} Fecha normalizada ("" si venía vacía).
+             */
             normalizeDateStr: function(dateStr) {
                 if (!dateStr) return "";
                 if (dateStr.includes("-") && dateStr.split("-")[0].length === 4) return dateStr;
@@ -344,6 +372,11 @@
                 return dateStr;
             },
 
+            /**
+             * Convierte una hora ("3:30 p.m.", "15:30") a minutos desde medianoche para ordenar.
+             * @param {string} timeStr Hora cruda de la hoja.
+             * @return {number} Minutos, o 9999 si no es válida (se ordena al final).
+             */
             parseTimeForSort: function(timeStr) {
                 if (!timeStr) return 9999;
                 let str = timeStr.toString().toLowerCase().trim();
@@ -361,6 +394,55 @@
                 return 9999;
             },
 
+            /**
+             * Escapa texto para insertarlo de forma segura en HTML.
+             * @param {*} s Valor cualquiera.
+             * @return {string} Texto con &, <, >, " y ' escapados.
+             */
+            esc: function(s) {
+                return String(s ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+            },
+
+            /**
+             * @param {string} iso Fecha YYYY-MM-DD.
+             * @return {string} DD/MM/YYYY, o "Fecha por definir" si no es válida.
+             */
+            formatDateLabel: function(iso) {
+                if (!iso || !/^\d{4}-\d{2}-\d{2}$/.test(iso)) return 'Fecha por definir';
+                const [y, mo, d] = iso.split('-');
+                return `${d}/${mo}/${y}`;
+            },
+
+            /**
+             * @param {string} timeStr Hora de la hoja.
+             * @return {string} "h:mm p.m." / "h:mm a.m.", o "" si no es válida.
+             */
+            formatTimeLabel: function(timeStr) {
+                const min = this.parseTimeForSort(timeStr);
+                if (min === 9999) return '';
+                const h24 = Math.floor(min / 60);
+                const h = h24 % 12 === 0 ? 12 : h24 % 12;
+                return `${h}:${String(min % 60).padStart(2, '0')} ${h24 >= 12 ? 'p.m.' : 'a.m.'}`;
+            },
+
+            /**
+             * @param {string} fase Valor de Fase_Torneo.
+             * @return {string} Etiqueta visible, o "" para Temporada Regular.
+             */
+            phaseLabel: function(fase) {
+                const f = (fase || '').trim();
+                if (!f || f.toUpperCase() === UI.FASE_REGULAR.toUpperCase()) return '';
+                return f.toUpperCase() === 'TERCER LUGAR' ? '3er Lugar' : f;
+            },
+
+            // =================================================================
+            // ARRANQUE
+            // =================================================================
+
+            /**
+             * Punto de entrada: pinta desde la caché local (si existe) y actualiza desde la red.
+             * @return {Promise<void>}
+             */
             init: async function() {
                 localStorage.removeItem(UI.CACHE_BOOTSTRAP_LEGACY);
                 window.addEventListener('resize', () => {
@@ -411,8 +493,16 @@
                 }
             },
 
-            // Dataset = {teams, matches, standings} normalizado y ordenado. Lo usan igual la temporada
-            // Actual (bootstrap) y las finalizadas (historial): misma forma de datos.
+            // =================================================================
+            // DATOS
+            // =================================================================
+
+            /**
+             * Dataset = {teams, matches, standings} normalizado y ordenado. Lo usan igual la
+             * temporada Actual (bootstrap) y las finalizadas (historial): misma forma de datos.
+             * @param {{equipos:Array, partidos:Array, clasificacion:Array}} data Respuesta del API.
+             * @return {{teams:Array, matches:Array, standings:Array}} Dataset listo para las vistas.
+             */
             buildDataset: function(data) {
                 const teams = Array.isArray(data.equipos) ? data.equipos : [];
                 const matches = Array.isArray(data.partidos) ? data.partidos.map(m => ({
@@ -451,18 +541,25 @@
                 return { teams, matches, standings };
             },
 
-            // Cambia el dataset que leen todas las vistas (this.data.*).
+            /**
+             * Cambia el dataset que leen todas las vistas (this.data.*).
+             * @param {{teams:Array, matches:Array, standings:Array}} ds Dataset a activar.
+             */
             useDataset: function(ds) {
                 this.data.teams = ds.teams;
                 this.data.matches = ds.matches;
                 this.data.standings = ds.standings;
             },
 
+            /**
+             * Carga la respuesta de bootstrap: config, selector de temporada y dataset Actual.
+             * No pisa la temporada elegida por el usuario cuando llega la actualización de red.
+             * @param {Object} data Campo "data" de la respuesta bootstrap.
+             */
             hydrateData: function(data) {
                 if (data.config) {
                     this.data.config = data.config;
                     const validas = this.getSelectableSeasons().map(t => t.temporada);
-                    // No se pisa la elección del usuario cuando llega la actualización de red.
                     if (!this.activeSeason || !validas.includes(this.activeSeason)) {
                         this.activeSeason = data.config.activa || validas[0] || '';
                     }
@@ -478,7 +575,14 @@
                 }
             },
 
-            // Temporadas que el selector puede mostrar: la Actual primero y luego las Finalizadas.
+            // =================================================================
+            // TEMPORADAS
+            // =================================================================
+
+            /**
+             * @return {Array<{temporada:string, estatus:string}>} Temporadas del selector:
+             *   la Actual primero y luego las Finalizadas.
+             */
             getSelectableSeasons: function() {
                 const lista = (this.data.config && this.data.config.temporadas) || [];
                 const activa = this.data.config.activa;
@@ -487,16 +591,20 @@
                     .sort((a, b) => (b.temporada === activa) - (a.temporada === activa));
             },
 
-            // true cuando la temporada seleccionada NO es la Actual (solo clasificación y playoffs).
+            /**
+             * @return {boolean} true cuando la temporada seleccionada NO es la Actual
+             *   (solo clasificación y playoffs).
+             */
             isHistoricSeason: function() {
                 return !!this.activeSeason && this.activeSeason !== this.data.config.activa;
             },
 
+            /** @return {string[]} Vistas permitidas según el modo (Actual o histórico). */
             allowedViews: function() {
                 return this.isHistoricSeason() ? UI.VISTAS_HISTORICAS : UI.VISTAS_ACTUAL;
             },
 
-            // Muestra u oculta las pestañas según el modo y actualiza insignia y título.
+            /** Muestra u oculta las pestañas según el modo y actualiza insignia y título. */
             applySeasonMode: function() {
                 const historic = this.isHistoricSeason();
                 ['home', 'teams', 'calendar'].forEach(v => document.getElementById(`tab-${v}`).classList.toggle('hidden', historic));
@@ -505,14 +613,18 @@
                 if (title) title.innerText = this.activeSeason || 'Temporada';
             },
 
+            /** Rellena el selector global de temporada. */
             populateSeasonFilter: function() {
                 const select = document.getElementById('season-filter');
                 select.innerHTML = this.getSelectableSeasons()
-                    .map(t => `<option value="${t.temporada}" ${t.temporada === this.activeSeason ? 'selected' : ''}>${t.temporada}</option>`)
+                    .map(t => `<option value="${this.esc(t.temporada)}" ${t.temporada === this.activeSeason ? 'selected' : ''}>${this.esc(t.temporada)}</option>`)
                     .join('');
             },
 
-            // Llamado por el selector (onchange).
+            /**
+             * Llamado por el selector (onchange).
+             * @param {string} temporada Nombre de la temporada elegida.
+             */
             changeSeason: function(temporada) {
                 this.activeSeason = temporada;
                 this.applySeasonMode();
@@ -525,14 +637,18 @@
                 this.refreshActiveView();
             },
 
-            // Vuelve a dibujar la vista abierta (switchView redirige si no existe en este modo).
+            /** Vuelve a dibujar la vista abierta (switchView redirige si no existe en este modo). */
             refreshActiveView: function() {
                 const vista = document.querySelector('.spa-view.active')?.id?.replace('view-', '') || 'home';
                 this.switchView(vista);
             },
 
-            // Temporada finalizada: se muestra al instante lo guardado (el historial no cambia)
-            // y se actualiza desde la red una vez por sesión.
+            /**
+             * Temporada finalizada: se muestra al instante lo guardado (el historial no cambia)
+             * y se actualiza desde la red una vez por sesión.
+             * @param {string} temporada Nombre de la temporada finalizada.
+             * @return {Promise<void>}
+             */
             loadHistory: async function(temporada) {
                 if (!this.history[temporada]) {
                     const guardado = this.readHistoryCache(temporada);
@@ -568,26 +684,51 @@
                 }
             },
 
+            /** @return {string} Mensaje para las vistas históricas mientras cargan o fallan. */
             getSeasonStatusMessage: function() {
                 return this.seasonStatus === 'error'
                     ? 'No se pudo cargar esta temporada. Revisa tu conexión e intenta de nuevo.'
                     : 'Cargando temporada...';
             },
 
+            /**
+             * @param {string} temporada Nombre de la temporada.
+             * @return {string} Clave de localStorage del historial de esa temporada.
+             */
             historyCacheKey: function(temporada) {
                 return UI.CACHE_HISTORIAL_PREFIJO + temporada.replace(/[^A-Za-z0-9]+/g, '_');
             },
+
+            /**
+             * @param {string} temporada Nombre de la temporada.
+             * @return {Object|null} Historial guardado, o null si falta o está corrupto.
+             */
             readHistoryCache: function(temporada) {
                 try {
                     const raw = localStorage.getItem(this.historyCacheKey(temporada));
                     return raw ? JSON.parse(raw) : null;
                 } catch (e) { return null; }
             },
+
+            /**
+             * Guarda el historial en localStorage (si la cuota se agota, solo avisa en consola).
+             * @param {string} temporada Nombre de la temporada.
+             * @param {Object} data Respuesta del endpoint historial.
+             */
             writeHistoryCache: function(temporada, data) {
                 try { localStorage.setItem(this.historyCacheKey(temporada), JSON.stringify(data)); }
                 catch (e) { console.warn('No se pudo guardar el historial en la caché local:', e); }
             },
 
+            // =================================================================
+            // NAVEGACIÓN
+            // =================================================================
+
+            /**
+             * Cambia de pestaña y dibuja su contenido. Si la vista no está permitida en el
+             * modo actual (histórico), redirige a la primera permitida.
+             * @param {string} viewId home | teams | calendar | standings | playoffs.
+             */
             switchView: function(viewId) {
                 const permitidas = this.allowedViews();
                 if (!permitidas.includes(viewId)) viewId = permitidas[0];
@@ -610,6 +751,14 @@
                 if(viewId === 'playoffs') this.renderPlayoffs(); 
             },
 
+            // =================================================================
+            // COMPONENTES
+            // =================================================================
+
+            /**
+             * @param {string} name Nombre del equipo.
+             * @return {string} HTML del logo (imagen o iniciales de 3 letras).
+             */
             getLogoBadge: function(name) {
                 const team = this.data.teams.find(t => t.name === name);
                 if (team && team.logo && team.logo.trim() !== "") {
@@ -619,7 +768,14 @@
                 return `<div class="w-10 h-10 md:w-12 md:h-12 bg-dark rounded-full flex items-center justify-center border border-raptor-light shadow-inner"><span class="font-sport font-bold text-sm md:text-lg text-white tracking-tighter">${short}</span></div>`;
             },
             
-            // UTILIDAD PARA EL PODIO: Extrae o genera el logo con clases personalizadas
+            /**
+             * Utilidad para el podio: extrae o genera el logo con clases personalizadas.
+             * @param {string} teamName Nombre del equipo.
+             * @param {string} sizeClasses Clases de tamaño (w-/h-).
+             * @param {string} textClasses Clases de tamaño de texto de las iniciales.
+             * @param {string} borderClasses Clases de color de borde.
+             * @return {string} HTML del logo.
+             */
             getPodiumLogo: function(teamName, sizeClasses, textClasses, borderClasses) {
                 const team = this.data.teams.find(t => t.name === teamName);
                 const short = teamName && teamName !== 'Por Definir' ? teamName.substring(0,3).toUpperCase() : '???';
@@ -629,6 +785,12 @@
                 return `<div class="${sizeClasses} bg-dark rounded-full border-4 ${borderClasses} flex items-center justify-center shadow-[inset_0_0_20px_rgba(0,0,0,0.5)] shrink-0"><span class="font-sport font-bold ${textClasses} text-white tracking-tighter">${short}</span></div>`;
             },
 
+            /**
+             * Tarjeta de partido (inicio y calendario).
+             * @param {Object} m Partido público.
+             * @param {boolean} [isLive=false] true para el estilo "En Juego".
+             * @return {string} HTML de la tarjeta.
+             */
             getMatchCardHTML: function(m, isLive = false) {
                 const teamA = m?.teamA || 'Por Definir';
                 const teamB = m?.teamB || 'Por Definir';
@@ -716,7 +878,15 @@
                 `;
             },
 
-            // 1. GENERADOR DE TARJETAS PARA EL BRACKET ESTÁTICO DE PLAYOFFS
+            /**
+             * Tarjeta del bracket estático de playoffs (incluye Pase Directo y "Por Definir").
+             * @param {Object|undefined} m Partido (undefined = slot vacío).
+             * @param {string} roundName Fase (data-fase).
+             * @param {number} order Orden dentro de la ronda (data-orden).
+             * @param {number} top Posición vertical absoluta en px.
+             * @param {boolean} [isThirdPlace=false] true para la tarjeta de 3er lugar.
+             * @return {string} HTML de la tarjeta.
+             */
             getPlayoffCardHTML: function(m, roundName, order, top, isThirdPlace = false) {
                 const CARD_HEIGHT = 140; // Altura ajustada para no desbordar el footer
                 const label = isThirdPlace ? `<h4 class="text-[10px] font-bold text-gray-500 uppercase tracking-widest absolute -top-6 w-full text-center">3er Lugar</h4>` : '';
@@ -843,6 +1013,11 @@
                 `;
             },
 
+            // =================================================================
+            // VISTAS
+            // =================================================================
+
+            /** Vista Inicio: partidos en juego, partidos del día y líderes por categoría. */
             renderHome: function() {
                 const seasonMatches = this.data.matches.filter(m => m.temporada === this.activeSeason);
                 const liveContainer = document.getElementById('live-matches-container');
@@ -884,6 +1059,10 @@
                 lucide.createIcons();
             },
 
+            /**
+             * Vista Equipos: tarjetas de equipos Activos de la temporada. Cada tarjeta abre el
+             * modal de resultados. Ya no se expone plantilla ni entrenador.
+             */
             renderTeams: function() {
                 const search = document.getElementById('teams-search').value.toLowerCase();
                 const catFilter = document.getElementById('teams-category').value;
@@ -898,16 +1077,18 @@
                     return;
                 }
                 filtered.forEach(t => {
-                    grid.innerHTML += `<div ${UI.MODAL_EQUIPO_ACTIVO ? `onclick="app.openModal('${t.id}')"` : ''} class="bg-raptor-dark border border-raptor rounded-xl p-4 flex flex-col items-center justify-center text-center ${UI.MODAL_EQUIPO_ACTIVO ? 'cursor-pointer hover:border-raptor-light hover:bg-raptor transition-all' : ''} shadow-lg">${t.logo ? `<img src="${t.logo}" alt="${t.name}" class="w-14 h-14 rounded-full object-cover mb-3 border border-raptor-light shadow-inner bg-dark">` : `<div class="w-14 h-14 bg-dark rounded-full mb-3 flex items-center justify-center border border-raptor-light shadow-inner"><span class="font-sport font-bold text-xl text-white tracking-tighter">${t.name.substring(0,3).toUpperCase()}</span></div>`}<h3 class="font-bold text-sm leading-tight text-white">${t.name}</h3><span class="text-[10px] font-bold text-accent uppercase tracking-widest mt-1.5 bg-dark border border-raptor-light/50 px-2 py-0.5 rounded">${t.category}</span></div>`;
+                    grid.innerHTML += `<div onclick="app.openTeamResults('${this.esc(t.id)}')" class="bg-raptor-dark border border-raptor rounded-xl p-4 flex flex-col items-center justify-center text-center cursor-pointer hover:border-raptor-light hover:bg-raptor transition-all shadow-lg">${t.logo ? `<img src="${t.logo}" alt="${this.esc(t.name)}" class="w-14 h-14 rounded-full object-cover mb-3 border border-raptor-light shadow-inner bg-dark">` : `<div class="w-14 h-14 bg-dark rounded-full mb-3 flex items-center justify-center border border-raptor-light shadow-inner"><span class="font-sport font-bold text-xl text-white tracking-tighter">${this.esc(t.name.substring(0,3).toUpperCase())}</span></div>`}<h3 class="font-bold text-sm leading-tight text-white">${this.esc(t.name)}</h3><span class="text-[10px] font-bold text-accent uppercase tracking-widest mt-1.5 bg-dark border border-raptor-light/50 px-2 py-0.5 rounded">${this.esc(t.category)}</span></div>`;
                 });
             },
 
+            /** Vista Calendario: inicializa selector de mes, slider de días y lista de partidos. */
             initCalendar: function() {
                 this.populateMonthSelector();
                 this.generateDaysSlider();
                 this.renderCalendarMatches();
             },
 
+            /** Rellena el selector de mes (una sola vez) y lo posiciona en el mes activo. */
             populateMonthSelector: function() {
                 const selector = document.getElementById('calendar-month-selector');
                 const months = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
@@ -917,6 +1098,7 @@
                 selector.value = this.selectedMonth;
             },
 
+            /** Llamado por el selector de mes: selecciona hoy si es el mes actual o el día 1. */
             changeCalendarMonth: function() {
                 const selector = document.getElementById('calendar-month-selector');
                 this.selectedMonth = parseInt(selector.value);
@@ -929,6 +1111,7 @@
                 this.renderCalendarMatches();
             },
 
+            /** Dibuja el slider horizontal de días del mes y centra el día seleccionado. */
             generateDaysSlider: function() {
                 const slider = document.getElementById('calendar-days-slider');
                 slider.innerHTML = '';
@@ -956,6 +1139,7 @@
                 if (todayBtn) setTimeout(() => { todayBtn.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' }); }, 50);
             },
 
+            /** Dibuja próximos encuentros y los partidos del día seleccionado con los filtros activos. */
             renderCalendarMatches: function() {
                 const search = document.getElementById('calendar-search').value.toLowerCase();
                 const category = document.getElementById('calendar-category').value;
@@ -979,6 +1163,7 @@
                 else matchesContainer.innerHTML = `<div class="col-span-1 md:col-span-2 text-center py-10 text-sm text-zinc-400 font-medium bg-surface border border-zinc-700/50 border-dashed rounded-xl">No hay partidos registrados para esta fecha.</div>`;
             },
 
+            /** Vista Clasificaciones: tabla por categoría con buscador. */
             renderStandings: function() {
                 const category = document.getElementById('standings-category').value;
                 const search = document.getElementById('standings-search').value.toLowerCase();
@@ -1007,7 +1192,7 @@
                 });
             },
 
-            // 2. RENDERIZADO DEL BRACKET VACÍO Y ESTÁTICO (8-4-2-1)
+            /** Vista Playoffs: bracket estático 8-4-2-1 con tercer lugar y podio final. */
             renderPlayoffs: function() {
                 const category = document.getElementById('playoffs-category').value;
                 const container = document.getElementById('bracket-container');
@@ -1216,7 +1401,10 @@
                 });
             },
 
-            // 3. LÍNEAS VECTORIALES CONECTADAS AL CENTRO DE LA TARJETA
+            /**
+             * Dibuja las líneas SVG del bracket desde el centro de cada tarjeta hacia la de la
+             * siguiente ronda; ilumina la línea si hay ganador y avanza a esa tarjeta.
+             */
             drawBracketLines: function() {
                 const container = document.getElementById('bracket-container');
                 if (!container) return;
@@ -1304,85 +1492,148 @@
                 }
             },
 
-            openModal: function(teamId) {
+            // =================================================================
+            // MODAL DE RESULTADOS DEL EQUIPO
+            // =================================================================
+
+            /**
+             * Abre el modal con récord, próximos encuentros y resultados de un equipo.
+             * Cruza partidos y clasificación por NOMBRE + CATEGORÍA (el API público no
+             * expone IDs de equipo en los partidos). El ID solo sirve para ubicar el
+             * equipo dentro de this.data.teams.
+             * @param {string} teamId ID_Equipo del equipo tocado.
+             */
+            openTeamResults: function(teamId) {
                 const team = this.data.teams.find(t => t.id === teamId);
-                if(!team) return;
-                this.currentTeamId = teamId;
+                if (!team) return;
+                const season = this.activeSeason;
+
+                // --- Encabezado ---
                 document.getElementById('modal-team-name').innerText = team.name;
                 document.getElementById('modal-team-category').innerText = team.category;
-                document.getElementById('modal-team-logo').innerHTML = team.logo ? `<img src="${team.logo}" class="w-full h-full object-cover rounded-full border border-zinc-700">` : `<span class="font-sport font-bold text-lg text-gray-300">${team.name.substring(0,3).toUpperCase()}</span>`;
-                document.getElementById('modal-coach-name').innerText = team.coach;
-                const coachPhotoContainer = document.getElementById('modal-coach-photo-container');
-                coachPhotoContainer.innerHTML = team.coachPhoto ? `<img src="${team.coachPhoto}" alt="${team.coach}" class="w-full h-full object-cover">` : `<i data-lucide="user" class="w-8 h-8 text-zinc-500"></i>`;
-                document.getElementById('btn-coach-contact').classList.remove('hidden');
-                document.getElementById('links-coach-contact').classList.add('hidden');
-                document.getElementById('modal-roster-count').innerText = `${team.roster.length} Registrados`;
-                const rosterList = document.getElementById('modal-roster-list');
-                rosterList.innerHTML = '';
-                team.roster.forEach(player => {
-                    rosterList.innerHTML += `<li class="bg-zinc-900/40 border border-zinc-800/60 rounded-xl p-3 md:p-4 flex items-center gap-4 relative overflow-hidden shadow-sm"><div class="w-16 h-16 md:w-20 md:h-20 rounded-lg bg-dark border border-zinc-700 flex-shrink-0 flex justify-center items-center overflow-hidden shadow-inner">${player.photo ? `<img src="${player.photo}" alt="${player.name}" class="w-full h-full object-cover">` : `<i data-lucide="user" class="w-8 h-8 text-zinc-500"></i>`}</div><div class="flex-1 flex flex-col justify-center py-1 z-10"><span class="text-base md:text-lg font-black text-white leading-tight uppercase">${player.name}</span><span class="text-[9px] text-gray-400 font-bold tracking-widest mt-1">JUGADOR OFICIAL</span></div><div class="flex-shrink-0 w-12 h-12 md:w-14 md:h-14 bg-raptor text-white font-sport text-2xl md:text-3xl font-black flex justify-center items-center rounded-lg transform -skew-x-6 shadow-md border border-raptor-light/50 relative z-10">${player.num}</div></li>`;
-                });
+                document.getElementById('modal-team-logo').innerHTML = team.logo
+                    ? `<img src="${team.logo}" class="w-full h-full object-cover rounded-full border border-zinc-700">`
+                    : `<span class="font-sport font-bold text-lg text-gray-300">${this.esc(team.name.substring(0, 3).toUpperCase())}</span>`;
+
+                // --- Récord y posición en su categoría ---
+                const ranking = this.data.standings.filter(s => s.category === team.category && s.temporada === season);
+                const pos = ranking.findIndex(s => s.team === team.name);
+                const st = pos >= 0 ? ranking[pos] : null;
+                const posEl = document.getElementById('modal-team-position');
+                const recEl = document.getElementById('modal-team-record');
+                if (st) {
+                    posEl.innerText = `#${pos + 1} de ${ranking.length}`;
+                    posEl.classList.remove('hidden');
+                    const cells = [['PJ', st.pj], ['PG', st.pg], ['PP', st.pp], ['SF', st.sf], ['SC', st.sc], ['PF', st.pf], ['PC', st.pc]];
+                    recEl.innerHTML = `<div class="grid grid-cols-7 gap-1.5">${cells.map(([k, v]) => `
+                        <div class="bg-dark border border-zinc-800 rounded-lg py-2 text-center">
+                            <div class="text-[9px] font-bold text-gray-500 tracking-widest">${k}</div>
+                            <div class="font-sport font-black text-xl ${k === 'PG' ? 'text-accent' : (k === 'PP' ? 'text-red-400' : 'text-white')}">${v ?? 0}</div>
+                        </div>`).join('')}</div>`;
+                } else {
+                    posEl.classList.add('hidden');
+                    recEl.innerHTML = `<div class="text-center py-4 text-sm text-zinc-400 bg-dark border border-zinc-800 border-dashed rounded-xl">Aún sin partidos jugados.</div>`;
+                }
+
+                // --- Partidos del equipo (misma temporada y categoría) ---
+                const own = this.data.matches.filter(m =>
+                    m.temporada === season && m.category === team.category &&
+                    (m.teamA === team.name || m.teamB === team.name));
+
+                const sortKey = m => (m.date || '9999-99-99');
+                const cmpAsc = (a, b) => sortKey(a).localeCompare(sortKey(b)) || this.parseTimeForSort(a.time) - this.parseTimeForSort(b.time);
+
+                const upcoming = own.filter(m => UI.ESTATUS_PENDIENTES.includes(m.status)).sort(cmpAsc);
+                const results = own.filter(m => !UI.ESTATUS_PENDIENTES.includes(m.status)).sort((a, b) => cmpAsc(b, a));
+
+                const empty = txt => `<li class="text-center py-4 text-sm text-zinc-400 bg-dark border border-zinc-800 border-dashed rounded-xl">${txt}</li>`;
+                document.getElementById('modal-team-upcoming').innerHTML = upcoming.length
+                    ? upcoming.map(m => this.buildTeamMatchRow(m, team.name)).join('') : empty('Sin encuentros próximos.');
+                document.getElementById('modal-team-results').innerHTML = results.length
+                    ? results.map(m => this.buildTeamMatchRow(m, team.name)).join('') : empty('Sin resultados todavía.');
+
                 const modal = document.getElementById('team-modal');
                 const content = document.getElementById('team-modal-content');
                 modal.classList.remove('hidden');
-                setTimeout(() => { content.classList.remove('translate-y-full'); }, 10);
+                setTimeout(() => content.classList.remove('translate-y-full'), 10);
                 lucide.createIcons();
             },
 
+            /**
+             * Fila de un partido vista desde el equipo consultado (marcador y sets desde su
+             * perspectiva, no como local/visita).
+             * @param {Object} m Partido público.
+             * @param {string} teamName Equipo consultado.
+             * @return {string} HTML de <li>.
+             */
+            buildTeamMatchRow: function(m, teamName) {
+                const isHome = m.teamA === teamName;
+                const rival = (isHome ? m.teamB : m.teamA) || 'Por Definir';
+                const status = m.status || 'Programado';
+                const isBye = status === 'Pase Directo';
+                const isFinal = status === 'Finalizado';
+
+                const mine = isHome ? m.scoreA : m.scoreB;
+                const theirs = isHome ? m.scoreB : m.scoreA;
+                const hasScore = [mine, theirs].every(v => v !== undefined && v !== '');
+
+                // Insignia de estado: Ganado/Perdido si el partido terminó con ganador.
+                let badgeLabel = status;
+                let badgeCls = 'text-raptor-light border-raptor/50 bg-raptor-dark/30';
+                if (isFinal && hasScore && Number(mine) !== Number(theirs)) {
+                    const won = Number(mine) > Number(theirs);
+                    badgeLabel = won ? 'Ganado' : 'Perdido';
+                    badgeCls = won ? 'text-accent border-accent/30 bg-accent/10' : 'text-red-400 border-red-900/50 bg-red-900/10';
+                } else if (status === 'En Vivo') badgeCls = 'text-accent border-accent/30 bg-accent/10 animate-pulse';
+                else if (status === 'Cancelado') badgeCls = 'text-red-500 border-red-900/50 bg-red-900/10';
+                else if (isBye) badgeCls = 'text-amber-400 border-amber-500/40 bg-amber-500/10';
+
+                // Sets en la perspectiva del equipo consultado (propio-rival).
+                const sets = (isFinal || status === 'En Vivo')
+                    ? [1, 2, 3].map(n => {
+                        const l = m[`s${n}Local`], v = m[`s${n}Visitante`];
+                        if ([l, v].some(x => x === undefined || x === '')) return null;
+                        return isHome ? `${l}-${v}` : `${v}-${l}`;
+                    }).filter(Boolean).join(' · ')
+                    : '';
+
+                const fase = this.phaseLabel(m.fase);
+                const faseHtml = fase ? `<span class="text-[9px] font-black text-yellow-400 tracking-widest uppercase border border-yellow-500/60 bg-yellow-500/20 px-2 py-0.5 rounded whitespace-nowrap">${this.esc(fase)}</span>` : '';
+
+                const meta = isBye ? '' : [this.formatDateLabel(m.date), this.formatTimeLabel(m.time), m.court].filter(Boolean).map(x => this.esc(x)).join(' · ');
+
+                const rivalLogo = rival === 'Por Definir' ? ''
+                    : this.getLogoBadge(rival).replace('w-10 h-10 md:w-12 md:h-12', 'w-7 h-7').replace('text-sm md:text-lg', 'text-[10px]');
+
+                const middle = isBye
+                    ? `<span class="text-sm font-bold text-amber-400">Pase directo a la siguiente ronda</span>`
+                    : `<div class="flex items-center gap-2 min-w-0">${rivalLogo}
+                           <div class="min-w-0">
+                               <p class="text-[9px] text-gray-500 uppercase tracking-widest">${isHome ? 'Local' : 'Visita'} vs</p>
+                               <p class="font-bold text-sm text-white truncate">${this.esc(rival)}</p>
+                           </div>
+                       </div>
+                       <span class="font-sport font-black text-2xl text-gray-200 shrink-0">${hasScore ? `${this.esc(mine)} - ${this.esc(theirs)}` : '- : -'}</span>`;
+
+                return `<li class="bg-zinc-900/40 border border-zinc-800/60 rounded-xl p-3 space-y-2">
+                    <div class="flex justify-between items-center gap-2">
+                        <span class="text-[10px] font-bold text-gray-400 tracking-wider uppercase truncate">${meta}</span>
+                        <div class="flex items-center gap-1.5 shrink-0">${faseHtml}<span class="text-[9px] font-bold uppercase tracking-widest border px-2 py-0.5 rounded ${badgeCls}">${this.esc(badgeLabel)}</span></div>
+                    </div>
+                    <div class="flex justify-between items-center gap-3">${middle}</div>
+                    ${sets ? `<p class="text-[11px] text-gray-400 font-medium">Sets: ${this.esc(sets)}</p>` : ''}
+                </li>`;
+            },
+
+            /** Cierra el modal de resultados con animación de salida. */
             closeModal: function() {
                 const modal = document.getElementById('team-modal');
                 const content = document.getElementById('team-modal-content');
                 content.classList.add('translate-y-full');
                 setTimeout(() => { modal.classList.add('hidden'); }, 300);
-            },
-
-            requestPin: function() {
-                document.getElementById('pin-input').value = '';
-                document.getElementById('pin-error-msg').classList.add('hidden');
-                const pinModal = document.getElementById('pin-modal');
-                const pinContent = document.getElementById('pin-modal-content');
-                pinModal.classList.remove('hidden');
-                setTimeout(() => { pinContent.classList.remove('scale-95'); pinContent.classList.add('scale-100'); }, 10);
-                document.getElementById('pin-input').focus();
-            },
-
-            closePinPrompt: function() {
-                const pinModal = document.getElementById('pin-modal');
-                const pinContent = document.getElementById('pin-modal-content');
-                pinContent.classList.remove('scale-100');
-                pinContent.classList.add('scale-95');
-                setTimeout(() => { pinModal.classList.add('hidden'); }, 200);
-            },
-
-            submitPinPrompt: async function() {
-                const pin = document.getElementById('pin-input').value;
-                const errorMsg = document.getElementById('pin-error-msg');
-                const btnValidar = document.querySelector('#pin-modal button[onclick="app.submitPinPrompt()"]');
-                if (!pin || pin.length < 4) { errorMsg.innerText = "Ingrese un PIN de 4 dígitos."; errorMsg.classList.remove('hidden'); return; }
-                const textoOriginal = btnValidar.innerText;
-                btnValidar.innerText = "..."; btnValidar.disabled = true; errorMsg.classList.add('hidden');
-                try {
-                    const res = await fetch(`${API_URL}?endpoint=contacto&id=${encodeURIComponent(this.currentTeamId)}&pin=${encodeURIComponent(pin)}`);
-                    const json = await res.json();
-                    if (json.status === "success" && json.data && json.data.phone) {
-                        this.closePinPrompt();
-                        document.getElementById('btn-coach-contact').classList.add('hidden');
-                        let cleanPhone = json.data.phone.toString().replace(/\D/g, '');
-                        if (cleanPhone.length === 10) cleanPhone = '52' + cleanPhone;
-                        document.getElementById('link-coach-call').href = `tel:${cleanPhone}`;
-                        document.getElementById('link-coach-wa').href = `https://api.whatsapp.com/send?phone=${cleanPhone}`;
-                        document.getElementById('links-coach-contact').classList.remove('hidden');
-                    } else throw new Error();
-                } catch (error) {
-                    errorMsg.innerText = "PIN incorrecto o no autorizado."; errorMsg.classList.remove('hidden');
-                    document.getElementById('pin-input').value = ''; document.getElementById('pin-input').focus();
-                } finally {
-                    btnValidar.innerText = textoOriginal; btnValidar.disabled = false;
-                }
             }
         };
 
-        document.getElementById('pin-input').addEventListener('keypress', function (e) { if (e.key === 'Enter') app.submitPinPrompt(); });
         app.init();
     </script>
 </body>
