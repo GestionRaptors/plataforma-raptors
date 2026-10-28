@@ -387,7 +387,7 @@
                     let h = parseInt(timeParts[0], 10);
                     let m = parseInt(timeParts[1], 10);
                     if (!isPM && !isAM) return (h * 60) + m;
-                    if (isPM && h !== 12) h += 12;
+                    if (isPM && h < 12) h += 12;
                     if (isAM && h === 12) h = 0;
                     return (h * 60) + m;
                 }
@@ -807,7 +807,7 @@
                     if (parts.length === 3) displayDate = `${parts[2]}/${parts[1]}/${parts[0]}`;
                 }
                 
-                let matchTime = m?.time || '00:00';
+                const matchTime = this.formatTimeLabel(m?.time) || '--:--';
                 if (matchTime) {
                     let timeStr = matchTime.toString().toLowerCase().trim();
                     let isPM = /(p\.?m\.?|p\s*m)/i.test(timeStr);
@@ -934,7 +934,7 @@
                     if (parts.length === 3) displayDate = `${parts[2]}/${parts[1]}/${parts[0]}`;
                 }
 
-                let matchTime = m.time || '--:--';
+                const matchTime = this.formatTimeLabel(m.time) || '--:--';
                 if (matchTime && matchTime !== '--:--') {
                     let str = matchTime.toString().toLowerCase().trim();
                     let isPM = /(p\.?m\.?|p\s*m)/i.test(str);
