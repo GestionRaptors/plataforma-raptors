@@ -184,6 +184,7 @@
                     <option value="Femenil A">Femenil A</option>
                     <option value="Femenil B">Femenil B</option>
                     <option value="Mixto">Mixto</option>
+                    <option value="Primaria">Primaria</option>
                 </select>
             </div>
             <div id="teams-grid" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3"></div>
@@ -214,6 +215,7 @@
                         <option value="Femenil A">Femenil A</option>
                         <option value="Femenil B">Femenil B</option>
                         <option value="Mixto">Mixto</option>
+                        <option value="Primaria">Primaria</option>
                     </select>
                     <select id="calendar-status" onchange="app.renderCalendarMatches()" class="bg-surface border border-zinc-700 text-white text-sm rounded-lg p-2.5 outline-none w-1/2 focus:border-raptor transition-colors">
                         <option value="Programado">Programados</option>
@@ -235,6 +237,7 @@
                     <option value="Femenil A">Femenil A</option>
                     <option value="Femenil B">Femenil B</option>
                     <option value="Mixto">Mixto</option>
+                    <option value="Primaria">Primaria</option>
                 </select>
                 <input type="text" id="standings-search" onkeyup="app.renderStandings()" placeholder="Buscar equipo..." class="bg-surface border border-zinc-800 text-white text-sm rounded-lg block w-full md:w-2/3 p-2.5 outline-none focus:border-raptor">
             </div>
@@ -266,6 +269,7 @@
                     <option value="Femenil A">Femenil A</option>
                     <option value="Femenil B">Femenil B</option>
                     <option value="Mixto">Mixto</option>
+                    <option value="Primaria">Primaria</option>
                 </select>
             </div>
             <div class="overflow-x-auto pb-8 no-scrollbar bg-dark/50 rounded-xl border border-zinc-800/50 p-4 relative">
@@ -808,24 +812,6 @@
                 }
                 
                 const matchTime = this.formatTimeLabel(m?.time) || '--:--';
-                if (matchTime) {
-                    let timeStr = matchTime.toString().toLowerCase().trim();
-                    let isPM = /(p\.?m\.?|p\s*m)/i.test(timeStr);
-                    let isAM = /(a\.?m\.?|a\s*m)/i.test(timeStr);
-                    let timeParts = timeStr.match(/\d+/g);
-                    if (timeParts && timeParts.length >= 2) {
-                        let h = parseInt(timeParts[0], 10);
-                        let min = timeParts[1].padStart(2, '0');
-                        if (!isPM && !isAM) {
-                            if (h >= 12) isPM = true;
-                            else isAM = true;
-                        }
-                        if (h > 12) h -= 12;
-                        else if (h === 0) h = 12;
-                        let suffix = isPM ? 'p.m.' : 'a.m.';
-                        matchTime = `${h}:${min} ${suffix}`;
-                    } else matchTime = '00:00';
-                }
 
                 let statusColor = '';
                 if (isLive) statusColor = 'text-accent animate-pulse font-black drop-shadow-md';
@@ -934,20 +920,7 @@
                     if (parts.length === 3) displayDate = `${parts[2]}/${parts[1]}/${parts[0]}`;
                 }
 
-                const matchTime = this.formatTimeLabel(m.time) || '--:--';
-                if (matchTime && matchTime !== '--:--') {
-                    let str = matchTime.toString().toLowerCase().trim();
-                    let isPM = /(p\.?m\.?|p\s*m)/i.test(str);
-                    let isAM = /(a\.?m\.?|a\s*m)/i.test(str);
-                    let timeParts = str.match(/\d+/g);
-                    if (timeParts && timeParts.length >= 2) {
-                        let h = parseInt(timeParts[0], 10);
-                        let min = timeParts[1].padStart(2, '0');
-                        if (!isPM && !isAM) { if (h >= 12) isPM = true; else isAM = true; }
-                        if (h > 12) h -= 12; else if (h === 0) h = 12;
-                        matchTime = `${h}:${min} ${isPM ? 'p.m.' : 'a.m.'}`;
-                    } else matchTime = '--:--';
-                }
+                  const matchTime = this.formatTimeLabel(m?.time) || '--:--';
 
                 const isLive = matchStatus === 'En Vivo';
                 const isFinal = matchStatus === 'Finalizado';
@@ -1036,9 +1009,10 @@
                 if(dayMatches.length > 0) dayMatches.forEach(m => { homeMatchesContainer.innerHTML += this.getMatchCardHTML(m, false); });
                 else homeMatchesContainer.innerHTML = `<div class="col-span-1 md:col-span-2 text-center py-6 text-sm text-zinc-400 bg-surface border border-zinc-700/50 border-dashed rounded-xl">No hay partidos para mostrar con este filtro.</div>`;
 
+                // LIDERES DE CLASIFICACION
                 const leadersContainer = document.getElementById('home-leaders-container');
                 leadersContainer.innerHTML = '';
-                const cats = ["Varonil", "Femenil A", "Femenil B", "Mixto"];
+                const cats = ["Varonil", "Femenil A", "Femenil B", "Mixto", "Primaria"];
                 cats.forEach(cat => {
                     const topTeams = this.data.standings.filter(s => s.category === cat && s.temporada === this.activeSeason).slice(0, 5);
                     if(topTeams.length === 0) return;
